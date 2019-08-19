@@ -4,5 +4,5 @@ class Coordinate:
 		self.x = x
 		self.y = y
 
-	def get_coordinate():
+	def get_coordinate(self):
 		return (self.x, self.y)
