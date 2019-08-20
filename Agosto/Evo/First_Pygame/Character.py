@@ -9,7 +9,7 @@ class Character:
     window_width = 500
     window_heigth = 500
 
-    def __init__(self, position_dimensions, color,  background_color, vel, win):
+    def __init__(self, position_dimensions, color, background_color, vel, win):
         self.position_dimensions = position_dimensions
         self.color = color
         # TODO: Can be upgraded to multiple backgrounds
