@@ -1,3 +1,3 @@
 **/env/**
 january/first_project/first/**
-**/__pycache__/**
+*.pyc
