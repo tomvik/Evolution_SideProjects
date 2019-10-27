@@ -1,5 +1,16 @@
 You define your own limit.
 
+Next steps:
+- Manual controller of an object
+- Fix collision tests
+- Draw inside stage
+- Delimit inside the stage
+- Add food
+- Block overlapping of characters
+- Expand movement to 8 directions
+- Add vision circle
+- Search vs. Retrieve vs. Go Home movement
+
 TODO:
 
 -A simulator that runs with the formulas given and the parameters chosen.
