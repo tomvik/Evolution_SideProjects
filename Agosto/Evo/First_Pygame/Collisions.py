@@ -2,6 +2,9 @@ import matplotlib.path as mplPath
 import numpy as np
 
 import Coordinate
+import Dimensions
+import PositionAndDimension
+import Character
 
 # Returns line in form of (m, b) y = mx +b
 # Y = MX + B

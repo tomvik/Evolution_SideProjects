@@ -29,13 +29,13 @@ class Character:
                                   self.position_dimensions.coordinate.y)
         b = Coordinate.Coordinate(self.position_dimensions.coordinate.x +
                                   self.position_dimensions.dimension.width,
-                                  self.position_dimensions.y)
+                                  self.position_dimensions.coordinate.y)
         c = Coordinate.Coordinate(self.position_dimensions.coordinate.x,
                                   self.position_dimensions.coordinate.y +
                                   self.position_dimensions.dimension.heigth)
         d = Coordinate.Coordinate(self.position_dimensions.coordinate.x +
                                   self.position_dimensions.dimension.width,
-                                  self.position_dimensions.y +
+                                  self.position_dimensions.coordinate.y +
                                   self.position_dimensions.dimension.heigth)
         return (a, b, c, d)
 
@@ -44,7 +44,7 @@ class Character:
                                   self.position_dimensions.coordinate.y)
         b = Coordinate.Coordinate(self.position_dimensions.coordinate.x +
                                   self.position_dimensions.dimension.width,
-                                  self.position_dimensions.y +
+                                  self.position_dimensions.coordinate.y +
                                   self.position_dimensions.dimension.heigth)
         return (a, b)
 
@@ -73,11 +73,19 @@ class Character:
             return self.position_dimensions.coordinate.x - self.vel >= 0
 
     def move(self, direction):
+        self.draw_background()
         if direction == "UP":
-            self.position_dimensions.coordinate.y - self.vel
+            self.position_dimensions.coordinate.y -= self.vel
         elif direction == "RIGHT":
-            self.position_dimensions.coordinate.x + self.vel
+            self.position_dimensions.coordinate.x += self.vel
         elif direction == "DOWN":
-            self.position_dimensions.coordinate.y + self.vel
+            self.position_dimensions.coordinate.y += self.vel
         elif direction == "LEFT":
-            self.position_dimensions.coordinate.x - self.vel
+            self.position_dimensions.coordinate.x -= self.vel
+        self.draw()
+
+    def reset_position(self, x, y):
+        self.draw_background()
+        self.position_dimensions.coordinate.x = x
+        self.position_dimensions.coordinate.y = y
+        self.draw()
