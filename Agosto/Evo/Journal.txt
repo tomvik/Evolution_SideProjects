@@ -1,7 +1,6 @@
 You define your own limit.
 
 Next steps:
-- Fix colors
 - Add food
 - Create Character
 - Create Stage
