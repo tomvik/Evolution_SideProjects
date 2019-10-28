@@ -1,10 +1,10 @@
 You define your own limit.
 
 Next steps:
-- Make characters not able to collide to each other
+- Fix colors
 - Add food
-- Block overlapping of characters
-- Expand movement to 8 directions
+- Create Character
+- Create Stage
 - Add vision circle
 - Search vs. Retrieve vs. Go Home movement
 
