@@ -25,28 +25,10 @@ class Character:
         return (self.position_dimensions, self.color, self.vel)
 
     def get_vertices(self):
-        a = Coordinate.Coordinate(self.position_dimensions.coordinate.x,
-                                  self.position_dimensions.coordinate.y)
-        b = Coordinate.Coordinate(self.position_dimensions.coordinate.x +
-                                  self.position_dimensions.dimension.width,
-                                  self.position_dimensions.coordinate.y)
-        c = Coordinate.Coordinate(self.position_dimensions.coordinate.x,
-                                  self.position_dimensions.coordinate.y +
-                                  self.position_dimensions.dimension.heigth)
-        d = Coordinate.Coordinate(self.position_dimensions.coordinate.x +
-                                  self.position_dimensions.dimension.width,
-                                  self.position_dimensions.coordinate.y +
-                                  self.position_dimensions.dimension.heigth)
-        return (a, b, c, d)
+        return self.position_dimensions.get_vertices()
 
     def get_vertex_limits(self):
-        a = Coordinate.Coordinate(self.position_dimensions.coordinate.x,
-                                  self.position_dimensions.coordinate.y)
-        b = Coordinate.Coordinate(self.position_dimensions.coordinate.x +
-                                  self.position_dimensions.dimension.width,
-                                  self.position_dimensions.coordinate.y +
-                                  self.position_dimensions.dimension.heigth)
-        return (a, b)
+        return self.position_dimensions.get_vertex_limits()
 
     def draw(self):
         pygame.draw.rect(self.win,
@@ -58,19 +40,20 @@ class Character:
                          self.background_color.get_color(),
                          self.position_dimensions.get_position_dimensions())
 
-    def move_is_possible(self, direction):
+    def is_move_possible(self, direction, delimiting_vertices):
+        a, b = delimiting_vertices
         if direction == "UP":
-            return self.position_dimensions.coordinate.y - self.vel >= 0
+            return self.position_dimensions.coordinate.y - self.vel >= a.y
         elif direction == "RIGHT":
             return self.position_dimensions.coordinate.x + self.vel +\
                 self.position_dimensions.dimension.width <=\
-                self.window_width
+                b.x
         elif direction == "DOWN":
             return self.position_dimensions.coordinate.y + self.vel +\
                 self.position_dimensions.dimension.heigth <=\
-                self.window_heigth
+                b.y
         elif direction == "LEFT":
-            return self.position_dimensions.coordinate.x - self.vel >= 0
+            return self.position_dimensions.coordinate.x - self.vel >= a.x
 
     def move(self, direction):
         self.draw_background()

@@ -13,34 +13,34 @@ import Character
 # TODO: x != x
 
 
-def LineFor(a, b):
+def line_for(a, b):
     m = (b.y - a.y)/(b.x - a.x)
     b = a.y - (m * a.x)
     return (m, b)
 
 
-def CollisionCoordinate(line_a, line_b):
+def collision_coordinate(line_a, line_b):
     Xp = (b[1] - a[1]) / (a[0] - b[0])
     Yp = (a[0] * Xp) + a[1]
     return Coordinate(Xp, Yp)
 
 
-def IsPointBetweenPoints(a, b, vip):
+def is_point_between_points(a, b, vip):
     if (a.x <= vip.x <= b.x or a.x >= vip.x >= b.x):
         if (a.y <= vip.y <= b.y or a.y >= vip.x >= b.y):
             return True
     return False
 
 
-def IsPointInsideCharacter(character, vip):
+def is_point_inside_character(character, vip):
     a, b = character.get_vertex_limits()
-    return IsPointBetweenPoints(a, b, vip)
+    return is_point_between_points(a, b, vip)
 
 
-def IsCollision(character_a, character_b):
+def is_collision(character_a, character_b):
     b_vertices = character_b.get_vertices()
     for v in b_vertices:
-        if IsPointInsideCharacter(character_a, v):
+        if is_point_inside_character(character_a, v):
             return True
     return False
 

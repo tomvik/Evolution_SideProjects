@@ -1,8 +1,7 @@
 You define your own limit.
 
 Next steps:
-- Manual controller of an object
-- Fix collision tests
+- Try Rect pygame object
 - Draw inside stage
 - Delimit inside the stage
 - Add food
