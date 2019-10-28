@@ -9,7 +9,8 @@ class Rectangle:
     window_width = 500
     window_heigth = 500
 
-    def __init__(self, rectangle, color, background_color, win):
+    def __init__(self, rectangle: pygame.Rect, color: Color.RBGColor,
+                 background_color: Color.RBGColor, win: pygame.Surface):
         self.rectangle = rectangle
         self.initial_pos = (rectangle.x, rectangle.y)
         self.color = color
@@ -21,52 +22,27 @@ class Rectangle:
     def __del__(self):
         self.draw_background()
 
-    def get_rectangle_array(self):
-        return (self.rectangle, self.color)
+    # Returns the Rectangle and Color as a Tuple.
+    def get_rectangle(self):
+        return (self.rectangle)
 
+    # Draws itself.
     def draw(self):
         pygame.draw.rect(self.win, self.color.get_color(), self.rectangle)
 
+    # Draws the background.
+    # Note: Must be used before moving the object.
     def draw_background(self):
         pygame.draw.rect(
             self.win, self.background_color.get_color(), self.rectangle)
 
-    def is_collision(self, character_b):
+    # Returns true if there's a collision between self and character_b.
+    def is_collision(self, character_b: 'Rectangle'):
         return self.rectangle.colliderect(character_b.rectangle)
 
-    def move(self, dx, dy, blockings):
-        # Move each axis separately.
-        # Note that this checks for collisions both times.
-        if dx != 0:
-            self.move_single_axis(dx, 0, blockings)
-        if dy != 0:
-            self.move_single_axis(0, dy, blockings)
 
-    def move_single_axis(self, dx, dy, blockings):
-        self.draw_background()
-
-        self.rectangle.x += dx
-        self.rectangle.y += dy
-
-        for block in blockings:
-            if self.is_collision(block):
-                if dx > 0:  # Moving right; Hit the left side of the block
-                    self.rectangle.right = block.rectangle.left
-                if dx < 0:  # Moving left; Hit the right side of the block
-                    self.rectangle.left = block.rectangle.right
-                if dy > 0:  # Moving down; Hit the top side of the block
-                    self.rectangle.bottom = block.rectangle.top
-                if dy < 0:  # Moving up; Hit the bottom side of the block
-                    self.rectangle.top = block.rectangle.bottom
-        self.draw()
-
-    def reset_position(self, x, y):
-        self.draw_background()
-        self.rectangle.x = self.initial_pos[0]
-        self.rectangle.y = self.initial_pos[1]
-        self.draw()
-
-
+# Spans the amount of rectangles on the delimited area without collision
+# and adds them to the blocking list if is_blocking is set to True.
 def random_spanner(amount: int, delimiter_rect: pygame.Rect,
                    span_rect: pygame.Rect, color: Color.RBGColor,
                    background_color: Color.RBGColor,
