@@ -1,12 +1,9 @@
 You define your own limit.
 
 Next steps:
-- Try Rect pygame object
-- Draw inside stage
-- Delimit inside the stage
 - Add food
-- Block overlapping of characters
-- Expand movement to 8 directions
+- Create Character
+- Create Stage
 - Add vision circle
 - Search vs. Retrieve vs. Go Home movement
 
@@ -23,8 +20,6 @@ TODO:
 		- Create time
 		- Controlled
 		- Under an equation
-	- Be able to detect collisions
-	- Be able to detect it's out of the stage
 	- 
 
 	and be able to move and spawn any unit

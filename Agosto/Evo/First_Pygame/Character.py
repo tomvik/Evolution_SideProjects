@@ -1,60 +1,62 @@
 import pygame
+from typing import List
 
 import Color
+from Rectangle import Rectangle
+from Food import Food
 
 
-class Character:
-    window_width = 500
-    window_heigth = 500
+class Character(Rectangle):
 
-    def __init__(self, rectangle, color, background_color, vel, win):
-        self.rectangle = rectangle
-        self.color = color
-        # TODO: Can be upgraded to multiple backgrounds
-        self.background_color = background_color
-        self.vel = vel
-        self.win = win
-        self.draw()
+    def __init__(self, id: int, left: int, top: int, width: int, height: int,
+                 color: Color.RBGColor, background_color: Color.RBGColor,
+                 win: pygame.Surface, speed: int):
+        super().__init__(pygame.Rect(left, top, width, height),
+                         color, background_color, win)
+        self._id = id
+        self._hunger = 1
+        self._speed = speed
 
-    def __del__(self):
+    def get_id(self) -> int:
+        return self._id
+
+    def get_hunger(self) -> int:
+        return self._hunger
+
+    # Adjusts the hunger according to the nutritional value intake.
+    def feed(self, nutritional_value: int):
+        if self._hunger - nutritional_value < 0:
+            self._hunger = 0
+        else:
+            self._hunger -= nutritional_value
+
+    # Moves the object by dx and dy times speed.
+    # If there's a blocking, it moves at much as possible.
+    # Also checks if there's food and eats it if there is.
+    def move(self, dx: int, dy: int, blockings: List[Rectangle]):
+        # Move each axis separately.
+        # Note that this checks for collisions both times.
+        if dx != 0:
+            self.__move_single_axis(dx, 0, blockings)
+        if dy != 0:
+            self.__move_single_axis(0, dy, blockings)
+
+    # Helper function for moving the object on a single axis.
+    def __move_single_axis(self, dx: int, dy: int,
+                           blockings: List[Rectangle]):
         self.draw_background()
 
-    def get_character_array(self):
-        return (self.rectangle, self.color, self.vel)
+        self.rectangle.x += dx*self._speed
+        self.rectangle.y += dy*self._speed
 
-    def draw(self):
-        pygame.draw.rect(self.win, self.color.get_color(), self.rectangle)
-
-    def draw_background(self):
-        pygame.draw.rect(
-            self.win, self.background_color.get_color(), self.rectangle)
-
-    def is_move_possible(self, direction, delimiting_rectangle):
-        if direction == "UP":
-            return self.rectangle.y - self.vel >= delimiting_rectangle.y
-        elif direction == "RIGHT":
-            return self.rectangle.x + self.vel + self.rectangle.width <= \
-                delimiting_rectangle.x + delimiting_rectangle.width
-        elif direction == "DOWN":
-            return self.rectangle.y + self.vel + self.rectangle.height <= \
-                delimiting_rectangle.y + delimiting_rectangle.height
-        elif direction == "LEFT":
-            return self.rectangle.x - self.vel >= delimiting_rectangle.x
-
-    def move(self, direction):
-        self.draw_background()
-        if direction == "UP":
-            self.rectangle.move_ip(0, -self.vel)
-        elif direction == "RIGHT":
-            self.rectangle.move_ip(self.vel, 0)
-        elif direction == "DOWN":
-            self.rectangle.move_ip(0, self.vel)
-        elif direction == "LEFT":
-            self.rectangle.move_ip(-self.vel, 0)
-        self.draw()
-
-    def reset_position(self, x, y):
-        self.draw_background()
-        self.rectangle.x = x
-        self.rectangle.y = y
+        for block in blockings:
+            if self.rectangle.colliderect(block.rectangle):
+                if dx > 0:  # Moving right; Hit the left side of the block
+                    self.rectangle.right = block.rectangle.left
+                if dx < 0:  # Moving left; Hit the right side of the block
+                    self.rectangle.left = block.rectangle.right
+                if dy > 0:  # Moving down; Hit the top side of the block
+                    self.rectangle.bottom = block.rectangle.top
+                if dy < 0:  # Moving up; Hit the bottom side of the block
+                    self.rectangle.top = block.rectangle.bottom
         self.draw()
