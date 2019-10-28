@@ -1,16 +1,14 @@
 import pygame
 
 import Color
-import Coordinate
-import PositionAndDimension
 
 
 class Character:
     window_width = 500
     window_heigth = 500
 
-    def __init__(self, position_dimensions, color, background_color, vel, win):
-        self.position_dimensions = position_dimensions
+    def __init__(self, rectangle, color, background_color, vel, win):
+        self.rectangle = rectangle
         self.color = color
         # TODO: Can be upgraded to multiple backgrounds
         self.background_color = background_color
@@ -22,53 +20,41 @@ class Character:
         self.draw_background()
 
     def get_character_array(self):
-        return (self.position_dimensions, self.color, self.vel)
-
-    def get_vertices(self):
-        return self.position_dimensions.get_vertices()
-
-    def get_vertex_limits(self):
-        return self.position_dimensions.get_vertex_limits()
+        return (self.rectangle, self.color, self.vel)
 
     def draw(self):
-        pygame.draw.rect(self.win,
-                         self.color.get_color(),
-                         self.position_dimensions.get_position_dimensions())
+        pygame.draw.rect(self.win, self.color.get_color(), self.rectangle)
 
     def draw_background(self):
-        pygame.draw.rect(self.win,
-                         self.background_color.get_color(),
-                         self.position_dimensions.get_position_dimensions())
+        pygame.draw.rect(
+            self.win, self.background_color.get_color(), self.rectangle)
 
-    def is_move_possible(self, direction, delimiting_vertices):
-        a, b = delimiting_vertices
+    def is_move_possible(self, direction, delimiting_rectangle):
         if direction == "UP":
-            return self.position_dimensions.coordinate.y - self.vel >= a.y
+            return self.rectangle.y - self.vel >= delimiting_rectangle.y
         elif direction == "RIGHT":
-            return self.position_dimensions.coordinate.x + self.vel +\
-                self.position_dimensions.dimension.width <=\
-                b.x
+            return self.rectangle.x + self.vel + self.rectangle.width <= \
+                delimiting_rectangle.x + delimiting_rectangle.width
         elif direction == "DOWN":
-            return self.position_dimensions.coordinate.y + self.vel +\
-                self.position_dimensions.dimension.heigth <=\
-                b.y
+            return self.rectangle.y + self.vel + self.rectangle.height <= \
+                delimiting_rectangle.y + delimiting_rectangle.height
         elif direction == "LEFT":
-            return self.position_dimensions.coordinate.x - self.vel >= a.x
+            return self.rectangle.x - self.vel >= delimiting_rectangle.x
 
     def move(self, direction):
         self.draw_background()
         if direction == "UP":
-            self.position_dimensions.coordinate.y -= self.vel
+            self.rectangle.move_ip(0, -self.vel)
         elif direction == "RIGHT":
-            self.position_dimensions.coordinate.x += self.vel
+            self.rectangle.move_ip(self.vel, 0)
         elif direction == "DOWN":
-            self.position_dimensions.coordinate.y += self.vel
+            self.rectangle.move_ip(0, self.vel)
         elif direction == "LEFT":
-            self.position_dimensions.coordinate.x -= self.vel
+            self.rectangle.move_ip(-self.vel, 0)
         self.draw()
 
     def reset_position(self, x, y):
         self.draw_background()
-        self.position_dimensions.coordinate.x = x
-        self.position_dimensions.coordinate.y = y
+        self.rectangle.x = x
+        self.rectangle.y = y
         self.draw()
