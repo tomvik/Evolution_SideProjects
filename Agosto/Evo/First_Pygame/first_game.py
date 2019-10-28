@@ -14,11 +14,10 @@ win_title = "First game"
 win_life = True
 
 vel = 5
-possible_movements = ["UP", "RIGHT", "DOWN", "LEFT"]
+possible_movements = [(0, -vel), (vel, 0), (0, vel), (-vel, 0)]
 number_of_characters = 20
 number_of_foods = 20
 characters = list()
-mov = list()
 
 win = pygame.display.set_mode((win_width, win_heigth))
 pygame.display.set_caption(win_title)
@@ -57,18 +56,10 @@ for stage_rect in stage_rects:
         stage_rect, stage_walls_color, stage_walls_color, win))
     blocking_rects.append(stage[-1])
 
-for i in range(number_of_characters):
-    mov.append(random.choice(possible_movements))
-
 while win_life:
     # Use actual timer later on
     pygame.time.delay(delay_ms)
     pygame.display.update()
-
-    if characters[0].is_collision(characters[1]):
-        pygame.time.delay(delay_ms+1000)
-        characters[0].reset_position(50, 50)
-        characters[1].reset_position(120, 50)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -83,13 +74,15 @@ while win_life:
         characters[0].move(0, vel, blocking_rects[1:])
     elif keys[pygame.K_LEFT]:
         characters[0].move(-vel, 0, blocking_rects[1:])
-'''
+
     for i in range(number_of_characters):
-        mov[i] = random.choice(possible_movements)
-        while characters[i].is_within_limits(mov[i], stage_rect) is False:
-            mov[i] = random.choice(possible_movements)
-        characters[i].move(mov[i])
-'''
+        first_half = blocking_rects[:i]
+        second_half = blocking_rects[i+1:]
+        current_blockings = first_half + second_half
+
+        movement = random.choice(possible_movements)
+        characters[i].move(movement[0], movement[1], current_blockings)
+
 
 pygame.display.update()
 pygame.time.delay(delay_ms)
