@@ -10,16 +10,16 @@ from Food import Food
 
 # Spans the selected amount of food randomly throughout the stage,
 # avoiding collisions.
-def span_random_foods(amount: int, delimiter_rect: pygame.Rect,
+def span_random_foods(amount: int, delimiter: Rectangle,
                       width: int, height: int, color: Color.RBGColor,
                       background_color: Color.RBGColor, win: pygame.Surface,
                       nutritional_value: int,
                       blockings: List[Character]) -> List[Food]:
     foods = list()
-    min_x = delimiter_rect.x
-    min_y = delimiter_rect.y
-    max_x = delimiter_rect.x + delimiter_rect.width - width
-    max_y = delimiter_rect.y + delimiter_rect.height - height
+    min_x = delimiter.rectangle.x
+    min_y = delimiter.rectangle.y
+    max_x = delimiter.rectangle.x + delimiter.rectangle.width - width
+    max_y = delimiter.rectangle.y + delimiter.rectangle.height - height
 
     while len(foods) < amount:
         current_x = random.randint(min_x, max_x)
@@ -46,15 +46,15 @@ def span_random_foods(amount: int, delimiter_rect: pygame.Rect,
 
 # Spans the selected amount of characters randomly throughout the stage,
 # avoiding collisions.
-def span_random_characters(amount: int, delimiter_rect: pygame.Rect,
+def span_random_characters(amount: int, delimiter: Rectangle,
                            width: int, height: int, color: Color.RBGColor,
                            background_color: Color.RBGColor,
                            win: pygame.Surface) -> List[Character]:
     characters = list()
-    min_x = delimiter_rect.x
-    min_y = delimiter_rect.y
-    max_x = delimiter_rect.x + delimiter_rect.width - width
-    max_y = delimiter_rect.y + delimiter_rect.height - height
+    min_x = delimiter.rectangle.x
+    min_y = delimiter.rectangle.y
+    max_x = delimiter.rectangle.x + delimiter.rectangle.width - width
+    max_y = delimiter.rectangle.y + delimiter.rectangle.height - height
 
     while len(characters) < amount:
         current_x = random.randint(min_x, max_x)
