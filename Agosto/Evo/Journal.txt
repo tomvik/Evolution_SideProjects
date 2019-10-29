@@ -1,6 +1,7 @@
 You define your own limit.
 
 Next steps:
+- Maybe move only in cardinal coordinates?
 - Verify sensing, it's buggy.
 - Add that if it has reached the wall, stop or go out. Something.
 - Refactor things better
