@@ -1,6 +1,11 @@
 You define your own limit.
 
 Next steps:
+- Input of how many characters and food
+- Maybe retry or more than one try
+- Character manager
+- Food manager
+- Game manager
 - Refactor things better
 - Make them move better, like search out more for food.
 - Search vs. Retrieve vs. Go Home movement
