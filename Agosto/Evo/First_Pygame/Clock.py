@@ -6,7 +6,8 @@ import Rectangle
 
 class Clock:
     def __init__(self, fps: int, pos: Tuple[int, int],
-                 font_letter: str, font_size: int, font_color: List[int]):
+                 font_letter: str, font_size: int, font_color: List[int],
+                 ttl: int):
         self.__fps = fps
         self.__clock = pygame.time.Clock()
         self.__font = pygame.font.SysFont(font_letter, font_size)
@@ -17,6 +18,7 @@ class Clock:
         self.__minute = 0
         self.__second = 0
         self.__first = True
+        self.__ttl = ttl
 
         self.__hour_font, self.__hour_fontR = self.initialize_font(
             self.__hour, pos, False)
@@ -72,3 +74,6 @@ class Clock:
             font = self.__font.render(
                 "{0:02}:".format(time), 1, self.__font_color)
         win.blit(font, fontR)
+
+    def still_valid(self) -> bool:
+        return self.__ttl > self.__total_ms

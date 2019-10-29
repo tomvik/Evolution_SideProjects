@@ -21,6 +21,7 @@ fps = 60
 clock_font_type = "Trebuchet MS"
 clock_font_size = 25
 clock_font_color = (0, 0, 0)
+clock_ttl = 5*1000
 
 stage_width = 800
 stage_height = 500
@@ -48,18 +49,18 @@ pygame.display.set_caption(win_title)
 
 start_game = False
 
+clock = Clock.Clock(fps, clock_position, clock_font_type,
+                    clock_font_size, clock_font_color, clock_ttl)
+
+stage = Stage.Stage(stage_width, stage_height, stage_color, walls_color,
+                    win, clock)
+
+pygame.display.update()
 
 while start_game is False:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             start_game = True
-
-
-clock = Clock.Clock(fps, clock_position, clock_font_type,
-                    clock_font_size, clock_font_color)
-
-stage = Stage.Stage(stage_width, stage_height, stage_color, walls_color,
-                    win, clock)
 
 characters = Engine.span_random_characters(number_of_characters,
                                            stage.get_stage(),
@@ -86,7 +87,9 @@ while start_game is False:
 
 
 while win_life:
-    stage.update_clock()
+
+    if stage.update_clock() is False:
+        win_life = False
 
     pygame.display.update()
 
@@ -102,4 +105,12 @@ while win_life:
 
 
 pygame.display.update()
+
+start_game = False
+
+while start_game is False:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            start_game = True
+
 pygame.quit()

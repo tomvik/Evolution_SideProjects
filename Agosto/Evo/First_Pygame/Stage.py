@@ -44,6 +44,8 @@ class Stage:
                           self.__walls_color, self.__win)
         return walls, stage
 
+    # Returns True if it's under its Time To Live, otherwise False.
     def update_clock(self):
         self.__clock.update_clock()
         self.__clock.render_clock(self.__walls[-1], self.__win)
+        return self.__clock.still_valid()
