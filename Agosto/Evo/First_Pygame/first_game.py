@@ -21,7 +21,8 @@ stage_width = 1000
 stage_height = 500
 
 number_of_characters = 20
-number_of_foods = 20
+number_of_foods = 30
+sensing_range = 50
 
 characters = list()
 foods = list()
@@ -37,11 +38,14 @@ pygame.display.set_caption(win_title)
 
 stage = Stage.Stage(stage_width, stage_height, stage_color, walls_color, win)
 
-characters = Engine.span_random_characters(20, stage.get_stage(), 10, 15,
-                                           color_1, stage_color, win)
+characters = Engine.span_random_characters(number_of_characters,
+                                           stage.get_stage(), 10, 15,
+                                           color_1, stage_color, win, 5,
+                                           sensing_range)
 
-foods = Engine.span_random_foods(20, stage.get_stage(), 5, 5, food_color,
-                                 stage_color, win, 1, characters)
+foods = Engine.span_random_foods(number_of_foods, stage.get_stage(),
+                                 5, 5, food_color,
+                                 stage_color, win, characters, 1)
 
 while win_life:
     # Use actual timer later on
@@ -54,18 +58,6 @@ while win_life:
 
     Engine.move_characters(number_of_characters, characters, foods,
                            stage.get_walls())
-
-'''
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP]:
-        characters[0].move(0, -vel, blocking_rects[1:])
-    elif keys[pygame.K_RIGHT]:
-        characters[0].move(vel, 0, blocking_rects[1:])
-    elif keys[pygame.K_DOWN]:
-        characters[0].move(0, vel, blocking_rects[1:])
-    elif keys[pygame.K_LEFT]:
-        characters[0].move(-vel, 0, blocking_rects[1:])
-'''
 
 
 pygame.display.update()

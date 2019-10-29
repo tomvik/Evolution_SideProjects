@@ -1,8 +1,10 @@
 You define your own limit.
 
 Next steps:
+- Verify sensing, it's buggy.
+- Add that if it has reached the wall, stop or go out. Something.
+- Refactor things better
 - Make them move better
-- Add vision circle
 - Search vs. Retrieve vs. Go Home movement
 
 TODO:

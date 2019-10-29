@@ -13,7 +13,7 @@ class Stage:
         self.__stage_color = stage_color
         self.__walls_color = walls_color
         self.__win = win
-        self.__walls, self.__stage = self.__initialize_stage_and_walls()
+        self.__walls, self.__stage = self.__initialize_stage()
 
     def get_walls(self) -> List[Rectangle]:
         return self.__walls
@@ -41,4 +41,6 @@ class Stage:
                                    self.__stage_color, self.__win))
         stage = Rectangle(stage_rect, self.__stage_color,
                           self.__walls_color, self.__win)
+        print("PRINT PRINT PRINT")
+        print(stage.get_corners())
         return walls, stage

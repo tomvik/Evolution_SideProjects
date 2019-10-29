@@ -8,20 +8,27 @@ from Food import Food
 
 class Character(Rectangle):
 
-    def __init__(self, id: int, left: int, top: int, width: int, height: int,
+    def __init__(self, left: int, top: int, width: int, height: int,
                  color: Color.RBGColor, background_color: Color.RBGColor,
-                 win: pygame.Surface, speed: int):
+                 win: pygame.Surface, id: int, speed: int, sensing_range: int):
         super().__init__(pygame.Rect(left, top, width, height),
                          color, background_color, win)
         self._id = id
         self._hunger = 1
         self._speed = speed
+        self._sensing_range = sensing_range
 
     def get_id(self) -> int:
         return self._id
 
     def get_hunger(self) -> int:
         return self._hunger
+
+    def is_hungry(self) -> bool:
+        return self._hunger > 0
+
+    def get_sensing(self) -> int:
+        return self._sensing_range
 
     # Adjusts the hunger according to the nutritional value intake.
     def feed(self, nutritional_value: int):
