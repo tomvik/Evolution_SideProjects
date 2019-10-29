@@ -1,7 +1,6 @@
 import pygame
 from typing import List
 
-import Color
 from Rectangle import Rectangle
 from Food import Food
 
@@ -10,7 +9,7 @@ class Character(Rectangle):
     next_home = (1, 1)
 
     def __init__(self, left: int, top: int, width: int, height: int,
-                 color: Color.RBGColor, background_color: Color.RBGColor,
+                 color: List[int], background_color: List[int],
                  win: pygame.Surface, id: int, speed: int, sensing_range: int):
         super().__init__(pygame.Rect(left, top, width, height),
                          color, background_color, win)

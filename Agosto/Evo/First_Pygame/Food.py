@@ -1,12 +1,12 @@
 import pygame
+from typing import List
 
-import Color
 from Rectangle import Rectangle
 
 
 class Food(Rectangle):
     def __init__(self, id: int, left: int, top: int, width: int, height: int,
-                 color: Color.RBGColor, background_color: Color.RBGColor,
+                 color: List[int], background_color: List[int],
                  win: pygame.Surface, nutritional_value: int):
         super().__init__(pygame.Rect(left, top, width, height),
                          color, background_color, win)

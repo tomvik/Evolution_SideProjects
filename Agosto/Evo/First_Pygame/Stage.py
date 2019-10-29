@@ -1,19 +1,20 @@
 import pygame
 from typing import List, Tuple
 
-import Color
 from Rectangle import Rectangle
+from Clock import Clock
 
 
 class Stage:
-    def __init__(self, width: int, height: int, stage_color: Color.RBGColor,
-                 walls_color: Color.RBGColor, win: pygame.Surface):
+    def __init__(self, width: int, height: int, stage_color: List[int],
+                 walls_color: List[int], win: pygame.Surface, clock: Clock):
         self.__width = width
         self.__height = height
         self.__stage_color = stage_color
         self.__walls_color = walls_color
         self.__win = win
         self.__walls, self.__stage = self.__initialize_stage()
+        self.__clock = clock
 
     def get_walls(self) -> List[Rectangle]:
         return self.__walls
@@ -41,6 +42,8 @@ class Stage:
                                    self.__stage_color, self.__win))
         stage = Rectangle(stage_rect, self.__stage_color,
                           self.__walls_color, self.__win)
-        print("PRINT PRINT PRINT")
-        print(stage.get_corners())
         return walls, stage
+
+    def update_clock(self):
+        self.__clock.update_clock()
+        self.__clock.render_clock(self.__walls[-1], self.__win)

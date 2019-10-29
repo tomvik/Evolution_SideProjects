@@ -2,8 +2,8 @@ import pygame
 import random
 from typing import List
 
-import Color
 import Rectangle
+import Clock
 import Character
 import Stage
 import Food
@@ -16,6 +16,12 @@ win_heigth = 700
 win_width = 1200
 win_title = "First game"
 win_life = True
+
+clock_position = (500, 650)
+fps = 60
+clock_font_type = "Trebuchet MS"
+clock_font_size = 25
+clock_font_color = (0, 0, 0)
 
 stage_width = 800
 stage_height = 500
@@ -32,16 +38,20 @@ number_of_foods = 30
 characters = list()
 foods = list()
 
-color_1 = Color.RBGColor(255, 0, 0)
-color_2 = Color.RBGColor(0, 0, 255)
-food_color = Color.RBGColor(255, 255, 255)
-stage_color = Color.RBGColor(211, 211, 211)
-walls_color = Color.RBGColor(0, 255, 0)
+color_1 = (255, 0, 0)
+color_2 = (0, 0, 255)
+food_color = (255, 255, 255)
+stage_color = (211, 211, 211)
+walls_color = (0, 255, 0)
 
 win = pygame.display.set_mode((win_width, win_heigth))
 pygame.display.set_caption(win_title)
 
-stage = Stage.Stage(stage_width, stage_height, stage_color, walls_color, win)
+clock = Clock.Clock(fps, clock_position, clock_font_type,
+                    clock_font_size, clock_font_color)
+
+stage = Stage.Stage(stage_width, stage_height, stage_color, walls_color,
+                    win, clock)
 
 characters = Engine.span_random_characters(number_of_characters,
                                            stage.get_stage(),
@@ -57,8 +67,8 @@ foods = Engine.span_random_foods(number_of_foods, stage.get_stage(),
                                  food_nutritional_value)
 
 while win_life:
-    # Use actual timer later on
-    pygame.time.delay(delay_ms)
+    stage.update_clock()
+
     pygame.display.update()
 
     for event in pygame.event.get():

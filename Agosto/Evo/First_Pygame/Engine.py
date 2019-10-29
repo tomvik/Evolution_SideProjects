@@ -2,7 +2,6 @@ import pygame
 import random
 from typing import List, Tuple
 
-import Color
 import Rectangle
 from Character import Character
 from Food import Food
@@ -11,8 +10,8 @@ from Food import Food
 # Spans the selected amount of food randomly throughout the stage,
 # avoiding collisions.
 def span_random_foods(amount: int, delimiter: Rectangle.Rectangle,
-                      width: int, height: int, color: Color.RBGColor,
-                      background_color: Color.RBGColor, win: pygame.Surface,
+                      width: int, height: int, color: List[int],
+                      background_color: List[int], win: pygame.Surface,
                       blockings: List[Character],
                       nutritional_value: int) -> List[Food]:
     foods = list()
@@ -47,8 +46,8 @@ def span_random_foods(amount: int, delimiter: Rectangle.Rectangle,
 # Spans the selected amount of characters randomly throughout the stage,
 # avoiding collisions.
 def span_random_characters(amount: int, delimiter: Rectangle.Rectangle,
-                           width: int, height: int, color: Color.RBGColor,
-                           background_color: Color.RBGColor,
+                           width: int, height: int, color: List[int],
+                           background_color: List[int],
                            win: pygame.Surface, speed: int,
                            sensing_range: int) -> List[Character]:
     characters = list()
@@ -120,7 +119,7 @@ def move_character(character: Character, dx: int, dy: int,
     character.move(dx, dy, blockings)
     counter = 0
     fed = False
-    if character.get_hunger() is not 0:
+    if character.is_hungry():
         for food in foods:
             if character.rectangle.colliderect(food.rectangle):
                 character.feed(food.get_nutritional_value())
@@ -128,7 +127,6 @@ def move_character(character: Character, dx: int, dy: int,
                 break
             counter += 1
         if fed:
-            print("Someone ate")
             del foods[counter]
             character.draw()
 

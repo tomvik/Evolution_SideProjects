@@ -3,15 +3,11 @@ import random
 import math
 from typing import List, Tuple
 
-import Color
-
 
 class Rectangle:
-    window_width = 500
-    window_heigth = 500
 
-    def __init__(self, rectangle: pygame.Rect, color: Color.RBGColor,
-                 background_color: Color.RBGColor, win: pygame.Surface):
+    def __init__(self, rectangle: pygame.Rect, color: List[int],
+                 background_color: List[int], win: pygame.Surface):
         self.rectangle = rectangle
         self.color = color
         # TODO: Can be upgraded to multiple backgrounds
@@ -55,13 +51,12 @@ class Rectangle:
 
     # Draws itself.
     def draw(self):
-        pygame.draw.rect(self.win, self.color.get_color(), self.rectangle)
+        pygame.draw.rect(self.win, self.color, self.rectangle)
 
     # Draws the background.
     # Note: Must be used before moving the object.
     def draw_background(self):
-        pygame.draw.rect(
-            self.win, self.background_color.get_color(), self.rectangle)
+        pygame.draw.rect(self.win, self.background_color, self.rectangle)
 
     # Returns true if there would be a collision between self and b.
     def would_collide(self, b: 'Rectangle',
