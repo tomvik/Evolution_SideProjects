@@ -22,7 +22,7 @@ stage_height = 500
 
 number_of_characters = 20
 number_of_foods = 30
-sensing_range = 50
+sensing_range = 70
 
 characters = list()
 foods = list()

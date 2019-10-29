@@ -1,11 +1,9 @@
 You define your own limit.
 
 Next steps:
-- Maybe move only in cardinal coordinates?
-- Verify sensing, it's buggy.
 - Add that if it has reached the wall, stop or go out. Something.
 - Refactor things better
-- Make them move better
+- Make them move better, like search out more for food.
 - Search vs. Retrieve vs. Go Home movement
 
 TODO:
