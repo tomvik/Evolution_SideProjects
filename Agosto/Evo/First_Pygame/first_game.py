@@ -11,7 +11,6 @@ import Engine
 
 pygame.init()
 
-delay_ms = 100
 win_heigth = 700
 win_width = 1200
 win_title = "First game"
@@ -32,8 +31,8 @@ character_sensing = 70
 food_size = 5
 food_nutritional_value = 1
 
-number_of_characters = 20
-number_of_foods = 30
+number_of_characters = 30
+number_of_foods = 60
 
 characters = list()
 foods = list()

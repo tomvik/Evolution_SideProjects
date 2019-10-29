@@ -11,20 +11,27 @@ class Clock:
         self.__clock = pygame.time.Clock()
         self.__font = pygame.font.SysFont(font_letter, font_size)
         self.__font_color = font_color
+        self.__separation = 33
         self.__total_ms = 0
         self.__hour = 0
         self.__minute = 0
         self.__second = 0
-        self.__hour_font, self.__hour_fontR = self.initialize_font(
-            self.__hour, pos)
-        self.__minute_font, self.__minute_fontR = self.initialize_font(
-            self.__minute, (pos[0]+150, pos[1]))
-        self.__second_font, self.__second_fontR = self.initialize_font(
-            self.__second, (pos[0]+300, pos[1]))
 
-    def initialize_font(self, time: int, pos: Tuple[int, int]):
-        font = self.__font.render("Hour:{0:02}".format(
-            time), 1, self.__font_color)  # zero-pad hours to 2 digits
+        self.__hour_font, self.__hour_fontR = self.initialize_font(
+            self.__hour, pos, False)
+        self.__minute_font, self.__minute_fontR = self.initialize_font(
+            self.__minute, (pos[0]+self.__separation, pos[1]), False)
+        self.__second_font, self.__second_fontR = self.initialize_font(
+            self.__second, (pos[0]+(self.__separation*2), pos[1]), True)
+
+    def initialize_font(self, time: int, pos: Tuple[int, int],
+                        is_second: bool):
+        if is_second:
+            font = self.__font.render("{0:02}".format(
+                time), 1, self.__font_color)
+        else:
+            font = self.__font.render("{0:02}:".format(
+                time), 1, self.__font_color)
         fontR = font.get_rect()
         fontR.center = pos
         return font, fontR
@@ -44,12 +51,20 @@ class Clock:
     # Draws background first and renders the new time.
     def render_clock(self, background: Rectangle, win: pygame.Surface):
         background.draw()
-        self.__second_font = self.__font.render(
-            "Second:{0:02}".format(self.__second), 1, self.__font_color)
-        win.blit(self.__second_font, self.__second_fontR)
-        self.__minute_font = self.__font.render(
-            "Minute:{0:02}".format(self.__minute), 1, self.__font_color)
-        win.blit(self.__minute_font, self.__minute_fontR)
-        self.__hour_font = self.__font.render(
-            "Hour:{0:02}".format(self.__hour), 1, self.__font_color)
-        win.blit(self.__hour_font, self.__hour_fontR)
+        self.render_individual(self.__second, self.__second_font,
+                               self.__second_fontR, True, win)
+        self.render_individual(self.__minute, self.__minute_font,
+                               self.__minute_fontR, False, win)
+        self.render_individual(self.__hour, self.__hour_font,
+                               self.__hour_fontR, False, win)
+
+    # Renders individual part of clock
+    def render_individual(self, time: int, font, fontR,
+                          is_second: bool, win: pygame.Surface):
+        if is_second:
+            font = self.__font.render(
+                "{0:02}".format(time), 1, self.__font_color)
+        else:
+            font = self.__font.render(
+                "{0:02}:".format(time), 1, self.__font_color)
+        win.blit(font, fontR)

@@ -1,7 +1,6 @@
 You define your own limit.
 
 Next steps:
-- Add that if it has reached the wall, stop or go out. Something.
 - Refactor things better
 - Make them move better, like search out more for food.
 - Search vs. Retrieve vs. Go Home movement
