@@ -13,19 +13,38 @@ class Rectangle:
     def __init__(self, rectangle: pygame.Rect, color: Color.RBGColor,
                  background_color: Color.RBGColor, win: pygame.Surface):
         self.rectangle = rectangle
-        self.initial_pos = (rectangle.x, rectangle.y)
         self.color = color
         # TODO: Can be upgraded to multiple backgrounds
         self.background_color = background_color
         self.win = win
         self.draw()
+        self._previous_movement = (0, 0)
 
     def __del__(self):
         self.draw_background()
 
     # Returns the Rectangle and Color as a Tuple.
-    def get_rectangle(self):
+    def get_rectangle(self) -> pygame.Rect:
         return (self.rectangle)
+
+    def get_size(self) -> Tuple[int, int]:
+        return (self.rectangle.width, self.rectangle.height)
+
+    def move(self, movement: Tuple[float, float]):
+        self._previous_movement = movement
+        self.rectangle.left += movement[0]
+        self.rectangle.top += movement[1]
+
+    def get_random_move(self) -> Tuple[int, int]:
+        possible = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+        movement = random.choice(possible)
+        while movement == -1*self._previous_movement:
+            movement = random.choice(possible)
+        return movement
+
+    def teleport(self, position: Tuple[int, int]):
+        self.rectangle.left = position[0]
+        self.rectangle.top = position[1]
 
     # Returns the Rectangle corners
     # a b
@@ -44,9 +63,15 @@ class Rectangle:
         pygame.draw.rect(
             self.win, self.background_color.get_color(), self.rectangle)
 
-    # Returns true if there's a collision between self and character_b.
-    def is_collision(self, character_b: 'Rectangle'):
-        return self.rectangle.colliderect(character_b.rectangle)
+    # Returns true if there would be a collision between self and b.
+    def would_collide(self, b: 'Rectangle',
+                      mov: Tuple[int, int]) -> bool:
+        self.rectangle.left += mov[0]
+        self.rectangle.top += mov[1]
+        would_collide = self.rectangle.colliderect(b.get_rectangle())
+        self.rectangle.left -= mov[0]
+        self.rectangle.top -= mov[1]
+        return would_collide
 
 
 # Euclidean distance
@@ -110,7 +135,7 @@ def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> Tuple[int, int]:
     corners = b.get_corners()
     for corner in corners:
         if r < L2(a_center, corner):
-            return random.choice([(0, -1), (1, 0), (0, 1), (-1, 0)])
+            return a.get_random_move()
 
     b_center = b.get_rectangle().center
     move_x = b_center[0] - a_center[0]
@@ -148,5 +173,6 @@ def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:
         return (-1, 0)
     elif down == 4:
         return (0, 1)
-    else:
+    elif up == 4:
         return (0, -1)
+    return a.get_random_move()

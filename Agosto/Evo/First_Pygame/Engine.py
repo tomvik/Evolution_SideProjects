@@ -88,14 +88,18 @@ def get_blockings(characters: List[Character],
 def goto_closer_wall(character: Character,
                      walls: List[Rectangle.Rectangle]) -> Tuple[int, int]:
     wall = Rectangle.closest_of_all_Linf(character, walls)
-    return Rectangle.cardinal_system_direction(character, wall)
+    movement = Rectangle.cardinal_system_direction(character, wall)
+    if character.would_collide(wall, movement):
+        character.arrived_home()
+        character.move_home()
+        return (0, 0)
+    return movement
 
 
 def goto_closer_food(character: Character,
                      foods: List[Food]) -> Tuple[int, int]:
-    possible_movements = [(0, -1), (1, 0), (0, 1), (-1, 0)]
     if len(foods) is 0:
-        return random.choice(possible_movements)
+        return character.get_random_move()
     food = Rectangle.closest_of_all_L2(character, foods)
     return Rectangle.sensing_direction(character, food,
                                        character.get_sensing())
@@ -106,7 +110,7 @@ def get_direction(character: Character, walls: List[Rectangle.Rectangle],
     if (character.is_hungry() is False):
         return goto_closer_wall(character, walls)
     return goto_closer_food(character, foods)
-    return random.choice([(0, -1), (1, 0), (0, 1), (-1, 0)])
+    return character.get_random_move()
 
 
 # Moves the character a certain dx and dy times its own speed, plus
@@ -133,8 +137,9 @@ def move_character(character: Character, dx: int, dy: int,
 def move_characters(number_of_characters: int, characters: List[Character],
                     foods: List[Food], walls: List[Rectangle.Rectangle]):
     for i in range(number_of_characters):
-        movement = get_direction(characters[i], walls, foods)
-        move_character(characters[i], movement[0], movement[1],
-                       get_blockings(characters, walls, i), foods)
+        if characters[i].finished() is False:
+            movement = get_direction(characters[i], walls, foods)
+            move_character(characters[i], movement[0], movement[1],
+                           get_blockings(characters, walls, i), foods)
     for food in foods:
         food.draw()

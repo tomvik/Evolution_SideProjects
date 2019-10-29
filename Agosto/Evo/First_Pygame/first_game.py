@@ -17,12 +17,17 @@ win_width = 1200
 win_title = "First game"
 win_life = True
 
-stage_width = 1000
+stage_width = 800
 stage_height = 500
+
+character_size = 15
+character_speed = 5
+character_sensing = 70
+food_size = 5
+food_nutritional_value = 1
 
 number_of_characters = 20
 number_of_foods = 30
-sensing_range = 70
 
 characters = list()
 foods = list()
@@ -39,13 +44,17 @@ pygame.display.set_caption(win_title)
 stage = Stage.Stage(stage_width, stage_height, stage_color, walls_color, win)
 
 characters = Engine.span_random_characters(number_of_characters,
-                                           stage.get_stage(), 10, 15,
-                                           color_1, stage_color, win, 5,
-                                           sensing_range)
+                                           stage.get_stage(),
+                                           character_size,
+                                           character_size,
+                                           color_1, stage_color, win,
+                                           character_speed,
+                                           character_sensing)
 
 foods = Engine.span_random_foods(number_of_foods, stage.get_stage(),
-                                 5, 5, food_color,
-                                 stage_color, win, characters, 1)
+                                 food_size, food_size, food_color,
+                                 stage_color, win, characters,
+                                 food_nutritional_value)
 
 while win_life:
     # Use actual timer later on
