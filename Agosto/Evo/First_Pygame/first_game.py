@@ -23,6 +23,10 @@ clock_font = (clock_font_type, clock_font_size)
 clock_font_color = (0, 0, 0)
 clock_ttl = 5*1000
 
+text_position = (1125, 300)
+text_size = (50, 50)
+text_colors = ((125, 125, 125), (200, 200, 200))
+
 stage_size = (800, 500)
 stage_color = (211, 211, 211)
 walls_color = (0, 255, 0)
@@ -49,15 +53,11 @@ walls_color = (0, 255, 0)
 win = pygame.display.set_mode((win_width, win_heigth))
 pygame.display.set_caption(win_title)
 
-start_game = False
-
 stage = Engine.initialize_stage(stage_size, stage_colors, fps, clock_position,
-                                clock_font, clock_font_color, clock_ttl, win)
+                                clock_font, clock_font_color, clock_ttl,
+                                text_position, text_size, text_colors, win)
 
-while start_game is False:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            start_game = True
+Engine.wait_for_enter(stage)
 
 characters = Engine.span_random_characters(number_of_characters,
                                            stage.get_stage(),
@@ -75,13 +75,7 @@ foods = Engine.span_random_foods(number_of_foods, stage.get_stage(),
 
 pygame.display.update()
 
-start_game = False
-
-while start_game is False:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            start_game = True
-
+Engine.wait_for_enter(stage)
 
 while win_life:
 
@@ -103,11 +97,6 @@ while win_life:
 
 pygame.display.update()
 
-start_game = False
-
-while start_game is False:
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            start_game = True
+Engine.wait_for_enter(stage)
 
 pygame.quit()

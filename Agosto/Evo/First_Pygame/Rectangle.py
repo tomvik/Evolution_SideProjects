@@ -68,6 +68,10 @@ class Rectangle:
         self.rectangle.top -= mov[1]
         return would_collide
 
+    # Returns true if it is colliding with the current point
+    def collide_point(self, b: Tuple[int, int]) -> bool:
+        return self.rectangle.collidepoint(b)
+
 
 # Euclidean distance
 def L2(a: Tuple[int, int], b: Tuple[int, int]) -> float:

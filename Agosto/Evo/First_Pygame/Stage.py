@@ -3,11 +3,12 @@ from typing import List, Tuple
 
 from Rectangle import Rectangle
 from Clock import Clock
+from TextBox import TextBox
 
 
 class Stage:
     def __init__(self, width: int, height: int, stage_color: List[int],
-                 walls_color: List[int], win: pygame.Surface, clock: Clock):
+                 walls_color: List[int], win: pygame.Surface, clock: Clock, text_box: TextBox):
         self.__width = width
         self.__height = height
         self.__stage_color = stage_color
@@ -15,6 +16,7 @@ class Stage:
         self.__win = win
         self.__walls, self.__stage = self.__initialize_stage()
         self.__clock = clock
+        self.__text_box = text_box
 
     def get_walls(self) -> List[Rectangle]:
         return self.__walls
@@ -49,3 +51,7 @@ class Stage:
         self.__clock.update_clock()
         self.__clock.render_clock(self.__walls[-1], self.__win)
         return self.__clock.still_valid()
+
+    def check_box(self, event: pygame.event):
+        self.__text_box.handle_event(event)
+        self.__text_box.draw()

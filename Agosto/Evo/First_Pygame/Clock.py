@@ -65,7 +65,7 @@ class Clock:
                                self.__hour_fontR, False, win)
 
     # Renders individual part of clock
-    def render_individual(self, time: int, font, fontR,
+    def render_individual(self, time: int, font, fontR: pygame.Rect,
                           is_second: bool, win: pygame.Surface):
         if is_second:
             font = self.__font.render(

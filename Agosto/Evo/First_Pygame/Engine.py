@@ -7,6 +7,7 @@ from Character import Character
 from Food import Food
 import Clock
 import Stage
+import TextBox
 
 
 # Spans the selected amount of food randomly throughout the stage,
@@ -149,12 +150,27 @@ def initialize_stage(stage_size: Tuple[int, int],
                      stage_colors: Tuple[List[int], List[int]],
                      fps: int, clock_position: Tuple[int, int],
                      font: Tuple[str, int], font_color: List[int],
-                     ttl: int, win: pygame.Surface) -> Stage.Stage:
+                     ttl: int, text_position: Tuple[int, int],
+                     text_size: Tuple[int, int],
+                     text_colors: Tuple[List[int], List[int]],
+                     win: pygame.Surface) -> Stage.Stage:
     clock = Clock.Clock(fps, clock_position, font[0],
                         font[1], font_color, ttl)
 
+    text_box = TextBox.TextBox(text_position, text_size, text_colors,
+                               stage_colors[1], font[0], font[1], win, "h")
+
     stage = Stage.Stage(stage_size[0], stage_size[1],
                         stage_colors[0], stage_colors[1],
-                        win, clock)
+                        win, clock, text_box)
     pygame.display.update()
     return stage
+
+
+def wait_for_enter(stage: Stage.Stage):
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            stage.check_box(event)
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                waiting = False
