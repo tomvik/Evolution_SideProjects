@@ -86,7 +86,7 @@ class Character(Rectangle):
         new_home_x = self.__class__.next_home[0] + character_width + 5
         new_home_y = self.__class__.next_home[1]
         if new_home_x + 50 > window_width:
-            new_home_x = 0
+            new_home_x = 1
             new_home_y += character_height + 5
 
         self.__class__.next_home = (new_home_x, new_home_y)

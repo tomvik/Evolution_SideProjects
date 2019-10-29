@@ -3,7 +3,6 @@ import random
 from typing import List
 
 import Rectangle
-import Clock
 import Character
 import Stage
 import Food
@@ -17,23 +16,26 @@ win_title = "First game"
 win_life = True
 
 clock_position = (500, 650)
-fps = 60
+fps = 20
 clock_font_type = "Trebuchet MS"
 clock_font_size = 25
+clock_font = (clock_font_type, clock_font_size)
 clock_font_color = (0, 0, 0)
 clock_ttl = 5*1000
 
-stage_width = 800
-stage_height = 500
+stage_size = (800, 500)
+stage_color = (211, 211, 211)
+walls_color = (0, 255, 0)
+stage_colors = (stage_color, walls_color)
 
-character_size = 15
+character_size = 20
 character_speed = 5
 character_sensing = 70
 food_size = 5
 food_nutritional_value = 1
 
-number_of_characters = 30
-number_of_foods = 60
+number_of_characters = 70
+number_of_foods = 80
 
 characters = list()
 foods = list()
@@ -49,13 +51,8 @@ pygame.display.set_caption(win_title)
 
 start_game = False
 
-clock = Clock.Clock(fps, clock_position, clock_font_type,
-                    clock_font_size, clock_font_color, clock_ttl)
-
-stage = Stage.Stage(stage_width, stage_height, stage_color, walls_color,
-                    win, clock)
-
-pygame.display.update()
+stage = Engine.initialize_stage(stage_size, stage_colors, fps, clock_position,
+                                clock_font, clock_font_color, clock_ttl, win)
 
 while start_game is False:
     for event in pygame.event.get():

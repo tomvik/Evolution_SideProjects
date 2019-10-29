@@ -5,6 +5,8 @@ from typing import List, Tuple
 import Rectangle
 from Character import Character
 from Food import Food
+import Clock
+import Stage
 
 
 # Spans the selected amount of food randomly throughout the stage,
@@ -141,3 +143,18 @@ def move_characters(number_of_characters: int, characters: List[Character],
                            get_blockings(characters, walls, i), foods)
     for food in foods:
         food.draw()
+
+
+def initialize_stage(stage_size: Tuple[int, int],
+                     stage_colors: Tuple[List[int], List[int]],
+                     fps: int, clock_position: Tuple[int, int],
+                     font: Tuple[str, int], font_color: List[int],
+                     ttl: int, win: pygame.Surface) -> Stage.Stage:
+    clock = Clock.Clock(fps, clock_position, font[0],
+                        font[1], font_color, ttl)
+
+    stage = Stage.Stage(stage_size[0], stage_size[1],
+                        stage_colors[0], stage_colors[1],
+                        win, clock)
+    pygame.display.update()
+    return stage
