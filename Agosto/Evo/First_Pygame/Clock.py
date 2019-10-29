@@ -16,6 +16,7 @@ class Clock:
         self.__hour = 0
         self.__minute = 0
         self.__second = 0
+        self.__first = True
 
         self.__hour_font, self.__hour_fontR = self.initialize_font(
             self.__hour, pos, False)
@@ -40,6 +41,9 @@ class Clock:
     def update_clock(self):
         self.__clock.tick_busy_loop(self.__fps)
         self.__total_ms += self.__clock.get_time()
+        if self.__first:
+            self.__total_ms = 0
+            self.__first = False
 
         self.__second = int(self.__total_ms/1000)
         self.__minute = int(self.__second/60)

@@ -46,6 +46,15 @@ walls_color = (0, 255, 0)
 win = pygame.display.set_mode((win_width, win_heigth))
 pygame.display.set_caption(win_title)
 
+start_game = False
+
+
+while start_game is False:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            start_game = True
+
+
 clock = Clock.Clock(fps, clock_position, clock_font_type,
                     clock_font_size, clock_font_color)
 
@@ -65,6 +74,17 @@ foods = Engine.span_random_foods(number_of_foods, stage.get_stage(),
                                  stage_color, win, characters,
                                  food_nutritional_value)
 
+
+pygame.display.update()
+
+start_game = False
+
+while start_game is False:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            start_game = True
+
+
 while win_life:
     stage.update_clock()
 
@@ -73,11 +93,13 @@ while win_life:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             win_life = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                win_life = False
 
     Engine.move_characters(number_of_characters, characters, foods,
                            stage.get_walls())
 
 
 pygame.display.update()
-pygame.time.delay(delay_ms)
 pygame.quit()
