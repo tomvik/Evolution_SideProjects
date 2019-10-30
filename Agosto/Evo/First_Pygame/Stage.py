@@ -95,6 +95,10 @@ class Stage:
     def get_win(self) -> pygame.Surface:
         return self.__win
 
+    # Returns the Stage limits as in: x_min, y_min, x_max, y_max
+    def get_stage_limits(self) -> List[int]:
+        return (self.__stage.get_limits())
+
     # Returns True if it's under its Time To Live, otherwise False.
     def update_clock(self):
         self.__clock.update_clock()

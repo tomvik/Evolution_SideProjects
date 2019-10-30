@@ -5,8 +5,9 @@ from typing import List
 import Rectangle
 import Character
 import Stage
-import Food
 import Engine
+from Food_Manager import FoodManager
+from Character_Manager import CharacterManager
 
 pygame.init()
 
@@ -40,9 +41,6 @@ food_value = 1
 number_of_characters = 70
 number_of_foods = 80
 
-characters = list()
-foods = list()
-
 character_color = (255, 0, 0)
 food_color = (255, 255, 255)
 stage_color = (211, 211, 211)
@@ -55,14 +53,14 @@ stage = Engine.initialize_stage(stage_size, stage_colors, fps, clock_position,
                                 clock_font, clock_font_color, clock_ttl,
                                 text_position, text_font, text_colors, win)
 
-characters, foods = Engine.initialize_characters_and_food(stage,
-                                                          character_size,
-                                                          character_color,
-                                                          character_speed,
-                                                          character_sensing,
-                                                          food_size,
-                                                          food_color,
-                                                          food_value)
+character_manager, food_manager = Engine.initialize_managers(stage,
+                                                             character_size,
+                                                             character_color,
+                                                             character_speed,
+                                                             character_sensing,
+                                                             food_size,
+                                                             food_color,
+                                                             food_value)
 
 
 pygame.display.update()
@@ -83,7 +81,7 @@ while win_life:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     round_life = False
-        Engine.move_characters(characters, foods, stage.get_walls())
+        Engine.run_game(character_manager, food_manager, stage)
     for event in pygame.event.get():
         stage.check_box(event)
         if event.type == pygame.QUIT:
@@ -94,15 +92,15 @@ while win_life:
             if event.key == pygame.K_SPACE:
                 round_life = True
                 stage.reset_clock()
-                characters, foods = \
-                    Engine.initialize_characters_and_food(stage,
-                                                          character_size,
-                                                          character_color,
-                                                          character_speed,
-                                                          character_sensing,
-                                                          food_size,
-                                                          food_color,
-                                                          food_value)
+                character_manager, food_manager = \
+                    Engine.initialize_managers(stage,
+                                               character_size,
+                                               character_color,
+                                               character_speed,
+                                               character_sensing,
+                                               food_size,
+                                               food_color,
+                                               food_value)
 
 
 pygame.display.update()

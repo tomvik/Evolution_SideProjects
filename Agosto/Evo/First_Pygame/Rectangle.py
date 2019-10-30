@@ -55,6 +55,11 @@ class Rectangle:
         return (self.rectangle.topleft, self.rectangle.topright,
                 self.rectangle.bottomleft, self.rectangle.bottomright)
 
+    # Returns the Rectangle limits as in: x_min, y_min, x_max, y_max
+    def get_limits(self) -> List[int]:
+        return (self.rectangle.left, self.rectangle.top,
+                self.rectangle.right, self.rectangle.bottom,)
+
     # Draws itself.
     def draw(self):
         pygame.draw.rect(self.win, self.color, self.rectangle)
@@ -73,6 +78,19 @@ class Rectangle:
         self.rectangle.left -= mov[0]
         self.rectangle.top -= mov[1]
         return would_collide
+
+    # Returns True if the current Rectangle collides with the area given
+    def area_collide(self, area: List[int]) -> bool:
+        collides = False
+        left, top, right, bottom = self.get_limits()
+        left_, top_, right_, bottom_ = area
+        if (left <= left_ <= right or left <= right_ <= right) and \
+                (top <= top_ <= bottom or top <= bottom_ <= bottom):
+            collides = True
+        elif (left_ <= left <= right_ or left_ <= right <= right_) and \
+                (top_ <= top <= bottom_ or top_ <= bottom <= bottom_):
+            collides = True
+        return collides
 
     # Returns true if it is colliding with the current point
     def collide_point(self, b: Tuple[int, int]) -> bool:
