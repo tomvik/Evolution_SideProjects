@@ -1,27 +1,44 @@
 import pygame
 from typing import List
 
-import Color
 from Rectangle import Rectangle
 from Food import Food
 
 
 class Character(Rectangle):
+    next_home = (1, 1)
 
-    def __init__(self, id: int, left: int, top: int, width: int, height: int,
-                 color: Color.RBGColor, background_color: Color.RBGColor,
-                 win: pygame.Surface, speed: int):
+    def __init__(self, left: int, top: int, width: int, height: int,
+                 color: List[int], background_color: List[int],
+                 win: pygame.Surface, id: int, speed: int, sensing_range: int):
         super().__init__(pygame.Rect(left, top, width, height),
                          color, background_color, win)
         self._id = id
         self._hunger = 1
         self._speed = speed
+        self._sensing_range = sensing_range
+        self._is_home = False
 
     def get_id(self) -> int:
         return self._id
 
     def get_hunger(self) -> int:
         return self._hunger
+
+    def is_hungry(self) -> bool:
+        return self._hunger > 0
+
+    def is_home(self) -> bool:
+        return self._is_home
+
+    def arrived_home(self):
+        self._is_home = True
+
+    def finished(self) -> bool:
+        return self.is_home() and (self.is_hungry() is False)
+
+    def get_sensing(self) -> int:
+        return self._sensing_range
 
     # Adjusts the hunger according to the nutritional value intake.
     def feed(self, nutritional_value: int):
@@ -46,8 +63,7 @@ class Character(Rectangle):
                            blockings: List[Rectangle]):
         self.draw_background()
 
-        self.rectangle.x += dx*self._speed
-        self.rectangle.y += dy*self._speed
+        super().move((dx*self._speed, dy*self._speed))
 
         for block in blockings:
             if self.rectangle.colliderect(block.rectangle):
@@ -60,3 +76,17 @@ class Character(Rectangle):
                 if dy < 0:  # Moving up; Hit the bottom side of the block
                     self.rectangle.top = block.rectangle.bottom
         self.draw()
+
+    def move_home(self):
+        self.draw_background()
+        super().teleport(self.__class__.next_home)
+        self.draw()
+        window_width, window_height = self.win.get_size()
+        character_width, character_height = self.get_size()
+        new_home_x = self.__class__.next_home[0] + character_width + 5
+        new_home_y = self.__class__.next_home[1]
+        if new_home_x + 50 > window_width:
+            new_home_x = 1
+            new_home_y += character_height + 5
+
+        self.__class__.next_home = (new_home_x, new_home_y)

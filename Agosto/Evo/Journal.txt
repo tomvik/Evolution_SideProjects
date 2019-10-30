@@ -1,10 +1,16 @@
 You define your own limit.
 
 Next steps:
-- Add food
-- Create Character
-- Create Stage
-- Add vision circle
+- Make clock use TextBox
+- Clock manager
+- Create the Textboxes and Clocks on the Stage
+- Maybe retry or more than one try
+- If no more character, stop clock.
+- Character manager
+- Food manager
+- Game manager
+- Refactor things better
+- Make them move better, like search out more for food.
 - Search vs. Retrieve vs. Go Home movement
 
 TODO:
