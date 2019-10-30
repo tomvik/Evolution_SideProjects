@@ -1,11 +1,11 @@
 You define your own limit.
 
 Next steps:
-- Clock manager
+- Add fps, ttl textboxes
+- Add id to textboxes
 - If no more character, stop clock.
 - If no more food, stop clock.
-- Character manager
-- Food manager
+- Add continuous mode, where the survivors go to next
 - Game manager
 - Refactor things better
 - Make them move better, like search out more for food.
