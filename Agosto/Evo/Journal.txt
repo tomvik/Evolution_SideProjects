@@ -1,8 +1,11 @@
 You define your own limit.
 
 Next steps:
-- Input of how many characters and food
+- Make clock use TextBox
+- Clock manager
+- Create the Textboxes and Clocks on the Stage
 - Maybe retry or more than one try
+- If no more character, stop clock.
 - Character manager
 - Food manager
 - Game manager

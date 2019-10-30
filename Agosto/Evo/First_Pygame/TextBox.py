@@ -21,8 +21,6 @@ class TextBox:
         rect.topleft = position
         self.__rect = Rectangle.Rectangle(rect, box_color, background_color,
                                           win)
-        if self.__is_transparent:
-            self.__rect.draw_background()
 
     def handle_event(self, event: pygame.event):
         if self.__is_input is False:
