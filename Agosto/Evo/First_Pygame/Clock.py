@@ -33,6 +33,10 @@ class Clock:
                                             font_letter, font_size, False, win,
                                             "{0:02}".format(self.__second))
 
+    # Returns true if the time is still under the TTL.
+    def still_valid(self) -> bool:
+        return self.__total_ms < self.__ttl
+
     # This function should be called each frame.
     def update_clock(self):
         self.__clock.tick_busy_loop(self.__fps)
@@ -57,9 +61,7 @@ class Clock:
         self.__second_box.write("{0:02}".format(self.__second))
         self.__second_box.draw()
 
-    def still_valid(self) -> bool:
-        return self.__ttl > self.__total_ms
-
+    # Resets the clock to 0 and draws it.
     def reset(self):
         self.__first = True
         self.update_clock()

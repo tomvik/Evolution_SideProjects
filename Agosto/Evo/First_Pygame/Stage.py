@@ -4,6 +4,7 @@ from typing import List, Tuple
 from Rectangle import Rectangle
 from Clock import Clock
 from TextBox import TextBox
+import Distances
 
 
 class Stage:
@@ -31,6 +32,7 @@ class Stage:
                              clock_font[0], clock_font[1],
                              clock_font_color, ttl, self.__win)
 
+    # Initializes the stage and returns its walls and stage.
     def __initialize_stage(self) -> Tuple[List[Rectangle], Rectangle]:
         wall_rects = (pygame.Rect(0, 0,
                                   self.__wall_width, self.__window_height),
@@ -51,6 +53,7 @@ class Stage:
                           self.__walls_color, self.__win)
         return walls, stage
 
+    # Initializes the text boxes. This part is partly hard_coded.
     def __initialize_text_boxes(self, font: Tuple[str, int]) -> List[TextBox]:
         text_boxes = list()
 
@@ -83,15 +86,19 @@ class Stage:
 
         return text_boxes
 
+    # Returns the walls.
     def get_walls(self) -> List[Rectangle]:
         return self.__walls
 
+    # Returns the stage.
     def get_stage(self) -> Rectangle:
         return self.__stage
 
+    # Returns the stage color.
     def get_stage_color(self) -> List[int]:
         return self.__stage_color
 
+    # Returns the window.
     def get_win(self) -> pygame.Surface:
         return self.__win
 
@@ -105,17 +112,35 @@ class Stage:
         self.__clock.draw()
         return self.__clock.still_valid()
 
-    def reset_clock(self):
-        self.__clock.reset()
-
-    def check_box(self, event: pygame.event):
-        for text_box in self.__text_boxes:
-            text_box.handle_event(event)
-            text_box.draw()
-
+    # Return the value of each text_box on a list.
     def get_text_values(self) -> List[int]:
         return_values = list()
         for text_box in self.__text_boxes:
             if text_box.is_input():
                 return_values.append(text_box.get_value())
         return return_values
+
+    # Returns the closest wall to the object and its direction towards it.
+    def closest_wall_to(self,
+                        a: Rectangle) -> Tuple[Rectangle, Tuple[int, int]]:
+        selected_wall = Distances.closest_of_all_Linf(a, self.__walls)
+        direction = Distances.cardinal_system_direction(a, selected_wall)
+        return selected_wall, direction
+
+    # Resets the clock back to 0.
+    def reset_clock(self):
+        self.__clock.reset()
+
+    # Handle the events for each text box.
+    def handle_event(self, event: pygame.event):
+        for text_box in self.__text_boxes:
+            text_box.handle_event(event)
+            text_box.draw()
+
+    def handle_in_game(self, characters: int, foods: int) -> bool:
+        self.__text_boxes[1].write(str(characters))
+        self.__text_boxes[1].draw()
+        self.__text_boxes[3].write(str(foods))
+        self.__text_boxes[3].draw()
+
+        return self.update_clock()

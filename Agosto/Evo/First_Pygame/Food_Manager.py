@@ -5,6 +5,8 @@ from typing import List, Tuple
 import Rectangle
 from Food import Food
 import Stage
+import Distances
+from Character import Character
 
 
 class FoodManager:
@@ -56,15 +58,41 @@ class FoodManager:
         self.__foods = foods
         self.__initial_amount = amount
 
+    # Returns the list of food.
     def get_list(self) -> List[Food]:
         return self.__foods
 
+    # Returns how much food is left.
+    def food_left(self) -> int:
+        return len(self.__foods)
+
+    # Returns the direction to the closes food from the character received.
+    def direction_to_closest_food(self,
+                                  character: Character) -> Tuple[int, int]:
+        food = Distances.closest_of_all_L2(character, self.__foods)
+        return Distances.sensing_direction(character, food,
+                                           character.get_sensing())
+
+    # Delete the specific food.
+    def delete_index(self, index: int):
+        del self.__foods[index]
+
+    # Draws all the foods.
     def draw(self):
         for food in self.__foods:
             food.draw()
 
-    def delete_index(self, index: int):
-        del self.__foods[index]
+    # Feeds the character that it receives.
+    def maybe_is_eating(self, character: Character):
+        counter = 0
+        foods_to_eat = list()
+        amount_of_food = self.food_left()
 
-    def food_left(self) -> int:
-        return len(self.__foods)
+        while counter < amount_of_food and character.is_hungry():
+            if character.collides(self.__foods[counter]):
+                character.feed(self.__foods[counter].get_nutritional_value())
+                del self.__foods[counter]
+                counter -= 1
+                amount_of_food -= 1
+                character.draw()
+            counter += 1

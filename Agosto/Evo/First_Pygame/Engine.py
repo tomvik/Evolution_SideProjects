@@ -11,22 +11,12 @@ import Stage
 import TextBox
 
 
-# Moves all the characters on the list and some may eat some food.
-def run_game(character_manager: CharacterManager, food_manager: FoodManager,
-             stage: Stage.Stage):
-    character_manager.move_characters(food_manager, stage)
-    food_manager.draw()
-
-
 # Initializes the stage.
 def initialize_stage(stage_size: Tuple[int, int],
                      stage_colors: Tuple[List[int], List[int]],
-                     fps: int, clock_position: Tuple[int, int],
-                     clock_font: Tuple[str, int], clock_font_color: List[int],
-                     ttl: int,
-                     text_position: Tuple[int, int],
+                     fps: int, clock_font: Tuple[str, int],
+                     clock_font_color: List[int], ttl: int,
                      text_font: Tuple[str, int],
-                     text_colors: Tuple[List[int], List[int]],
                      win: pygame.Surface) -> Stage.Stage:
     stage = Stage.Stage(stage_size[0], stage_size[1],
                         stage_colors[0], stage_colors[1],
@@ -36,6 +26,7 @@ def initialize_stage(stage_size: Tuple[int, int],
     return stage
 
 
+# Initialize the managers and waits for the input.
 def initialize_managers(stage: Stage.Stage, character_size: int,
                         character_color: List[int],
                         character_speed: int,
@@ -64,14 +55,61 @@ def initialize_managers(stage: Stage.Stage, character_size: int,
     return character_manager, food_manager
 
 
+# Waits for the key enter and while doing so,
+# the input textboxes can be written on.
 def wait_for_enter(stage: Stage.Stage):
     waiting = True
     while waiting:
         for event in pygame.event.get():
-            stage.check_box(event)
+            stage.handle_event(event)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 waiting = False
 
 
+# Returns a list of the values of the text_boxes.
 def load_state(stage: Stage.Stage) -> List[int]:
     return stage.get_text_values()
+
+
+# Returns true if quit or escape have been pressed.
+def maybe_quit(event: pygame.event) -> bool:
+    if event.type == pygame.QUIT:
+        return True
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE:
+            return True
+    return False
+
+
+def maybe_restart(event: pygame.event, stage: Stage.Stage) -> int:
+    stage.handle_event(event)
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_SPACE:
+            return True
+    return False
+
+
+def handle_events(in_game: bool, stage: Stage.Stage) -> int:
+    for event in pygame.event.get():
+        if maybe_quit(event):
+            return 1
+        if not in_game:
+            if maybe_restart(event, stage):
+                return 2
+    return 0
+
+
+# Runs the game. Returns false if the round has finished.
+def run_game(character_manager: CharacterManager, food_manager: FoodManager,
+             stage: Stage.Stage, traverse_character: bool) -> bool:
+    round_life = True
+    character_manager.move_characters(food_manager, stage,
+                                      traverse_character)
+    food_manager.draw()
+    round_life = stage.handle_in_game(character_manager.characters_left(),
+                                      food_manager.food_left())
+    if handle_events(True, stage) == 1:
+        round_life = False
+    pygame.display.update()
+
+    return round_life

@@ -59,80 +59,86 @@ class CharacterManager:
         self.__characters = characters
         self.__initial_amount = amount
 
+    # Returns the list of characters.
     def get_list(self) -> List[Character]:
         return self.__characters
 
+    # Draws all the characters.
     def draw(self):
         for character in self.__characters:
             character.draw()
 
+    # Deletes the indexed character.
     def delete_index(self, index: int):
         del self.__characters[index]
 
-    def character_left(self) -> int:
+    # Returns the number of characters that haven't finished.
+    def characters_left(self) -> int:
         return len(self.__characters)
 
+    # Moves all the characters.
+    # They may also eat some food.
+    def move_characters(self, food_manager: FoodManager, stage: Stage,
+                        only_walls: bool):
+        characters_left = self.characters_left()
+        i = 0
+        while i < characters_left:
+            movement = self.__get_direction(i, stage, food_manager)
+            if self.__characters[i].finished():
+                self.__move_home(i)
+                i -= 1
+                characters_left -= 1
+            else:
+                self.__move_character(i, movement,
+                                      self.__get_blockings(i,
+                                                           stage.get_walls(),
+                                                           only_walls),
+                                      food_manager)
+            i += 1
+
+    # Moves the character home, and transfers it to the finished list.
+    def __move_home(self, index: int):
+        self.__finished_characters.append(self.__characters.pop(index))
+        self.__finished_characters[-1].move_home()
+
     # Returns the blockings for the current index.
-    def get_blockings(self, characters: List[Character],
-                      walls: List[Rectangle.Rectangle],
-                      current: int) -> List[Rectangle.Rectangle]:
+    def __get_blockings(self, current: int, walls: List[Rectangle.Rectangle],
+                        only_walls: bool) -> List[Rectangle.Rectangle]:
+        if only_walls:
+            return walls
         left_hand = characters[:current]
         right_hand = characters[current+1:]
         return left_hand + right_hand + walls
 
-    def goto_closer_wall(self, character: Character,
-                         walls: List[Rectangle.Rectangle]) -> Tuple[int, int]:
-        wall = Rectangle.closest_of_all_Linf(character, walls)
-        movement = Rectangle.cardinal_system_direction(character, wall)
-        if character.would_collide(wall, movement):
-            character.arrived_home()
-            character.move_home()
+    # Returns the direction to the closest wall of the indexed character.
+    # If it arrives home, it does nothing and sets the variable on the
+    # character.
+    def __goto_closest_wall(self, index: int, stage: Stage) -> Tuple[int, int]:
+        wall, movement = stage.closest_wall_to(self.__characters[index])
+        if self.__characters[index].would_collide(wall, movement):
+            self.__characters[index].arrived_home()
             return (0, 0)
         return movement
 
-    def goto_closer_food(self, character: Character,
-                         food_manager: FoodManager) -> Tuple[int, int]:
-        foods = food_manager.get_list()
-        if len(foods) is 0:
-            return character.get_random_move()
-        food = Rectangle.closest_of_all_L2(character, foods)
-        return Rectangle.sensing_direction(character, food,
-                                           character.get_sensing())
+    # Returns the direction to the closest food of the indexed character.
+    # If there's no food left, it returns a random movement.
+    def __goto_closest_food(self, index: int,
+                            food_manager: FoodManager) -> Tuple[int, int]:
+        if food_manager.food_left() is 0:
+            return self.__characters[index].get_random_move()
+        return food_manager.direction_to_closest_food(self.__characters[index])
 
-    def get_direction(self, character: Character, walls: List[Rectangle.Rectangle],
-                      food_manager: FoodManager) -> Tuple[int, int]:
-        if (character.is_hungry() is False):
-            return self.goto_closer_wall(character, walls)
-        return self.goto_closer_food(character, food_manager)
-        return character.get_random_move()
+    # Returns the direction that the character shall follow.
+    def __get_direction(self, index: int, stage: Stage,
+                        food_manager: FoodManager) -> Tuple[int, int]:
+        if (self.__characters[index].is_hungry() is False):
+            return self.__goto_closest_wall(index, stage)
+        return self.__goto_closest_food(index, food_manager)
 
     # Moves the character a certain dx and dy times its own speed, plus
     # checks on the foods and eats if the character is hungry.
-
-    def move_character(self, character: Character, dx: int, dy: int,
-                       blockings: List[Rectangle.Rectangle],
-                       food_manager: FoodManager):
-        character.move(dx, dy, blockings)
-        counter = 0
-        fed = False
-        foods = food_manager.get_list()
-        if character.is_hungry():
-            for food in foods:
-                if character.rectangle.colliderect(food.rectangle):
-                    character.feed(food.get_nutritional_value())
-                    fed = True
-                    break
-                counter += 1
-            if fed:
-                del foods[counter]
-                character.draw()
-
-    def move_characters(self, food_manager: FoodManager, stage: Stage):
-        for i in range(len(self.__characters)):
-            if self.__characters[i].finished() is False:
-                movement = self.get_direction(self.__characters[i], stage.get_walls(),
-                                              food_manager)
-                self.move_character(self.__characters[i], movement[0], movement[1],
-                                    self.get_blockings(
-                                        self.get_list(), stage.get_walls(), i),
-                                    food_manager)
+    def __move_character(self, index: int, dir: Tuple[int, int],
+                         blockings: List[Rectangle.Rectangle],
+                         food_manager: FoodManager):
+        self.__characters[index].move(dir[0], dir[1], blockings)
+        food_manager.maybe_is_eating(self.__characters[index])
