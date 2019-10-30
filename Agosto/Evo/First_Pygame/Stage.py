@@ -50,8 +50,11 @@ class Stage:
     # Returns True if it's under its Time To Live, otherwise False.
     def update_clock(self):
         self.__clock.update_clock()
-        self.__clock.render_clock(self.__walls[-1], self.__win)
+        self.__clock.draw()
         return self.__clock.still_valid()
+
+    def reset_clock(self):
+        self.__clock.reset()
 
     def check_box(self, event: pygame.event):
         for text_box in self.__text_boxes:

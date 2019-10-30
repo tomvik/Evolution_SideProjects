@@ -38,18 +38,17 @@ class TextBox:
                     self.__text = self.__text[:-1]
                 else:
                     self.__text += event.unicode
-                self.__text_surface = self.__font.render(
-                    self.__text, 1, self.__color)
                 self.draw()
 
     def draw(self):
         self.__rect.draw_background()
+        self.__text_surface = self.__font.render(self.__text, 1, self.__color)
         if self.__is_transparent is False:
             self.__rect.draw()
         self.__rect.blit(self.__text_surface)
         pygame.display.update()
 
-    def write_text(self, text: str):
+    def write(self, text: str):
         self.__text = text
 
     def get_text(self) -> str:

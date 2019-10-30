@@ -181,8 +181,9 @@ def initialize_stage(stage_size: Tuple[int, int],
                      text_font: Tuple[str, int],
                      text_colors: Tuple[List[int], List[int]],
                      win: pygame.Surface) -> Stage.Stage:
-    clock = Clock.Clock(fps, clock_position, clock_font[0],
-                        clock_font[1], clock_font_color, ttl)
+    clock = Clock.Clock(fps, clock_position, stage_colors[0], stage_colors[1],
+                        clock_font[0], clock_font[1], clock_font_color,
+                        ttl, win)
 
     width, height = win.get_size()
     text_initial_width = stage_size[0]+((width-stage_size[0])/2)+10
@@ -206,6 +207,6 @@ def wait_for_enter(stage: Stage.Stage):
                 waiting = False
 
 
-def wait_for_initial_state(stage: Stage.Stage) -> List[int]:
+def load_state(stage: Stage.Stage) -> List[int]:
     wait_for_enter(stage)
     return stage.get_text_values()
