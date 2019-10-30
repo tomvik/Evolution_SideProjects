@@ -146,23 +146,53 @@ def move_characters(number_of_characters: int, characters: List[Character],
         food.draw()
 
 
+def initialize_text_boxes(position: Tuple[int, int],
+                          font: Tuple[str, int],
+                          colors: Tuple[List[int], List[int]],
+                          win: pygame.Surface) -> List[TextBox.TextBox]:
+    text_boxes = list()
+    text_boxes.append(TextBox.TextBox(position, colors[1], colors[0],
+                                      True, colors[0], font[0], font[1],
+                                      False, win, "# of Characters:"))
+    current_x, current_y = position
+    position = (current_x + (text_boxes[-1].get_size())[0] + 5, current_y)
+    text_boxes.append(TextBox.TextBox(position, colors[0], colors[1],
+                                      False, colors[0], font[0], font[1],
+                                      True, win, "100"))
+    position = (current_x, current_y + (text_boxes[-1].get_size())[1] + 10)
+    text_boxes.append(TextBox.TextBox(position, colors[1], colors[0],
+                                      True, colors[0], font[0], font[1],
+                                      False, win, "# of Foods:"))
+    position = (current_x + (text_boxes[-1].get_size())[0] + 5,
+                current_y + (text_boxes[-1].get_size())[1] + 10)
+    text_boxes.append(TextBox.TextBox(position, colors[0], colors[1],
+                                      False, colors[0], font[0], font[1],
+                                      True, win, "100"))
+
+    return text_boxes
+
+
 def initialize_stage(stage_size: Tuple[int, int],
                      stage_colors: Tuple[List[int], List[int]],
                      fps: int, clock_position: Tuple[int, int],
-                     font: Tuple[str, int], font_color: List[int],
-                     ttl: int, text_position: Tuple[int, int],
-                     text_size: Tuple[int, int],
+                     clock_font: Tuple[str, int], clock_font_color: List[int],
+                     ttl: int,
+                     text_position: Tuple[int, int],
+                     text_font: Tuple[str, int],
                      text_colors: Tuple[List[int], List[int]],
                      win: pygame.Surface) -> Stage.Stage:
-    clock = Clock.Clock(fps, clock_position, font[0],
-                        font[1], font_color, ttl)
+    clock = Clock.Clock(fps, clock_position, clock_font[0],
+                        clock_font[1], clock_font_color, ttl)
 
-    text_box = TextBox.TextBox(text_position, text_size, text_colors,
-                               stage_colors[1], font[0], font[1], win, "h")
+    width, height = win.get_size()
+    text_initial_width = stage_size[0]+((width-stage_size[0])/2)+10
+    text_initial_height = (height-stage_size[1])/2
+    text_pos = (text_initial_width, text_initial_height)
+    text_boxes = initialize_text_boxes(text_pos, text_font, text_colors, win)
 
     stage = Stage.Stage(stage_size[0], stage_size[1],
                         stage_colors[0], stage_colors[1],
-                        win, clock, text_box)
+                        win, clock, text_boxes)
     pygame.display.update()
     return stage
 
@@ -174,3 +204,8 @@ def wait_for_enter(stage: Stage.Stage):
             stage.check_box(event)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 waiting = False
+
+
+def wait_for_initial_state(stage: Stage.Stage) -> List[int]:
+    wait_for_enter(stage)
+    return stage.get_text_values()

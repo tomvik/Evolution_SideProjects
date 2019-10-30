@@ -8,7 +8,8 @@ from TextBox import TextBox
 
 class Stage:
     def __init__(self, width: int, height: int, stage_color: List[int],
-                 walls_color: List[int], win: pygame.Surface, clock: Clock, text_box: TextBox):
+                 walls_color: List[int], win: pygame.Surface, clock: Clock,
+                 text_boxes: List[TextBox]):
         self.__width = width
         self.__height = height
         self.__stage_color = stage_color
@@ -16,7 +17,7 @@ class Stage:
         self.__win = win
         self.__walls, self.__stage = self.__initialize_stage()
         self.__clock = clock
-        self.__text_box = text_box
+        self.__text_boxes = text_boxes
 
     def get_walls(self) -> List[Rectangle]:
         return self.__walls
@@ -53,5 +54,13 @@ class Stage:
         return self.__clock.still_valid()
 
     def check_box(self, event: pygame.event):
-        self.__text_box.handle_event(event)
-        self.__text_box.draw()
+        for text_box in self.__text_boxes:
+            text_box.handle_event(event)
+            text_box.draw()
+
+    def get_text_values(self) -> List[int]:
+        return_values = list()
+        for text_box in self.__text_boxes:
+            if text_box.is_input():
+                return_values.append(text_box.get_value())
+        return return_values

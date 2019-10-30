@@ -23,6 +23,12 @@ class Rectangle:
     def get_rectangle(self) -> pygame.Rect:
         return (self.rectangle)
 
+    def get_window(self) -> pygame.Surface:
+        return (self.win)
+
+    def blit(self, thing):
+        self.win.blit(thing, self.rectangle)
+
     def get_size(self) -> Tuple[int, int]:
         return (self.rectangle.width, self.rectangle.height)
 
