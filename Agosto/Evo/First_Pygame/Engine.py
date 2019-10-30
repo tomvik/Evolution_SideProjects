@@ -5,7 +5,6 @@ from typing import List, Tuple
 import Rectangle
 from Character import Character
 from Food import Food
-import Clock
 import Stage
 import TextBox
 
@@ -135,9 +134,9 @@ def move_character(character: Character, dx: int, dy: int,
 
 
 # Moves all the characters on the list and some may eat some food.
-def move_characters(number_of_characters: int, characters: List[Character],
-                    foods: List[Food], walls: List[Rectangle.Rectangle]):
-    for i in range(number_of_characters):
+def move_characters(characters: List[Character], foods: List[Food],
+                    walls: List[Rectangle.Rectangle]):
+    for i in range(len(characters)):
         if characters[i].finished() is False:
             movement = get_direction(characters[i], walls, foods)
             move_character(characters[i], movement[0], movement[1],
@@ -146,32 +145,7 @@ def move_characters(number_of_characters: int, characters: List[Character],
         food.draw()
 
 
-def initialize_text_boxes(position: Tuple[int, int],
-                          font: Tuple[str, int],
-                          colors: Tuple[List[int], List[int]],
-                          win: pygame.Surface) -> List[TextBox.TextBox]:
-    text_boxes = list()
-    text_boxes.append(TextBox.TextBox(position, colors[1], colors[0],
-                                      True, colors[0], font[0], font[1],
-                                      False, win, "# of Characters:"))
-    current_x, current_y = position
-    position = (current_x + (text_boxes[-1].get_size())[0] + 5, current_y)
-    text_boxes.append(TextBox.TextBox(position, colors[0], colors[1],
-                                      False, colors[0], font[0], font[1],
-                                      True, win, "100"))
-    position = (current_x, current_y + (text_boxes[-1].get_size())[1] + 10)
-    text_boxes.append(TextBox.TextBox(position, colors[1], colors[0],
-                                      True, colors[0], font[0], font[1],
-                                      False, win, "# of Foods:"))
-    position = (current_x + (text_boxes[-1].get_size())[0] + 5,
-                current_y + (text_boxes[-1].get_size())[1] + 10)
-    text_boxes.append(TextBox.TextBox(position, colors[0], colors[1],
-                                      False, colors[0], font[0], font[1],
-                                      True, win, "100"))
-
-    return text_boxes
-
-
+# Initializes the stage.
 def initialize_stage(stage_size: Tuple[int, int],
                      stage_colors: Tuple[List[int], List[int]],
                      fps: int, clock_position: Tuple[int, int],
@@ -181,21 +155,46 @@ def initialize_stage(stage_size: Tuple[int, int],
                      text_font: Tuple[str, int],
                      text_colors: Tuple[List[int], List[int]],
                      win: pygame.Surface) -> Stage.Stage:
-    clock = Clock.Clock(fps, clock_position, stage_colors[0], stage_colors[1],
-                        clock_font[0], clock_font[1], clock_font_color,
-                        ttl, win)
-
-    width, height = win.get_size()
-    text_initial_width = stage_size[0]+((width-stage_size[0])/2)+10
-    text_initial_height = (height-stage_size[1])/2
-    text_pos = (text_initial_width, text_initial_height)
-    text_boxes = initialize_text_boxes(text_pos, text_font, text_colors, win)
-
     stage = Stage.Stage(stage_size[0], stage_size[1],
                         stage_colors[0], stage_colors[1],
-                        win, clock, text_boxes)
+                        win, fps, clock_font,
+                        clock_font_color, ttl, text_font)
     pygame.display.update()
     return stage
+
+
+def initialize_characters_and_food(stage: Stage.Stage, character_size: int,
+                                   character_color: List[int],
+                                   character_speed: int,
+                                   character_sensing: int,
+                                   food_size: int,
+                                   food_color: List[int],
+                                   food_value: int) -> Tuple[List[Character],
+                                                             List[Food]]:
+    print("Select amount of characters and foods. Afterwards, press enter")
+    wait_for_enter(stage)
+    number_of_characters, number_of_foods = load_state(stage)
+
+    characters = span_random_characters(number_of_characters,
+                                        stage.get_stage(),
+                                        character_size,
+                                        character_size,
+                                        character_color,
+                                        stage.get_stage_color(),
+                                        stage.get_win(),
+                                        character_speed,
+                                        character_sensing)
+
+    foods = span_random_foods(number_of_foods,
+                              stage.get_stage(),
+                              food_size,
+                              food_size,
+                              food_color,
+                              stage.get_stage_color(),
+                              stage.get_win(),
+                              characters,
+                              food_value)
+    return characters, foods
 
 
 def wait_for_enter(stage: Stage.Stage):
@@ -208,5 +207,4 @@ def wait_for_enter(stage: Stage.Stage):
 
 
 def load_state(stage: Stage.Stage) -> List[int]:
-    wait_for_enter(stage)
     return stage.get_text_values()

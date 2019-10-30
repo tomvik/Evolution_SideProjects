@@ -35,7 +35,7 @@ character_size = 20
 character_speed = 5
 character_sensing = 70
 food_size = 5
-food_nutritional_value = 1
+food_value = 1
 
 number_of_characters = 70
 number_of_foods = 80
@@ -43,8 +43,7 @@ number_of_foods = 80
 characters = list()
 foods = list()
 
-color_1 = (255, 0, 0)
-color_2 = (0, 0, 255)
+character_color = (255, 0, 0)
 food_color = (255, 255, 255)
 stage_color = (211, 211, 211)
 walls_color = (0, 255, 0)
@@ -56,20 +55,14 @@ stage = Engine.initialize_stage(stage_size, stage_colors, fps, clock_position,
                                 clock_font, clock_font_color, clock_ttl,
                                 text_position, text_font, text_colors, win)
 
-number_of_characters, number_of_foods = Engine.load_state(stage)
-
-characters = Engine.span_random_characters(number_of_characters,
-                                           stage.get_stage(),
-                                           character_size,
-                                           character_size,
-                                           color_1, stage_color, win,
-                                           character_speed,
-                                           character_sensing)
-
-foods = Engine.span_random_foods(number_of_foods, stage.get_stage(),
-                                 food_size, food_size, food_color,
-                                 stage_color, win, characters,
-                                 food_nutritional_value)
+characters, foods = Engine.initialize_characters_and_food(stage,
+                                                          character_size,
+                                                          character_color,
+                                                          character_speed,
+                                                          character_sensing,
+                                                          food_size,
+                                                          food_color,
+                                                          food_value)
 
 
 pygame.display.update()
@@ -90,8 +83,7 @@ while win_life:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     round_life = False
-        Engine.move_characters(number_of_characters, characters, foods,
-                               stage.get_walls())
+        Engine.move_characters(characters, foods, stage.get_walls())
     for event in pygame.event.get():
         stage.check_box(event)
         if event.type == pygame.QUIT:
@@ -102,23 +94,15 @@ while win_life:
             if event.key == pygame.K_SPACE:
                 round_life = True
                 stage.reset_clock()
-                number_of_characters, number_of_foods = Engine.load_state(
-                    stage)
-
-                characters = Engine.span_random_characters(
-                    number_of_characters,
-                    stage.get_stage(),
-                    character_size,
-                    character_size,
-                    color_1, stage_color, win,
-                    character_speed,
-                    character_sensing)
-
-                foods = Engine.span_random_foods(
-                    number_of_foods, stage.get_stage(),
-                    food_size, food_size, food_color,
-                    stage_color, win, characters,
-                    food_nutritional_value)
+                characters, foods = \
+                    Engine.initialize_characters_and_food(stage,
+                                                          character_size,
+                                                          character_color,
+                                                          character_speed,
+                                                          character_sensing,
+                                                          food_size,
+                                                          food_color,
+                                                          food_value)
 
 
 pygame.display.update()

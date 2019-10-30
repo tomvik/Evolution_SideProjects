@@ -147,6 +147,8 @@ def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> Tuple[int, int]:
     move_y = b_center[1] - a_center[1]
     total = abs(move_x) + abs(move_y)
 
+    if total == 0:
+        return (0, 0)
     move_x = float(move_x) / float(total)
     move_y = float(move_y) / float(total)
 
