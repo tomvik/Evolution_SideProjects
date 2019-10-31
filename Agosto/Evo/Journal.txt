@@ -1,10 +1,8 @@
 You define your own limit.
 
 Next steps:
-- 8 directions instead of 4
 - Try making them move better towards the middle.
 - Game manager
-- Create characters around a certain area
 - Refactor better
 - Game manager
 - Make them move better, like search out more for food.

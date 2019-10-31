@@ -19,6 +19,7 @@ class CharacterManager:
         self.__stage_color = (0, 0, 0)
         self.__walls_color = (0, 0, 0)
         self.__win = 0
+        self.__in_wall = True
 
     # Spans randomly throughout the stage the amount of characters
     # selected with random values of sensing and speed, within the range.
@@ -163,20 +164,21 @@ class CharacterManager:
     # selected with random values of sensing and speed, within the range.
     def __span_random_characters(self, amount: int,
                                  sensing_range: Tuple[int, int],
-                                 speed_range: Tuple[int, int],):
+                                 speed_range: Tuple[int, int]):
         for i in range(amount):
             self.__span_random_character(sensing_range, speed_range)
 
     # Spans randomly one character.
     def __span_random_character(self,
                                 sensing_range: Tuple[int, int],
-                                speed_range: Tuple[int, int],):
+                                speed_range: Tuple[int, int]):
         current_speed = random.randint(speed_range[0], speed_range[1])
         current_sensing = random.randint(sensing_range[0],
                                          sensing_range[1])
 
         current_x, current_y = Rectangle.free_random_position(
-            self.__stage_limits, self.__character_size, self.__characters)
+            self.__stage_limits, self.__character_size, self.__characters,
+            self.__in_wall)
         self.__characters.append(Character(current_x,
                                            current_y,
                                            self.__character_size,

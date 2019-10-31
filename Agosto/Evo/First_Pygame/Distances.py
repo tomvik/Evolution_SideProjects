@@ -69,7 +69,8 @@ def closest_of_all_Linf(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
 
 # Returns the direction [dx, dy] from object a to object b.
 # If it's not within the sensing radius r, it returns a random movement.
-def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> Tuple[int, int]:
+def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> \
+        Tuple[float, float]:
     a_center = a.get_rectangle().center
     corners = b.get_corners()
     for corner in corners:
@@ -99,13 +100,13 @@ def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:
     down = 0
     up = 0
     for corner in corners:
-        if vip[0] < corner[0]:
+        if vip[0] <= corner[0]:
             right += 1
-        if vip[0] > corner[0]:
+        if vip[0] >= corner[0]:
             left += 1
-        if vip[1] < corner[1]:
+        if vip[1] <= corner[1]:
             down += 1
-        if vip[1] > corner[1]:
+        if vip[1] >= corner[1]:
             up += 1
 
     if right == 4:
