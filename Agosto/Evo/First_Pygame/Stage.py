@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 from Rectangle import Rectangle
 from Clock import Clock
-from TextBox import TextBox
+import TextBox
 import Distances
 
 
@@ -29,8 +29,7 @@ class Stage:
                      self.__height + self.__wall_height)
         self.__clock = Clock(fps, clock_pos,
                              self.__stage_color, self.__walls_color,
-                             clock_font[0], clock_font[1],
-                             clock_font_color, ttl, self.__win)
+                             clock_font, clock_font_color, self.__win, ttl)
 
     # Initializes the stage and returns its walls and stage.
     def __initialize_stage(self) -> Tuple[List[Rectangle], Rectangle]:
@@ -54,37 +53,24 @@ class Stage:
         return walls, stage
 
     # Initializes the text boxes. This part is partly hard_coded.
-    def __initialize_text_boxes(self, font: Tuple[str, int]) -> List[TextBox]:
+    def __initialize_text_boxes(self, font: Tuple[str, int]) -> \
+            List[TextBox.TextBox]:
         text_boxes = list()
 
+        colors = (self.__stage_color, self.__walls_color)
         position = (self.__width+(self.__wall_width)+10, self.__wall_height)
-        text_boxes.append(TextBox(position, self.__stage_color,
-                                  self.__walls_color, True,
-                                  self.__walls_color, font[0], font[1],
-                                  False, self.__win,
-                                  "# of Characters:"))
-        current_x, current_y = position
-        position = (current_x + (text_boxes[-1].get_size())[0] + 5, current_y)
-        text_boxes.append(TextBox(position, self.__walls_color,
-                                  self.__stage_color, False,
-                                  self.__walls_color, font[0], font[1],
-                                  True, self.__win,
-                                  "100"))
-        position = (current_x, current_y + (text_boxes[-1].get_size())[1] + 10)
-        text_boxes.append(TextBox(position, self.__stage_color,
-                                  self.__walls_color, True,
-                                  self.__walls_color, font[0], font[1],
-                                  False, self.__win,
-                                  "# of Foods:"))
-        position = (current_x + (text_boxes[-1].get_size())[0] + 5,
-                    current_y + (text_boxes[-1].get_size())[1] + 10)
-        text_boxes.append(TextBox(position, self.__walls_color,
-                                  self.__stage_color, False,
-                                  self.__walls_color, font[0], font[1],
-                                  True, self.__win,
-                                  "100"))
-
-        return text_boxes
+        separations = (5, 10)
+        per_row = 2
+        is_input = (False, True,
+                    False, True,
+                    False, True,
+                    False, True)
+        data = (("", "# of Characters:"), ("Characters", "100"),
+                ("", "# of Foods:"), ("Foods", "100"),
+                ("", "Time of Round (s):"), ("Ttl", "5  "),
+                ("", "fps:"), ("Fps", "30 "))
+        return TextBox.create_matrix(position, colors, separations, per_row,
+                                     self.__win, is_input, data, font)
 
     # Returns the walls.
     def get_walls(self) -> List[Rectangle]:
@@ -130,6 +116,14 @@ class Stage:
     # Resets the clock back to 0.
     def reset_clock(self):
         self.__clock.reset()
+
+    # Sets the new TTL.
+    def set_ttl_seconds(self, ttl: int):
+        self.__clock.set_ttl(ttl*1000)
+
+    # Sets the new FPS.
+    def set_fps(self, fps: int):
+        self.__clock.set_fps(fps)
 
     # Handle the events for each text box.
     def handle_event(self, event: pygame.event):

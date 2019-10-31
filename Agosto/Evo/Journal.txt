@@ -1,8 +1,6 @@
 You define your own limit.
 
 Next steps:
-- Add fps, ttl textboxes
-- Add id to textboxes
 - If no more character, stop clock.
 - If no more food, stop clock.
 - Add continuous mode, where the survivors go to next

@@ -37,7 +37,9 @@ def initialize_managers(stage: Stage.Stage, character_size: int,
                                                   FoodManager]:
     print("Select amount of characters and foods. Afterwards, press enter")
     wait_for_enter(stage)
-    number_of_characters, number_of_foods = load_state(stage)
+    number_of_characters, number_of_foods, ttl, fps = load_state(stage)
+    stage.set_ttl_seconds(ttl)
+    stage.set_fps(fps)
 
     character_manager = CharacterManager(character_size, character_color)
     character_manager.initialize_character_list(number_of_characters,

@@ -6,8 +6,8 @@ import TextBox
 
 class Clock:
     def __init__(self, fps: int, pos: Tuple[int, int], box_color: List[int],
-                 background_color: List[int], font_letter: str, font_size: int,
-                 font_color: List[int], ttl: int, win: pygame.Surface):
+                 background_color: List[int], font: Tuple[str, int],
+                 font_color: List[int], win: pygame.Surface, ttl: int = 5000):
         self.__fps = fps
         self.__clock = pygame.time.Clock()
         self.__ttl = ttl
@@ -16,26 +16,26 @@ class Clock:
         self.__minute = 0
         self.__second = 0
         self.__first = True
-        self.__hour_box = TextBox.TextBox(pos, font_color, box_color,
-                                          True, background_color,
-                                          font_letter, font_size, False, win,
-                                          "{0:02}:".format(self.__hour))
-        x, y = pos
-        pos = (x+((self.__hour_box.get_size())[0]), y)
-        self.__minute_box = TextBox.TextBox(pos, font_color, box_color,
-                                            True, background_color,
-                                            font_letter, font_size, False, win,
-                                            "{0:02}:".format(self.__minute))
-        x, y = pos
-        pos = (x+((self.__minute_box.get_size())[0]), y)
-        self.__second_box = TextBox.TextBox(pos, font_color, box_color,
-                                            True, background_color,
-                                            font_letter, font_size, False, win,
-                                            "{0:02}".format(self.__second))
+        is_input = (False, False, False)
+        data = (("Hour", "{0:02}:".format(self.__hour)),
+                ("Minute", "{0:02}:".format(self.__minute)),
+                ("Second", "{0:02}".format(self.__second)))
+        self.__hour_box, self.__minute_box, self.__second_box = \
+            TextBox.create_array(
+                pos, (font_color, background_color), 0, win,
+                is_input, data, font)
 
     # Returns true if the time is still under the TTL.
     def still_valid(self) -> bool:
         return self.__total_ms < self.__ttl
+
+    # Sets the new TTL.
+    def set_ttl(self, ttl: int):
+        self.__ttl = ttl
+
+    # Sets the new FPS.
+    def set_fps(self, fps: int):
+        self.__fps = fps
 
     # This function should be called each frame.
     def update_clock(self):
