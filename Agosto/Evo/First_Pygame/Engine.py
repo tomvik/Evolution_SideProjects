@@ -102,10 +102,10 @@ def handle_events(in_game: bool, stage: Stage.Stage) -> int:
 
 
 # Resets the game to run another round.
-def reset_continous(character_manager: CharacterManager,
-                    food_manager: FoodManager,
-                    stage: Stage.Stage) -> bool:
-    character_manager.reset_characters()
+def new_round_game(character_manager: CharacterManager,
+                   food_manager: FoodManager,
+                   stage: Stage.Stage) -> bool:
+    character_manager.new_round_characters()
     food_manager.reset_foods(character_manager.get_list())
     stage.reset_clock()
     stage.handle_in_game(character_manager.characters_left(),
@@ -123,7 +123,8 @@ def run_game(character_manager: CharacterManager, food_manager: FoodManager,
     round_life = stage.handle_in_game(character_manager.characters_left(),
                                       food_manager.food_left())
     if character_manager.characters_left() is 0 \
-            or food_manager.food_left() is 0:
+            or (food_manager.food_left() is 0
+                and character_manager.heading_home() is False):
         round_life = False
     if handle_events(True, stage) == 1:
         round_life = False

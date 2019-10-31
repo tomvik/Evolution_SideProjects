@@ -50,6 +50,10 @@ class Character(Rectangle):
     def get_sensing(self) -> int:
         return self._sensing_range
 
+    # Returns the speed value.
+    def get_speed(self) -> int:
+        return self._speed
+
     # Resets the values to indicate that is hungry and is not home.
     def reset(self):
         self._is_home = False

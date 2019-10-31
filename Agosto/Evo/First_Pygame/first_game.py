@@ -72,10 +72,9 @@ if continuous_mode:
         elif event_case == 1:
             win_life = False
         elif event_case == 2:
-            win_life = Engine.reset_continous(character_manager,
-                                              food_manager, stage)
+            win_life = Engine.new_round_game(character_manager,
+                                             food_manager, stage)
             round_life = True
-            stage.reset_clock()
 
 
 while win_life:

@@ -20,24 +20,6 @@ class FoodManager:
         self.__stage_color = (0, 0, 0)
         self.__win = 0
 
-    # Spans a random amount of food throughout the specified stage.
-    def __span_random_food(self, amount: int,
-                           blockings: List[Rectangle.Rectangle]) -> List[Food]:
-        foods = list()
-        while len(foods) < amount:
-            current_value = random.randint(self.__range_of_values[0],
-                                           self.__range_of_values[1])
-
-            current_x, current_y = Rectangle.free_random_position(
-                self.__stage_limits, self.__food_size, blockings + foods)
-
-            foods.append(Food(len(foods)+1,
-                              current_x, current_y,
-                              self.__food_size, self.__food_size,
-                              self.__food_color, self.__stage_color,
-                              self.__win, current_value))
-        return foods
-
     # Spans randomly throughout the stage the amount of food selected with
     # random values of nutrition within the range.
     # Replaces the list of foods.
@@ -78,12 +60,13 @@ class FoodManager:
         for food in self.__foods:
             food.draw()
 
-    # Feeds the character that it receives.
-    def maybe_is_eating(self, character: Character):
+    # Feeds the character that it receives and returns true if it has been
+    # completely fed.
+    def maybe_is_eating(self, character: Character) -> bool:
         counter = 0
         foods_to_eat = list()
         amount_of_food = self.food_left()
-
+        character_was_hungry = character.is_hungry()
         while counter < amount_of_food and character.is_hungry():
             if character.collides(self.__foods[counter]):
                 character.feed(self.__foods[counter].get_nutritional_value())
@@ -92,9 +75,28 @@ class FoodManager:
                 amount_of_food -= 1
                 character.draw()
             counter += 1
+        return character_was_hungry != character.is_hungry()
 
     # Spans the initial amount of food throughout the already defined stage.
     def reset_foods(self,
                     blockings: List[Rectangle.Rectangle]):
         self.__foods = self.__span_random_food(self.__initial_amount,
                                                blockings)
+
+    # Spans a random amount of food throughout the specified stage.
+    def __span_random_food(self, amount: int,
+                           blockings: List[Rectangle.Rectangle]) -> List[Food]:
+        foods = list()
+        while len(foods) < amount:
+            current_value = random.randint(self.__range_of_values[0],
+                                           self.__range_of_values[1])
+
+            current_x, current_y = Rectangle.free_random_position(
+                self.__stage_limits, self.__food_size, blockings + foods)
+
+            foods.append(Food(len(foods)+1,
+                              current_x, current_y,
+                              self.__food_size, self.__food_size,
+                              self.__food_color, self.__stage_color,
+                              self.__win, current_value))
+        return foods
