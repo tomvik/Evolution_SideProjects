@@ -6,6 +6,7 @@ import Rectangle
 from Character import Character
 from Stage import Stage
 from Food_Manager import FoodManager
+import Distances
 
 
 class CharacterManager:
@@ -138,10 +139,11 @@ class CharacterManager:
 
     # Returns the direction to the closest food of the indexed character.
     # If there's no food left, it returns a random movement.
+    # TODO: Make this more pretty.
     def __goto_closest_food(self, index: int,
                             food_manager: FoodManager) -> Tuple[int, int]:
         if food_manager.food_left() is 0:
-            return self.__characters[index].get_random_move()
+            return Distances.get_weighted_random_move(self.__characters[index].get_center(), self.__characters[index].get_direction())  # noqa: E501
         return food_manager.direction_to_closest_food(self.__characters[index])
 
     # Returns the direction that the character shall follow.

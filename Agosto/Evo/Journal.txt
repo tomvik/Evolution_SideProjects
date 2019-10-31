@@ -1,12 +1,11 @@
 You define your own limit.
 
 Next steps:
-- Try making them move better towards the middle.
-- Game manager
+- Constants file
 - Refactor better
 - Game manager
-- Make them move better, like search out more for food.
-- Search vs. Retrieve vs. Go Home movement
+- At the end of each round, output the pertinent data.
+- Decide which variables will be mutating and do that.
 
 TODO:
 

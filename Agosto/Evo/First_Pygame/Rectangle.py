@@ -14,6 +14,9 @@ class Rectangle:
         self._win = win
         self.draw()
         self._previous_movement = (0, 0)
+        self._movements = 0
+        self._direction = 0
+        self._max_movements = 60
 
     def __del__(self):
         self.draw_background()
@@ -54,16 +57,13 @@ class Rectangle:
     def get_position(self) -> Tuple[int, int]:
         return self._rectangle.topleft
 
-    # Returns a random movement that does not contradict the anterior one.
-    def get_random_move(self) -> Tuple[float, float]:
-        possible = [(0, -1), (0.5, -0.5),
-                    (1, 0), (0.5, 0.5),
-                    (0, 1), (-0.5, 0.5),
-                    (-1, 0), (-0.5, -0.5)]
-        movement = random.choice(possible)
-        while movement == -1*self._previous_movement:
-            movement = random.choice(possible)
-        return movement
+    # Returns the center position.
+    def get_center(self) -> Tuple[int, int]:
+        return self._rectangle.center
+
+    # Returns the direction to where it's headed.
+    def get_direction(self) -> int:
+        return self._direction
 
     # Sets the color.
     def set_color(self, color: List[int]):
