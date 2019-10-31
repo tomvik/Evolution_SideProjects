@@ -105,11 +105,10 @@ def handle_events(in_game: bool, stage: Stage.Stage) -> int:
 def new_round_game(character_manager: CharacterManager,
                    food_manager: FoodManager,
                    stage: Stage.Stage) -> bool:
-    character_manager.new_round_characters()
+    character_manager.new_round_characters(50)
     food_manager.reset_foods(character_manager.get_list())
-    stage.reset_clock()
-    stage.handle_in_game(character_manager.characters_left(),
-                         food_manager.food_left())
+    stage.new_round_stage(character_manager.characters_left(),
+                          food_manager.food_left())
     return character_manager.characters_left() > 0
 
 

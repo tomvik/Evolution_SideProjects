@@ -12,11 +12,18 @@ class Stage:
                  walls_color: List[int], win: pygame.Surface, fps: int,
                  clock_font: Tuple[str, int], clock_font_color: List[int],
                  ttl: int, text_box_font: Tuple[str, int]):
+        self.__characters_name = "Characters"
+        self.__foods_name = "Foods"
+        self.__ttl_name = "Ttl"
+        self.__fps_name = "Fps"
+        self.__days_name = "Days"
+
         self.__width = width
         self.__height = height
         self.__stage_color = stage_color
         self.__walls_color = walls_color
         self.__win = win
+        self.__days = 0
 
         self.__window_width, self.__window_height = self.__win.get_size()
         self.__wall_width = (self.__window_width - self.__width) / 2
@@ -64,11 +71,13 @@ class Stage:
         is_input = (False, True,
                     False, True,
                     False, True,
-                    False, True)
-        data = (("", "# of Characters:"), ("Characters", "100"),
-                ("", "# of Foods:"), ("Foods", "100"),
-                ("", "Time of Round (s):"), ("Ttl", "5  "),
-                ("", "fps:"), ("Fps", "30 "))
+                    False, True,
+                    False, False)
+        data = (("", "# of Characters:"), (self.__characters_name, "50 "),
+                ("", "# of Foods:"), (self.__foods_name, "50 "),
+                ("", "Time of Round (s):"), (self.__ttl_name, "5  "),
+                ("", "fps:"), (self.__fps_name, "40 "),
+                ("", "days:"), (self.__days_name, "0  "))
         return TextBox.create_matrix(position, colors, separations, per_row,
                                      self.__win, is_input, data, font)
 
@@ -95,6 +104,15 @@ class Stage:
     # Returns the Stage limits as in: x_min, y_min, x_max, y_max
     def get_stage_limits(self) -> List[int]:
         return (self.__stage.get_limits())
+
+    # Returns the amount of days that has passed.
+    def get_days(self) -> int:
+        return self.__days
+
+    # Draws all the text boxes.
+    def draw_boxes(self):
+        for box in self.__text_boxes:
+            box.draw()
 
     # Returns True if it's under its Time To Live, otherwise False.
     def update_clock(self):
@@ -135,10 +153,26 @@ class Stage:
             text_box.handle_event(event)
             text_box.draw()
 
+    # Handles the in-game updates.
     def handle_in_game(self, characters: int, foods: int) -> bool:
-        self.__text_boxes[1].write(str(characters))
-        self.__text_boxes[1].draw()
-        self.__text_boxes[3].write(str(foods))
-        self.__text_boxes[3].draw()
-
+        self.__text_boxes[self.__box_index(
+            self.__characters_name)].write(str(characters))
+        self.__text_boxes[self.__box_index(
+            self.__foods_name)].write(str(foods))
+        self.draw_boxes()
         return self.update_clock()
+
+    # Handles the updates necessary for the new round.
+    def new_round_stage(self, characters: int, foods: int):
+        self.__days += 1
+        self.reset_clock()
+        self.__text_boxes[self.__box_index(
+            self.__days_name)].write(str(self.__days))
+        self.handle_in_game(characters, foods)
+
+    # Returns the index of the box with the desired name.
+    def __box_index(self, name: str) -> int:
+        for i in range(len(self.__text_boxes)):
+            if self.__text_boxes[i].get_name() == name:
+                return i
+        return -1
