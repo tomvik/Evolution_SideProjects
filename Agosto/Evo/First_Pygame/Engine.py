@@ -4,208 +4,129 @@ from typing import List, Tuple
 
 import Rectangle
 from Character import Character
+from Character_Manager import CharacterManager
 from Food import Food
-import Clock
+from Food_Manager import FoodManager
 import Stage
 import TextBox
 
 
-# Spans the selected amount of food randomly throughout the stage,
-# avoiding collisions.
-def span_random_foods(amount: int, delimiter: Rectangle.Rectangle,
-                      width: int, height: int, color: List[int],
-                      background_color: List[int], win: pygame.Surface,
-                      blockings: List[Character],
-                      nutritional_value: int) -> List[Food]:
-    foods = list()
-    min_x = delimiter.rectangle.x
-    min_y = delimiter.rectangle.y
-    max_x = delimiter.rectangle.x + delimiter.rectangle.width - width
-    max_y = delimiter.rectangle.y + delimiter.rectangle.height - height
-
-    while len(foods) < amount:
-        current_x = random.randint(min_x, max_x)
-        current_y = random.randint(min_y, max_y)
-
-        current_rectangle = pygame.Rect(current_x, current_y, width, height)
-        blocks = False
-        for blocking in blockings:
-            if current_rectangle.colliderect(blocking.rectangle) is True:
-                blocks = True
-                break
-
-        for food in foods:
-            if current_rectangle.colliderect(food.rectangle) is True:
-                blocks = True
-                break
-
-        if blocks is False:
-            foods.append(Food(1, current_x, current_y, width, height,
-                              color, background_color, win, nutritional_value))
-
-    return foods
-
-
-# Spans the selected amount of characters randomly throughout the stage,
-# avoiding collisions.
-def span_random_characters(amount: int, delimiter: Rectangle.Rectangle,
-                           width: int, height: int, color: List[int],
-                           background_color: List[int],
-                           win: pygame.Surface, speed: int,
-                           sensing_range: int) -> List[Character]:
-    characters = list()
-    min_x = delimiter.rectangle.x
-    min_y = delimiter.rectangle.y
-    max_x = delimiter.rectangle.x + delimiter.rectangle.width - width
-    max_y = delimiter.rectangle.y + delimiter.rectangle.height - height
-
-    while len(characters) < amount:
-        current_x = random.randint(min_x, max_x)
-        current_y = random.randint(min_y, max_y)
-
-        current_rectangle = pygame.Rect(current_x, current_y, width, height)
-        blocks = False
-        for character in characters:
-            if current_rectangle.colliderect(character.rectangle) is True:
-                blocks = True
-                break
-
-        if blocks is False:
-            characters.append(Character(current_x, current_y, width, height,
-                                        color, background_color, win,
-                                        1, speed, sensing_range))
-
-    return characters
-
-
-# Returns the blockings for the current index.
-def get_blockings(characters: List[Character],
-                  walls: List[Rectangle.Rectangle],
-                  current: int) -> List[Rectangle.Rectangle]:
-    left_hand = characters[:current]
-    right_hand = characters[current+1:]
-    return left_hand + right_hand + walls
-
-
-def goto_closer_wall(character: Character,
-                     walls: List[Rectangle.Rectangle]) -> Tuple[int, int]:
-    wall = Rectangle.closest_of_all_Linf(character, walls)
-    movement = Rectangle.cardinal_system_direction(character, wall)
-    if character.would_collide(wall, movement):
-        character.arrived_home()
-        character.move_home()
-        return (0, 0)
-    return movement
-
-
-def goto_closer_food(character: Character,
-                     foods: List[Food]) -> Tuple[int, int]:
-    if len(foods) is 0:
-        return character.get_random_move()
-    food = Rectangle.closest_of_all_L2(character, foods)
-    return Rectangle.sensing_direction(character, food,
-                                       character.get_sensing())
-
-
-def get_direction(character: Character, walls: List[Rectangle.Rectangle],
-                  foods: List[Food]) -> Tuple[int, int]:
-    if (character.is_hungry() is False):
-        return goto_closer_wall(character, walls)
-    return goto_closer_food(character, foods)
-    return character.get_random_move()
-
-
-# Moves the character a certain dx and dy times its own speed, plus
-# checks on the foods and eats if the character is hungry.
-def move_character(character: Character, dx: int, dy: int,
-                   blockings: List[Rectangle.Rectangle], foods: List[Food]):
-    character.move(dx, dy, blockings)
-    counter = 0
-    fed = False
-    if character.is_hungry():
-        for food in foods:
-            if character.rectangle.colliderect(food.rectangle):
-                character.feed(food.get_nutritional_value())
-                fed = True
-                break
-            counter += 1
-        if fed:
-            del foods[counter]
-            character.draw()
-
-
-# Moves all the characters on the list and some may eat some food.
-def move_characters(number_of_characters: int, characters: List[Character],
-                    foods: List[Food], walls: List[Rectangle.Rectangle]):
-    for i in range(number_of_characters):
-        if characters[i].finished() is False:
-            movement = get_direction(characters[i], walls, foods)
-            move_character(characters[i], movement[0], movement[1],
-                           get_blockings(characters, walls, i), foods)
-    for food in foods:
-        food.draw()
-
-
-def initialize_text_boxes(position: Tuple[int, int],
-                          font: Tuple[str, int],
-                          colors: Tuple[List[int], List[int]],
-                          win: pygame.Surface) -> List[TextBox.TextBox]:
-    text_boxes = list()
-    text_boxes.append(TextBox.TextBox(position, colors[1], colors[0],
-                                      True, colors[0], font[0], font[1],
-                                      False, win, "# of Characters:"))
-    current_x, current_y = position
-    position = (current_x + (text_boxes[-1].get_size())[0] + 5, current_y)
-    text_boxes.append(TextBox.TextBox(position, colors[0], colors[1],
-                                      False, colors[0], font[0], font[1],
-                                      True, win, "100"))
-    position = (current_x, current_y + (text_boxes[-1].get_size())[1] + 10)
-    text_boxes.append(TextBox.TextBox(position, colors[1], colors[0],
-                                      True, colors[0], font[0], font[1],
-                                      False, win, "# of Foods:"))
-    position = (current_x + (text_boxes[-1].get_size())[0] + 5,
-                current_y + (text_boxes[-1].get_size())[1] + 10)
-    text_boxes.append(TextBox.TextBox(position, colors[0], colors[1],
-                                      False, colors[0], font[0], font[1],
-                                      True, win, "100"))
-
-    return text_boxes
-
-
+# Initializes the stage.
 def initialize_stage(stage_size: Tuple[int, int],
                      stage_colors: Tuple[List[int], List[int]],
-                     fps: int, clock_position: Tuple[int, int],
-                     clock_font: Tuple[str, int], clock_font_color: List[int],
-                     ttl: int,
-                     text_position: Tuple[int, int],
+                     fps: int, clock_font: Tuple[str, int],
+                     clock_font_color: List[int], ttl: int,
                      text_font: Tuple[str, int],
-                     text_colors: Tuple[List[int], List[int]],
                      win: pygame.Surface) -> Stage.Stage:
-    clock = Clock.Clock(fps, clock_position, clock_font[0],
-                        clock_font[1], clock_font_color, ttl)
-
-    width, height = win.get_size()
-    text_initial_width = stage_size[0]+((width-stage_size[0])/2)+10
-    text_initial_height = (height-stage_size[1])/2
-    text_pos = (text_initial_width, text_initial_height)
-    text_boxes = initialize_text_boxes(text_pos, text_font, text_colors, win)
-
     stage = Stage.Stage(stage_size[0], stage_size[1],
                         stage_colors[0], stage_colors[1],
-                        win, clock, text_boxes)
+                        win, fps, clock_font,
+                        clock_font_color, ttl, text_font)
     pygame.display.update()
     return stage
 
 
+# Initialize the managers and waits for the input.
+def initialize_managers(stage: Stage.Stage, character_size: int,
+                        character_color: List[int],
+                        character_speed: int,
+                        character_sensing: int,
+                        food_size: int,
+                        food_color: List[int],
+                        food_value: int) -> Tuple[CharacterManager,
+                                                  FoodManager]:
+    print("Select amount of characters and foods. Afterwards, press enter")
+    wait_for_enter(stage)
+    number_of_characters, number_of_foods, ttl, fps = load_state(stage)
+    stage.set_ttl_seconds(ttl)
+    stage.set_fps(fps)
+
+    character_manager = CharacterManager(character_size, character_color)
+    character_manager.initialize_character_list(number_of_characters,
+                                                (character_sensing,
+                                                 character_sensing),
+                                                (character_speed,
+                                                 character_speed),
+                                                stage)
+
+    food_manager = FoodManager(food_size, food_color)
+    food_manager.initialize_food_list(number_of_foods,
+                                      (food_value, food_value),
+                                      stage, character_manager.get_list())
+
+    return character_manager, food_manager
+
+
+# Waits for the key enter and while doing so,
+# the input textboxes can be written on.
 def wait_for_enter(stage: Stage.Stage):
     waiting = True
     while waiting:
         for event in pygame.event.get():
-            stage.check_box(event)
+            stage.handle_event(event)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 waiting = False
 
 
-def wait_for_initial_state(stage: Stage.Stage) -> List[int]:
-    wait_for_enter(stage)
+# Returns a list of the values of the text_boxes.
+def load_state(stage: Stage.Stage) -> List[int]:
     return stage.get_text_values()
+
+
+# Returns true if quit or escape have been pressed.
+def maybe_quit(event: pygame.event) -> bool:
+    if event.type == pygame.QUIT:
+        return True
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_ESCAPE:
+            return True
+    return False
+
+
+def maybe_restart(event: pygame.event, stage: Stage.Stage) -> int:
+    stage.handle_event(event)
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_SPACE:
+            return True
+    return False
+
+
+def handle_events(in_game: bool, stage: Stage.Stage) -> int:
+    for event in pygame.event.get():
+        if maybe_quit(event):
+            return 1
+        if not in_game:
+            if maybe_restart(event, stage):
+                return 2
+    return 0
+
+
+# Resets the game to run another round.
+def new_round_game(character_manager: CharacterManager,
+                   food_manager: FoodManager,
+                   stage: Stage.Stage) -> bool:
+    character_manager.new_round_characters(50)
+    food_manager.reset_foods(character_manager.get_list())
+    stage.new_round_stage(character_manager.characters_left(),
+                          food_manager.food_left())
+    return character_manager.characters_left() > 0
+
+
+# Runs the game. Returns false if the round has finished.
+def run_game(character_manager: CharacterManager, food_manager: FoodManager,
+             stage: Stage.Stage, traverse_character: bool) -> bool:
+    round_life = True
+    character_manager.move_characters(food_manager, stage,
+                                      traverse_character)
+    food_manager.draw()
+    round_life = stage.handle_in_game(character_manager.characters_left(),
+                                      food_manager.food_left())
+    if character_manager.characters_left() is 0 \
+            or (food_manager.food_left() is 0
+                and character_manager.heading_home() is False):
+        round_life = False
+    if handle_events(True, stage) == 1:
+        round_life = False
+    pygame.display.update()
+
+    return round_life

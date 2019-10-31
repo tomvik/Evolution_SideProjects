@@ -1,15 +1,12 @@
 You define your own limit.
 
 Next steps:
-- Make clock use TextBox
-- Clock manager
-- Create the Textboxes and Clocks on the Stage
-- Maybe retry or more than one try
-- If no more character, stop clock.
-- Character manager
-- Food manager
+- 8 directions instead of 4
+- Try making them move better towards the middle.
 - Game manager
-- Refactor things better
+- Create characters around a certain area
+- Refactor better
+- Game manager
 - Make them move better, like search out more for food.
 - Search vs. Retrieve vs. Go Home movement
 

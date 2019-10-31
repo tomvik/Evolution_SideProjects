@@ -13,8 +13,10 @@ class Food(Rectangle):
         self._id = id
         self._nutritional_value = nutritional_value
 
+    # Returns the id.
     def get_id(self) -> int:
         return self._id
 
+    # Returns the nutritional value.
     def get_nutritional_value(self) -> int:
         return self._nutritional_value
