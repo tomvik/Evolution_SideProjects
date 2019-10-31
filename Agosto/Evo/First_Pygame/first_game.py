@@ -59,6 +59,25 @@ Engine.wait_for_enter(stage)
 
 win_life = True
 round_life = True
+continuous_mode = True
+
+if continuous_mode:
+    while win_life:
+        while round_life:
+            round_life = Engine.run_game(character_manager, food_manager,
+                                         stage, traverse_character)
+        event_case = Engine.handle_events(False, stage)
+        if event_case == 0:
+            pass
+        elif event_case == 1:
+            win_life = False
+        elif event_case == 2:
+            win_life = Engine.reset_continous(character_manager,
+                                              food_manager, stage)
+            round_life = True
+            stage.reset_clock()
+
+
 while win_life:
     while round_life:
         round_life = Engine.run_game(character_manager, food_manager,

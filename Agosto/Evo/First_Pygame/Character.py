@@ -16,6 +16,7 @@ class Character(Rectangle):
         super().__init__(pygame.Rect(left, top, width, height),
                          color, background_color, win)
         self._id = id
+        self._original_hunger = 1
         self._hunger = 1
         self._speed = speed
         self._sensing_range = sensing_range
@@ -48,6 +49,15 @@ class Character(Rectangle):
     # Returns the sensing value.
     def get_sensing(self) -> int:
         return self._sensing_range
+
+    # Resets the values to indicate that is hungry and is not home.
+    def reset(self):
+        self._is_home = False
+        self._hunger = self._original_hunger
+
+    # Resets the coordinate of home.
+    def reset_home(self):
+        self.__class__.next_home = (1, 1)
 
     # Adjusts the hunger according to the nutritional value intake.
     def feed(self, nutritional_value: int):

@@ -140,3 +140,25 @@ class Rectangle:
     # Returns true if self collides with another Rectangle.
     def collides(self, b: 'Rectangle') -> bool:
         return self._rectangle.colliderect(b.get_rectangle())
+
+
+# Returns a random position that does not collide with any other blocking.
+def free_random_position(limits: List[int], size: int,
+                         blockings: List[Rectangle]) -> Tuple[int, int]:
+    x_min, y_min, x_max, y_max = limits
+    x_max -= size
+    y_max -= size
+    current_x = current_y = 0
+    blocks = True
+    while blocks:
+        current_x = random.randint(x_min, x_max)
+        current_y = random.randint(y_min, y_max)
+        current_limits = (current_x, current_y,
+                          current_x + size, current_y + size)
+        may_block = False
+        for blocking in blockings:
+            if blocking.area_collide(current_limits):
+                may_block = True
+                break
+        blocks = may_block
+    return current_x, current_y

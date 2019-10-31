@@ -101,6 +101,18 @@ def handle_events(in_game: bool, stage: Stage.Stage) -> int:
     return 0
 
 
+# Resets the game to run another round.
+def reset_continous(character_manager: CharacterManager,
+                    food_manager: FoodManager,
+                    stage: Stage.Stage) -> bool:
+    character_manager.reset_characters()
+    food_manager.reset_foods(character_manager.get_list())
+    stage.reset_clock()
+    stage.handle_in_game(character_manager.characters_left(),
+                         food_manager.food_left())
+    return character_manager.characters_left() > 0
+
+
 # Runs the game. Returns false if the round has finished.
 def run_game(character_manager: CharacterManager, food_manager: FoodManager,
              stage: Stage.Stage, traverse_character: bool) -> bool:
@@ -110,6 +122,9 @@ def run_game(character_manager: CharacterManager, food_manager: FoodManager,
     food_manager.draw()
     round_life = stage.handle_in_game(character_manager.characters_left(),
                                       food_manager.food_left())
+    if character_manager.characters_left() is 0 \
+            or food_manager.food_left() is 0:
+        round_life = False
     if handle_events(True, stage) == 1:
         round_life = False
     pygame.display.update()

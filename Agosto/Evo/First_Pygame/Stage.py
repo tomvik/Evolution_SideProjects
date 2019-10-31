@@ -84,6 +84,10 @@ class Stage:
     def get_stage_color(self) -> List[int]:
         return self.__stage_color
 
+    # Returns the wall color.
+    def get_walls_color(self) -> List[int]:
+        return self.__walls_color
+
     # Returns the window.
     def get_win(self) -> pygame.Surface:
         return self.__win
