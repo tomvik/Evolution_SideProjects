@@ -1,4 +1,5 @@
 import pygame
+import random
 from typing import List
 
 from Rectangle import Rectangle
@@ -58,6 +59,7 @@ class Character(Rectangle):
     def reset(self):
         self._is_home = False
         self._hunger = self._original_hunger
+        self._movements = 0
 
     # Resets the coordinate of home.
     def reset_home(self):
@@ -78,6 +80,10 @@ class Character(Rectangle):
             self.__move_single_axis(dx, 0, blockings)
         if dy != 0:
             self.__move_single_axis(0, dy, blockings)
+        self._movements += 1
+        if self._movements >= self._max_movements:
+            self._direction = random.randint(0, 4)
+            self._movements = 0
 
     # Helper function for moving the object on a single axis.
     def __move_single_axis(self, dx: int, dy: int, blockings: List[Rectangle]):

@@ -14,6 +14,9 @@ class Rectangle:
         self._win = win
         self.draw()
         self._previous_movement = (0, 0)
+        self._movements = 0
+        self._direction = 0
+        self._max_movements = 60
 
     def __del__(self):
         self.draw_background()
@@ -54,13 +57,13 @@ class Rectangle:
     def get_position(self) -> Tuple[int, int]:
         return self._rectangle.topleft
 
-    # Returns a random movement that does not contradict the anterior one.
-    def get_random_move(self) -> Tuple[int, int]:
-        possible = [(0, -1), (1, 0), (0, 1), (-1, 0)]
-        movement = random.choice(possible)
-        while movement == -1*self._previous_movement:
-            movement = random.choice(possible)
-        return movement
+    # Returns the center position.
+    def get_center(self) -> Tuple[int, int]:
+        return self._rectangle.center
+
+    # Returns the direction to where it's headed.
+    def get_direction(self) -> int:
+        return self._direction
 
     # Sets the color.
     def set_color(self, color: List[int]):
@@ -143,22 +146,46 @@ class Rectangle:
 
 
 # Returns a random position that does not collide with any other blocking.
+# And may be next to the walls.
 def free_random_position(limits: List[int], size: int,
-                         blockings: List[Rectangle]) -> Tuple[int, int]:
+                         blockings: List[Rectangle],
+                         in_wall: bool = False) -> Tuple[int, int]:
     x_min, y_min, x_max, y_max = limits
     x_max -= size
     y_max -= size
     current_x = current_y = 0
     blocks = True
     while blocks:
-        current_x = random.randint(x_min, x_max)
-        current_y = random.randint(y_min, y_max)
-        current_limits = (current_x, current_y,
-                          current_x + size, current_y + size)
-        may_block = False
-        for blocking in blockings:
-            if blocking.area_collide(current_limits):
-                may_block = True
-                break
-        blocks = may_block
+        selected = random.randint(0, 3) if in_wall else 4
+        if selected == 0:  # Left wall.
+            current_x = x_min + 1
+            current_y = random.randint(y_min, y_max)
+            blocks = check_if_blocked((current_x, current_y), size, blockings)
+        elif selected == 1:  # Top wall.
+            current_x = random.randint(x_min, x_max)
+            current_y = y_min + 1
+            blocks = check_if_blocked((current_x, current_y), size, blockings)
+        elif selected == 2:  # Right wall.
+            current_x = x_max - 1
+            current_y = random.randint(y_min, y_max)
+            blocks = check_if_blocked((current_x, current_y), size, blockings)
+        elif selected == 3:  # Bottom wall.
+            current_x = random.randint(x_min, x_max)
+            current_y = y_max - 1
+            blocks = check_if_blocked((current_x, current_y), size, blockings)
+        elif selected == 4:  # Around all the stage.
+            current_x = random.randint(x_min, x_max)
+            current_y = random.randint(y_min, y_max)
+            blocks = check_if_blocked((current_x, current_y), size, blockings)
     return current_x, current_y
+
+
+# Returns True if it's blocked.
+def check_if_blocked(position: Tuple[int, int], size: int,
+                     blockings: List[Rectangle]) -> bool:
+    current_limits = (position[0], position[1],
+                      position[0] + size, position[1] + size)
+    for blocking in blockings:
+        if blocking.area_collide(current_limits):
+            return True
+    return False
