@@ -16,20 +16,21 @@ class CharacterManager:
         self.__character_size = character_size
         self.__character_color = character_color
         self.__initial_amount = 0
-        self.__stage_limits = (0, 0, 0, 0)
-        self.__stage_color = (0, 0, 0)
-        self.__walls_color = (0, 0, 0)
+        self.__stage_limits = [0, 0, 0, 0]
+        self.__stage_color = [0, 0, 0]
+        self.__walls_color = [0, 0, 0]
         self.__win = 0
         self.__in_wall = True
+        self.__newest_generation = 0
 
     # Spans randomly throughout the stage the amount of characters
     # selected with random values of sensing and speed, within the range.
     # Replaces the list of characters.
     # Initializes stage values too.
-    def initialize_character_list(self, amount: int,
-                                  sensing_range: Tuple[int, int],
-                                  speed_range: Tuple[int, int],
-                                  stage: Stage):
+    def initialize(self, amount: int,
+                   sensing_range: Tuple[int, int],
+                   speed_range: Tuple[int, int],
+                   stage: Stage):
         self.__stage_limits = stage.get_stage_limits()
         self.__stage_color = stage.get_stage_color()
         self.__walls_color = stage.get_walls_color()
@@ -79,6 +80,7 @@ class CharacterManager:
                                                            only_walls),
                                       food_manager)
             i += 1
+        food_manager.draw()
 
     # Resets all the characters to a random position inside the stage.
     def reset_characters(self):
@@ -99,10 +101,15 @@ class CharacterManager:
         for i in range(self.__initial_amount):
             sensing = self.__characters[i].get_sensing()
             speed = self.__characters[i].get_speed()
+            next_generation = self.__characters[i].get_generation()+1
+            next_color = [255-(next_generation*10), 0, 0+(next_generation*10)]
             if random.randrange(0, 100, 1) < probability:
                 self.__span_random_character((sensing, sensing),
                                              (speed, speed))
-                self.__characters[-1].set_color((0, 0, 255))
+                self.__characters[-1].set_generation(next_generation)
+                self.__characters[-1].set_color(next_color)
+                if next_generation > self.__newest_generation:
+                    self.__newest_generation = next_generation
         self.__initial_amount = len(self.__characters)
 
     # Sets the characters ready for the new round.
@@ -110,6 +117,9 @@ class CharacterManager:
         self.reset_characters()
         self.reproduce_characters(50)
         self.draw()
+
+    def get_newest_generation(self) -> int:
+        return self.__newest_generation
 
     # Moves the character home, and transfers it to the finished list.
     def __move_home(self, index: int):
@@ -188,6 +198,5 @@ class CharacterManager:
                                            self.__character_color,
                                            self.__stage_color,
                                            self.__win,
-                                           len(self.__characters) + 1,
                                            current_speed,
                                            current_sensing))

@@ -23,10 +23,10 @@ class FoodManager:
     # Spans randomly throughout the stage the amount of food selected with
     # random values of nutrition within the range.
     # Replaces the list of foods.
-    def initialize_food_list(self, amount: int,
-                             range_of_values: Tuple[int, int],
-                             stage: Stage.Stage,
-                             blockings: List[Rectangle.Rectangle]):
+    def initialize(self, amount: int,
+                   range_of_values: Tuple[int, int],
+                   stage: Stage.Stage,
+                   blockings: List[Rectangle.Rectangle]):
         foods = list()
         self.__stage_limits = stage.get_stage_limits()
         self.__stage_color = stage.get_stage_color()

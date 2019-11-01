@@ -25,8 +25,6 @@ class TextBox:
         self.__rect = Rectangle.Rectangle(rect, box_color, background_color,
                                           win)
         self.__text = self.__text.strip()
-        if self.__is_transparent:
-            self.__rect.draw_background()
 
     # Returns the text value in int.
     def get_value(self) -> int:
@@ -44,6 +42,10 @@ class TextBox:
     def get_name(self) -> str:
         return self.__name
 
+    # Returns true if it has name.
+    def has_name(self) -> bool:
+        return self.__name != ""
+
     # Returns the Tuple [name, value]
     def get_name_value(self) -> Tuple[str, int]:
         return self.get_name(), self.get_value()
@@ -51,6 +53,10 @@ class TextBox:
     # Returns True if the textbox is an input box.
     def is_input(self) -> bool:
         return self.__is_input
+
+    # Sets if the box is transparent or not.
+    def set_transparent(self, transparent: bool):
+        self.__is_transparent = transparent
 
     # Write the input value into the textbox.
     # Note: It doesn't update the display, for that call draw().
@@ -78,12 +84,21 @@ class TextBox:
 
     # Updates the value of the textbox and it draws it.
     def draw(self):
-        self.__rect.draw_background()
         self.__text_surface = self.__font.render(self.__text, 1, self.__color)
         if self.__is_transparent is False:
             self.__rect.draw()
         self.__rect.blit(self.__text_surface)
         pygame.display.update()
+
+    # Changes the type of the box to the opposite one, changing its colors too.
+    def change_type(self):
+        self.__is_input = not self.__is_input
+        self.__is_transparent = not self.__is_transparent
+        new_text_color = self.__rect.get_color()
+        self.__rect.set_color(self.__color)
+        self.__color = new_text_color
+        self.__rect.draw_background()
+        self.draw()
 
 
 # Returns an array of TextBoxes. It does not verify if it fits on the same row.

@@ -1,11 +1,9 @@
 You define your own limit.
 
 Next steps:
-- Constants file
-- Refactor better
-- Game manager
-- At the end of each round, output the pertinent data.
+- At the end of each round, output the pertinent data to a file.
 - Decide which variables will be mutating and do that.
+- Refactor better
 
 TODO:
 
