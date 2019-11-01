@@ -70,16 +70,36 @@ class Stage:
         position = (self.__width+(self.__wall_width)+10, self.__wall_height)
         separations = (5, 10)
         per_row = 2
-        is_input = (False, True,
+        is_input = [False, False,
+                    False, False,
+                    False, False,
+                    False, False,
+                    False, False,
                     False, True,
                     False, True,
                     False, True,
-                    False, False)
-        data = (("", "# of Characters:"), (self.__characters_name, "50 "),
+                    False, True,
+                    False, False,
+                    False, False,
+                    False, False,
+                    False, False,
+                    False, False,
+                    False, False]
+        data = [("", "Pre-game Instructions:"), ("", " "),
+                ("", "Input the data into"), ("", " "),
+                ("", "the boxes and"), ("", " "),
+                ("", "afterwards press enter."), ("", " "),
+                ("", " "), ("", " "),
+                ("", "# of Characters:"), (self.__characters_name, "50 "),
                 ("", "# of Foods:"), (self.__foods_name, "50 "),
                 ("", "Time of Round (s):"), (self.__ttl_name, "5  "),
                 ("", "fps:"), (self.__fps_name, "40 "),
-                ("", "days:"), (self.__days_name, "0  "))
+                ("", "days:"), (self.__days_name, "0  "),
+                ("", " "), ("", " "),
+                ("", "In-game Instructions:"), ("", " "),
+                ("", "Key:  "), ("", "Effect:"),
+                ("", "Exit   "), ("", "Quit the game"),
+                ("", "Space "), ("", "End the round")]
         return TextBox.create_matrix(position, colors, separations, per_row,
                                      self.__win, is_input, data, font)
 
@@ -119,9 +139,10 @@ class Stage:
         return self.__clock.get_fps()
 
     # Draws all the text boxes.
-    def draw_boxes(self):
+    def draw_input_boxes(self):
         for box in self.__text_boxes:
-            box.draw()
+            if box.is_input():
+                box.draw()
 
     # Returns True if it's under its Time To Live, otherwise False.
     def update_clock(self):
@@ -168,7 +189,7 @@ class Stage:
             self.__characters_name)].write(str(characters))
         self.__text_boxes[self.__box_index(
             self.__foods_name)].write(str(foods))
-        self.draw_boxes()
+        self.draw_input_boxes()
         return self.update_clock()
 
     # Handles the updates necessary for the new round.
