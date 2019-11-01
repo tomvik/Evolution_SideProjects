@@ -22,6 +22,9 @@ class CharacterManager:
         self.__win = 0
         self.__in_wall = True
         self.__newest_generation = 0
+        self.__oldest_generation = 0
+        self.__perished = 0
+        self.__newborn = 0
 
     # Spans randomly throughout the stage the amount of characters
     # selected with random values of sensing and speed, within the range.
@@ -43,6 +46,22 @@ class CharacterManager:
     # Returns the list of characters.
     def get_list(self) -> List[Character]:
         return self.__characters
+
+    # Returns how many perished the previous day.
+    def get_perished(self) -> int:
+        return self.__perished
+
+    # Returns how many were born today.
+    def get_newborn(self) -> int:
+        return self.__newborn
+
+    # Returns the number of the newest generation.
+    def get_newest_generation(self) -> int:
+        return self.__newest_generation
+
+    # Returns the number of the oldest generation.
+    def get_oldest_generation(self) -> int:
+        return self.__oldest_generation
 
     # Returns if someone is heading home
     def heading_home(self) -> bool:
@@ -85,19 +104,26 @@ class CharacterManager:
     # Resets all the characters to a random position inside the stage.
     def reset_characters(self):
         self.__characters.clear()
+        self.__oldest_generation = self.__newest_generation
         while self.__finished_characters:
             self.__characters.append(self.__finished_characters.pop())
+            generation = self.__characters[-1].get_generation()
+            if self.__oldest_generation > generation:
+                self.__oldest_generation = generation
             self.__characters[-1].draw_background()
             self.__characters[-1].teleport(Rectangle.free_random_position(
-                self.__stage_limits, self.__character_size, self.__characters))
+                self.__stage_limits, self.__character_size, self.__characters,
+                True))
             self.__characters[-1].set_background_color(self.__stage_color)
             self.__characters[-1].reset()
         self.__characters[-1].reset_home()
+        self.__perished = self.__initial_amount - len(self.__characters)
         self.__initial_amount = len(self.__characters)
         self.__heading_home = 0
 
     # Reproduces the surviving characters according to the probability given.
     def reproduce_characters(self, probability: int):
+        self.__newborn = 0
         for i in range(self.__initial_amount):
             sensing = self.__characters[i].get_sensing()
             speed = self.__characters[i].get_speed()
@@ -110,6 +136,7 @@ class CharacterManager:
                 self.__characters[-1].set_color(next_color)
                 if next_generation > self.__newest_generation:
                     self.__newest_generation = next_generation
+                self.__newborn += 1
         self.__initial_amount = len(self.__characters)
 
     # Sets the characters ready for the new round.
@@ -117,9 +144,6 @@ class CharacterManager:
         self.reset_characters()
         self.reproduce_characters(50)
         self.draw()
-
-    def get_newest_generation(self) -> int:
-        return self.__newest_generation
 
     # Moves the character home, and transfers it to the finished list.
     def __move_home(self, index: int):

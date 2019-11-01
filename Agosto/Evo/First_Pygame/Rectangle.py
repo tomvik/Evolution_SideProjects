@@ -16,7 +16,7 @@ class Rectangle:
         self._previous_movement = (0, 0)
         self._movements = 0
         self._direction = 0
-        self._max_movements = 60
+        self._max_movements = 80
 
     def __del__(self):
         self.draw_background()
@@ -45,13 +45,13 @@ class Rectangle:
     # a b
     # c d
     def get_corners(self) -> List[Tuple[int, int]]:
-        return (self._rectangle.topleft, self._rectangle.topright,
-                self._rectangle.bottomleft, self._rectangle.bottomright)
+        return [self._rectangle.topleft, self._rectangle.topright,
+                self._rectangle.bottomleft, self._rectangle.bottomright]
 
     # Returns the Rectangle limits as in: x_min, y_min, x_max, y_max
     def get_limits(self) -> List[int]:
-        return (self._rectangle.left, self._rectangle.top,
-                self._rectangle.right, self._rectangle.bottom,)
+        return [self._rectangle.left, self._rectangle.top,
+                self._rectangle.right, self._rectangle.bottom]
 
     # Returns the position of the left top corner as x,y
     def get_position(self) -> Tuple[int, int]:

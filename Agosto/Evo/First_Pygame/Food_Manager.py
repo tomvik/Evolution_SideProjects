@@ -28,7 +28,12 @@ class FoodManager:
                    stage: Stage.Stage,
                    blockings: List[Rectangle.Rectangle]):
         foods = list()
+        width, height = blockings[0].get_size()
         self.__stage_limits = stage.get_stage_limits()
+        self.__stage_limits[0] += width
+        self.__stage_limits[1] += height
+        self.__stage_limits[2] -= width
+        self.__stage_limits[3] -= height
         self.__stage_color = stage.get_stage_color()
         self.__win = stage.get_win()
         self.__range_of_values = range_of_values

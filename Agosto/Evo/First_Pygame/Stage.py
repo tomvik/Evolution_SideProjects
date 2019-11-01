@@ -1,5 +1,5 @@
 import pygame
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from Rectangle import Rectangle
 from Clock import Clock
@@ -21,7 +21,6 @@ class Stage:
         self.__stage_color = stage_colors[0]
         self.__walls_color = stage_colors[1]
         self.__win = win
-        self.__days = 0
 
         self.__window_width, self.__window_height = self.__win.get_size()
         self.__wall_width = (self.__window_width - self.__width) / 2
@@ -67,8 +66,16 @@ class Stage:
         per_row = 2
         is_input = Constants.TEXTBOX_MATRIX_IS_INPUT
         data = Constants.TEXTBOX_MATRIX
-        return TextBox.create_matrix(position, colors, separations, per_row,
-                                     self.__win, is_input, data, font)
+        text_boxes = TextBox.create_matrix(position, colors, separations,
+                                           per_row,
+                                           self.__win, is_input, data, font)
+        position = (5, self.__wall_height)
+        is_input = Constants.INSTRUCTIONS_INPUT
+        data = Constants.INSTRUCTIONS_TEXTBOXES
+        text_boxes += TextBox.create_matrix(position, colors, separations,
+                                            per_row,
+                                            self.__win, is_input, data, font)
+        return text_boxes
 
     # Returns the index of the box with the desired name.
     def __box_index(self, name: str) -> int:
@@ -101,10 +108,6 @@ class Stage:
     def get_stage_limits(self) -> List[int]:
         return (self.__stage.get_limits())
 
-    # Returns the amount of days that has passed.
-    def get_days(self) -> int:
-        return self.__days
-
     # Gets the TTL in seconds.
     def get_ttl_seconds(self) -> int:
         return self.__clock.get_ttl()/1000
@@ -125,11 +128,12 @@ class Stage:
         return self.__clock.still_valid()
 
     # Return the value of each text_box on a list.
-    def get_text_values(self) -> List[int]:
-        return_values = list()
+    def get_text_values(self) -> Dict[str, int]:
+        return_values = dict()
         for text_box in self.__text_boxes:
             if text_box.is_input():
-                return_values.append(text_box.get_value())
+                key_value = text_box.get_name_value()
+                return_values[key_value[0]] = key_value[1]
         return return_values
 
     # Returns the closest wall to the object and its direction towards it.
@@ -158,21 +162,16 @@ class Stage:
             text_box.draw()
 
     # Handles the in-game updates.
-    def handle_in_game(self, characters: int, foods: int) -> bool:
-        self.__text_boxes[self.__box_index(
-            Constants.CHARACTERS_NAME)].write(str(characters))
-        self.__text_boxes[self.__box_index(
-            Constants.FOODS_NAME)].write(str(foods))
+    def handle_in_game(self, key_value: Dict[str, int]) -> bool:
+        for key, value in key_value.items():
+            self.__text_boxes[self.__box_index(key)].write(str(value))
         self.draw_input_boxes()
         return self.update_clock()
 
     # Handles the updates necessary for the new round.
-    def new_round_stage(self, characters: int, foods: int):
-        self.__days += 1
+    def new_round_stage(self, key_value: Dict[str, int]):
         self.reset_clock()
-        self.__text_boxes[self.__box_index(
-            Constants.DAYS_NAME)].write(str(self.__days))
-        self.handle_in_game(characters, foods)
+        self.handle_in_game(key_value)
 
     # Changes the boxes that won't be updated anymore to output only, and those
     # that will be to input. The naming is weird, but input are the only ones
@@ -180,6 +179,6 @@ class Stage:
     def initialize_game(self):
         for box in self.__text_boxes:
             if box.has_name():
-                if box.get_name() != Constants.CHARACTERS_NAME \
-                        and box.get_name() != Constants.FOODS_NAME:
+                if box.get_name() != Constants.CHARACTERS \
+                        and box.get_name() != Constants.FOODS:
                     box.change_type()

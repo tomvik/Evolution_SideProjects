@@ -1,5 +1,5 @@
 import pygame
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from Character_Manager import CharacterManager
 from Food_Manager import FoodManager
@@ -24,6 +24,7 @@ class GameManager:
                  food_size: int,
                  food_color: List[int],
                  food_value: int) -> 'GameManager':
+        self.__days = 0
         self.__traverse = traverse_characters
         self.__window = pygame.display.set_mode(window_size)
         pygame.display.set_caption(window_title)
@@ -34,20 +35,22 @@ class GameManager:
                                                clock_font_color,
                                                text_font)
         self.__wait_for_input()
-        characters, foods, ttl, fps, max_generation = self.__load_stage_state()
-        self.__max_generation = max_generation
-        self.__update_stage_state(fps, ttl)
-        self.__character_manager, \
-            self.__food_manager = self.__initialize_managers(self.__stage,
-                                                             characters,
-                                                             character_size,
-                                                             character_color,
-                                                             character_speed,
-                                                             character_sensing,
-                                                             foods,
-                                                             food_size,
-                                                             food_color,
-                                                             food_value)
+        stage_data = self.__load_stage_state()
+        self.__max_generation = stage_data[Constants.MAX_GENERATION]
+        self.__update_stage_state(stage_data[Constants.FPS],
+                                  stage_data[Constants.TTL])
+        self.__character_manager, self.__food_manager = \
+            self.__initialize_managers(self.__stage,
+                                       stage_data[Constants.CHARACTERS],
+                                       character_size,
+                                       character_color,
+                                       character_speed,
+                                       character_sensing,
+                                       stage_data[Constants.FOODS],
+                                       food_size,
+                                       food_color,
+                                       food_value)
+        pygame.display.update()
         self.__wait_for_enter()
         self.__stage.initialize_game()
 
@@ -62,6 +65,7 @@ class GameManager:
                 window_life = self.__new_round()
                 round_life = True
         pygame.display.update()
+        self.__wait_for_enter()
 
     # Initializes the stage.
     def __initialize_stage(self,
@@ -109,14 +113,8 @@ class GameManager:
         return character_manager, food_manager
 
     # Waits for the input of textboxes.
-    # Creates a textbox saying the instructions.
+    # It finishes once enter has been pressed.
     def __wait_for_input(self):
-        print("Select amount of characters and foods. Afterwards, press enter")
-        self.__wait_for_enter()
-
-    # Waits for the key enter and while doing so,
-    # the input textboxes can be written on.
-    def __wait_for_enter(self):
         waiting: bool = True
         while waiting:
             for event in pygame.event.get():
@@ -125,8 +123,18 @@ class GameManager:
                         and event.key == pygame.K_RETURN:
                     waiting = False
 
+    # Waits for the key enter and while doing so,
+    # the input textboxes can be written on.
+    def __wait_for_enter(self):
+        waiting: bool = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN \
+                        and event.key == pygame.K_RETURN:
+                    waiting = False
+
     # Returns a list of the values of the text_boxes.
-    def __load_stage_state(self) -> List[int]:
+    def __load_stage_state(self) -> Dict[str, int]:
         return self.__stage.get_text_values()
 
     # Updates the stage state by setting the TTL and FPS
@@ -168,9 +176,12 @@ class GameManager:
                                                  self.__traverse)
         remaining_characters = self.__character_manager.characters_left()
         remaining_foods = self.__food_manager.food_left()
-        round_life = \
-            self.__stage.handle_in_game(remaining_characters,
-                                        remaining_foods)
+
+        key_value = {Constants.CHARACTERS:
+                     remaining_characters,
+                     Constants.FOODS:
+                     remaining_foods}
+        round_life = self.__stage.handle_in_game(key_value)
         if remaining_characters is 0 \
                 or (remaining_foods is 0
                     and self.__character_manager.heading_home() is False):
@@ -192,7 +203,20 @@ class GameManager:
     def __new_round(self) -> bool:
         self.__character_manager.new_round_characters(Constants.REPRODUCTION)
         self.__food_manager.reset_foods(self.__character_manager.get_list())
-        self.__stage.new_round_stage(
-            self.__character_manager.characters_left(),
-            self.__food_manager.food_left())
+        self.__days += 1
+        key_value = {Constants.CHARACTERS:
+                     self.__character_manager.characters_left(),
+                     Constants.FOODS:
+                     self.__food_manager.food_left(),
+                     Constants.NEWEST_GENERATION:
+                     self.__character_manager.get_newest_generation(),
+                     Constants.OLDEST_GENERATION:
+                     self.__character_manager.get_oldest_generation(),
+                     Constants.PERISHED:
+                     self.__character_manager.get_perished(),
+                     Constants.NEWBORN:
+                     self.__character_manager.get_newborn(),
+                     Constants.DAYS:
+                     self.__days}
+        self.__stage.new_round_stage(key_value)
         return self.__character_manager.characters_left() > 0
