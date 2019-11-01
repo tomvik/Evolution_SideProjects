@@ -5,6 +5,7 @@ from Rectangle import Rectangle
 from Clock import Clock
 import TextBox
 import Distances
+import Constants
 
 
 class Stage:
@@ -15,12 +16,6 @@ class Stage:
                  clock_font: Tuple[str, int],
                  clock_font_color: List[int],
                  text_box_font: Tuple[str, int]):
-        self.__characters_name = "Characters"
-        self.__foods_name = "Foods"
-        self.__ttl_name = "Ttl"
-        self.__fps_name = "Fps"
-        self.__days_name = "Days"
-
         self.__width = size[0]
         self.__height = size[1]
         self.__stage_color = stage_colors[0]
@@ -70,38 +65,17 @@ class Stage:
         position = (self.__width+(self.__wall_width)+10, self.__wall_height)
         separations = (5, 10)
         per_row = 2
-        is_input = [False, False,
-                    False, False,
-                    False, False,
-                    False, False,
-                    False, False,
-                    False, True,
-                    False, True,
-                    False, True,
-                    False, True,
-                    False, False,
-                    False, False,
-                    False, False,
-                    False, False,
-                    False, False,
-                    False, False]
-        data = [("", "Pre-game Instructions:"), ("", " "),
-                ("", "Input the data into"), ("", " "),
-                ("", "the boxes and"), ("", " "),
-                ("", "afterwards press enter."), ("", " "),
-                ("", " "), ("", " "),
-                ("", "# of Characters:"), (self.__characters_name, "50 "),
-                ("", "# of Foods:"), (self.__foods_name, "50 "),
-                ("", "Time of Round (s):"), (self.__ttl_name, "5  "),
-                ("", "fps:"), (self.__fps_name, "40 "),
-                ("", "days:"), (self.__days_name, "0  "),
-                ("", " "), ("", " "),
-                ("", "In-game Instructions:"), ("", " "),
-                ("", "Key:  "), ("", "Effect:"),
-                ("", "Exit   "), ("", "Quit the game"),
-                ("", "Space "), ("", "End the round")]
+        is_input = Constants.TEXTBOX_MATRIX_IS_INPUT
+        data = Constants.TEXTBOX_MATRIX
         return TextBox.create_matrix(position, colors, separations, per_row,
                                      self.__win, is_input, data, font)
+
+    # Returns the index of the box with the desired name.
+    def __box_index(self, name: str) -> int:
+        for i in range(len(self.__text_boxes)):
+            if self.__text_boxes[i].get_name() == name:
+                return i
+        return -1
 
     # Returns the walls.
     def get_walls(self) -> List[Rectangle]:
@@ -186,9 +160,9 @@ class Stage:
     # Handles the in-game updates.
     def handle_in_game(self, characters: int, foods: int) -> bool:
         self.__text_boxes[self.__box_index(
-            self.__characters_name)].write(str(characters))
+            Constants.CHARACTERS_NAME)].write(str(characters))
         self.__text_boxes[self.__box_index(
-            self.__foods_name)].write(str(foods))
+            Constants.FOODS_NAME)].write(str(foods))
         self.draw_input_boxes()
         return self.update_clock()
 
@@ -197,12 +171,15 @@ class Stage:
         self.__days += 1
         self.reset_clock()
         self.__text_boxes[self.__box_index(
-            self.__days_name)].write(str(self.__days))
+            Constants.DAYS_NAME)].write(str(self.__days))
         self.handle_in_game(characters, foods)
 
-    # Returns the index of the box with the desired name.
-    def __box_index(self, name: str) -> int:
-        for i in range(len(self.__text_boxes)):
-            if self.__text_boxes[i].get_name() == name:
-                return i
-        return -1
+    # Changes the boxes that won't be updated anymore to output only, and those
+    # that will be to input. The naming is weird, but input are the only ones
+    # that get updated.
+    def initialize_game(self):
+        for box in self.__text_boxes:
+            if box.has_name():
+                if box.get_name() != Constants.CHARACTERS_NAME \
+                        and box.get_name() != Constants.FOODS_NAME:
+                    box.change_type()

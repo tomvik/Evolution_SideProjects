@@ -24,9 +24,9 @@ class GameManager:
                  food_size: int,
                  food_color: List[int],
                  food_value: int) -> 'GameManager':
+        self.__traverse = traverse_characters
         self.__window = pygame.display.set_mode(window_size)
         pygame.display.set_caption(window_title)
-        self.__traverse = traverse_characters
         self.__stage = self.__initialize_stage(self.__window,
                                                stage_size,
                                                stage_colors,
@@ -34,7 +34,8 @@ class GameManager:
                                                clock_font_color,
                                                text_font)
         self.__wait_for_input()
-        characters, foods, ttl, fps = self.__load_stage_state()
+        characters, foods, ttl, fps, max_generation = self.__load_stage_state()
+        self.__max_generation = max_generation
         self.__update_stage_state(fps, ttl)
         self.__character_manager, \
             self.__food_manager = self.__initialize_managers(self.__stage,
@@ -48,6 +49,7 @@ class GameManager:
                                                              food_color,
                                                              food_value)
         self.__wait_for_enter()
+        self.__stage.initialize_game()
 
     # Runs the game in continuous mode.
     def continous_game(self):
@@ -179,6 +181,10 @@ class GameManager:
         elif event_case == 2:
             round_life = False
         pygame.display.update()
+
+        if self.__character_manager.get_newest_generation() >= \
+                self.__max_generation:
+            round_life = window_life = False
 
         return round_life, window_life
 

@@ -8,24 +8,23 @@ from Food import Food
 
 class Character(Rectangle):
     # Variable to set where the next home would be
-    # TODO: reset it when a new round begins.
     next_home = (1, 1)
 
     def __init__(self, left: int, top: int, width: int, height: int,
                  color: List[int], background_color: List[int],
-                 win: pygame.Surface, id: int, speed: int, sensing_range: int):
+                 win: pygame.Surface, speed: int, sensing_range: int):
         super().__init__(pygame.Rect(left, top, width, height),
                          color, background_color, win)
-        self._id = id
+        self._generation = 0
         self._original_hunger = 1
         self._hunger = 1
         self._speed = speed
         self._sensing_range = sensing_range
         self._is_home = False
 
-    # Returns id of character.
-    def get_id(self) -> int:
-        return self._id
+    # Returns the generation of character.
+    def get_generation(self) -> int:
+        return self._generation
 
     # Returns the hunger.
     def get_hunger(self) -> int:
@@ -54,6 +53,10 @@ class Character(Rectangle):
     # Returns the speed value.
     def get_speed(self) -> int:
         return self._speed
+
+    # Sets the generation of the character.
+    def set_generation(self, generation: int):
+        self._generation = generation
 
     # Resets the values to indicate that is hungry and is not home.
     def reset(self):

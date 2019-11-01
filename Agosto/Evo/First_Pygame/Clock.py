@@ -25,6 +25,9 @@ class Clock:
             TextBox.create_array(
                 pos, (font_color, background_color), 0, win,
                 is_input, data, font)
+        self.__hour_box.set_transparent(False)
+        self.__minute_box.set_transparent(False)
+        self.__second_box.set_transparent(False)
 
     # Returns true if the time is still under the TTL.
     def still_valid(self) -> bool:
