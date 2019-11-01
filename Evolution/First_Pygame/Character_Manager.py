@@ -7,6 +7,7 @@ from Character import Character
 from Stage import Stage
 from Food_Manager import FoodManager
 import Distances
+import Constants
 
 
 class CharacterManager:
@@ -33,6 +34,7 @@ class CharacterManager:
     def initialize(self, amount: int,
                    sensing_range: Tuple[int, int],
                    speed_range: Tuple[int, int],
+                   movements_range: Tuple[int, int],
                    stage: Stage):
         self.__stage_limits = stage.get_stage_limits()
         self.__stage_color = stage.get_stage_color()
@@ -40,7 +42,8 @@ class CharacterManager:
         self.__win = stage.get_win()
         self.__characters.clear()
         self.__heading_home = 0
-        self.__span_random_characters(amount, sensing_range, speed_range)
+        self.__span_random_characters(amount, sensing_range, speed_range,
+                                      movements_range)
         self.__initial_amount = amount
 
     # Returns the list of characters.
@@ -71,7 +74,8 @@ class CharacterManager:
             data += str(character.get_generation()) + " "
             data += str(character.get_hunger()) + " "
             data += str(character.get_sensing()) + " "
-            data += str(character.get_speed()) + "\n"
+            data += str(character.get_speed()) + " "
+            data += str(character.get_movement_limit()) + "\n"
         return data
 
     # Returns if someone is heading home
@@ -136,15 +140,13 @@ class CharacterManager:
     def reproduce_characters(self, probability: int):
         self.__newborn = 0
         for i in range(self.__initial_amount):
-            sensing = self.__characters[i].get_sensing() + 5
-            speed = self.__characters[i].get_speed() + 1
+            speed, sensing, movements = self.__get_mutations(i)
             next_generation = self.__characters[i].get_generation()+1
-            next_color = [255-(next_generation*10), 0, 0+(next_generation*10)]
             if random.randrange(0, 100, 1) < probability:
                 self.__span_random_character((sensing, sensing),
-                                             (speed, speed))
+                                             (speed, speed),
+                                             (movements, movements))
                 self.__characters[-1].set_generation(next_generation)
-                self.__characters[-1].set_color(next_color)
                 if next_generation > self.__newest_generation:
                     self.__newest_generation = next_generation
                 self.__newborn += 1
@@ -211,17 +213,22 @@ class CharacterManager:
     # selected with random values of sensing and speed, within the range.
     def __span_random_characters(self, amount: int,
                                  sensing_range: Tuple[int, int],
-                                 speed_range: Tuple[int, int]):
+                                 speed_range: Tuple[int, int],
+                                 movements_range: Tuple[int, int]):
         for i in range(amount):
-            self.__span_random_character(sensing_range, speed_range)
+            self.__span_random_character(sensing_range, speed_range,
+                                         movements_range)
 
     # Spans randomly one character.
     def __span_random_character(self,
                                 sensing_range: Tuple[int, int],
-                                speed_range: Tuple[int, int]):
+                                speed_range: Tuple[int, int],
+                                movements_range: Tuple[int, int]):
         current_speed = random.randint(speed_range[0], speed_range[1])
         current_sensing = random.randint(sensing_range[0],
                                          sensing_range[1])
+        current_movement = random.randint(movements_range[0],
+                                          movements_range[1])
 
         current_x, current_y = Rectangle.free_random_position(
             self.__stage_limits, self.__character_size, self.__characters,
@@ -234,4 +241,59 @@ class CharacterManager:
                                            self.__stage_color,
                                            self.__win,
                                            current_speed,
-                                           current_sensing))
+                                           current_sensing,
+                                           current_movement))
+
+    def __get_mutations(self, index: int) -> List[int]:
+        speed = self.__characters[index].get_speed()
+        sensing = self.__characters[index].get_sensing()
+        movements = self.__characters[index].get_movement_limit()
+        index = Distances.get_weighted_index(Constants.PROBABILITIES_STEP,
+                                             0,
+                                             Constants.STEP_INDEXES)
+        if index == 0:
+            speeds = list()
+            for i in range(-2, 3, 1):
+                # print(i)
+                speeds.append(speed + (Constants.STEP_SPEED * i))
+                speeds[i+2] = max(speeds[i+2], Constants.MIN_SPEED)
+                speeds[i+2] = min(speeds[i+2], Constants.MAX_SPEED)
+            # print(len(speeds))
+            index = \
+                Distances.get_weighted_index(
+                    Constants.PROBABILITIES_MUTATIONS,
+                    0,
+                    Constants.MUTATIONS_INDEXES)
+            # print(index)
+            speed = speeds[index]
+        elif index == 1:
+            sensings = list()
+            for i in range(-2, 3, 1):
+                # print(i)
+                sensings.append(sensing + (Constants.STEP_SENSING * i))
+                sensings[i+2] = max(sensings[i+2], Constants.MIN_SENSING)
+                sensings[i+2] = min(sensings[i+2], Constants.MAX_SENSING)
+            # print(len(sensings))
+            index = \
+                Distances.get_weighted_index(
+                    Constants.PROBABILITIES_MUTATIONS,
+                    0,
+                    Constants.MUTATIONS_INDEXES)
+            # print(index)
+            sensing = sensings[index]
+        else:
+            movementss = list()
+            for i in range(-2, 3, 1):
+                # print(i)
+                movementss.append(movements + (Constants.STEP_MOVEMENTS * i))
+                movementss[i+2] = max(movementss[i+2], Constants.MIN_MOVEMENTS)
+                movementss[i+2] = min(movementss[i+2], Constants.MAX_MOVEMENTS)
+            # print(len(movementss))
+            index = \
+                Distances.get_weighted_index(
+                    Constants.PROBABILITIES_MUTATIONS,
+                    0,
+                    Constants.MUTATIONS_INDEXES)
+            # print(index)
+            movements = movementss[index]
+        return speed, sensing, movements

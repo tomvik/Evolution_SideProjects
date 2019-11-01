@@ -4,6 +4,8 @@ from typing import List
 
 from Rectangle import Rectangle
 from Food import Food
+import Distances
+import Constants
 
 
 class Character(Rectangle):
@@ -12,14 +14,18 @@ class Character(Rectangle):
 
     def __init__(self, left: int, top: int, width: int, height: int,
                  color: List[int], background_color: List[int],
-                 win: pygame.Surface, speed: int, sensing_range: int):
+                 win: pygame.Surface, speed: int, sensing_range: int,
+                 movement_limit: int):
+        self._speed = speed
+        self._sensing_range = sensing_range
+        self._max_movements = movement_limit
         super().__init__(pygame.Rect(left, top, width, height),
-                         color, background_color, win)
+                         color, background_color, win, movement_limit)
+        self.set_color_attributes()
+        self.draw()
         self._generation = 0
         self._original_hunger = 1
         self._hunger = 1
-        self._speed = speed
-        self._sensing_range = sensing_range
         self._is_home = False
 
     # Returns the generation of character.
@@ -87,6 +93,10 @@ class Character(Rectangle):
         if self._movements >= self._max_movements:
             self._direction = random.randint(0, 4)
             self._movements = 0
+        while Distances.L2(self.get_center(),
+                           Constants.INTEREST_POINTS[self._direction]) \
+                < self._sensing_range:
+            self._direction = random.randint(0, 4)
 
     # Helper function for moving the object on a single axis.
     def __move_single_axis(self, dx: int, dy: int, blockings: List[Rectangle]):
@@ -121,3 +131,19 @@ class Character(Rectangle):
             new_home_y += character_height + 5
 
         self.__class__.next_home = (new_home_x, new_home_y)
+
+    def set_color_attributes(self):
+        r = Constants.SLOPE_SPEED * self._speed + Constants.B_SPEED
+        r = int(r)
+        r = min(r, 255)
+        r = max(r, 0)
+        g = Constants.SLOPE_SENSING * self._sensing_range + Constants.B_SENSING
+        g = int(g)
+        g = min(g, 255)
+        g = max(g, 0)
+        b = Constants.SLOPE_MOVEMENTS * self._max_movements \
+            + Constants.B_MOVEMENTS
+        b = int(b)
+        b = min(b, 255)
+        b = max(b, 0)
+        self.set_color((r, g, b))

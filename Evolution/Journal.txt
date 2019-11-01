@@ -1,13 +1,10 @@
 You define your own limit.
 
 Next steps:
-- Don't include the files on github or maybe do.
-- Decide another specific folder for the files.
-- Comment code.
-- Fix distance travel.
-- Maybe Reorganize the code.
-- Decide which variables will be mutating and do that.
-- Refactor better
+- Comment to upload to master
+- Add hunger cost to mutations
+- Improve movement thingy of being too fast
+- Graph data
 
 TODO:
 

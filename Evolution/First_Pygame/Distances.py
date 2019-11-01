@@ -6,10 +6,7 @@ from collections import deque
 from numpy.random import choice
 
 from Rectangle import Rectangle
-
-# TODO, have these on a constant file.
-CENTER = (600, 350)
-points = (CENTER, (0, 0), (1200, 0), (1200, 700), (0, 700))
+import Constants
 
 
 # Returns the Euclidean distance between two points.
@@ -163,15 +160,16 @@ def index_direction_to_point(a: Tuple[int, int],
 # Returns a random weighted movement towards the direction.
 def get_weighted_random_move(a: Tuple[int, int],
                              direction: int) -> Tuple[float, float]:
+    index = index_direction_to_point(a, Constants.INTEREST_POINTS[direction])
+    index = get_weighted_index(Constants.PROBABILITIES_MOVES,
+                               index,
+                               Constants.MOVES_INDEXES)
+    return Constants.POSSIBLE_MOVES[index]
 
-    possible_moves = [(0, -1), (0.5, -0.5),
-                      (1, 0), (0.5, 0.5),
-                      (0, 1), (-0.5, 0.5),
-                      (-1, 0), (-0.5, -0.5)]
-    possible_indexes = range(8)
-    index = index_direction_to_point(a, points[direction])
-    probabilities = [0.4, 0.2, 0.1, 0, 0, 0, 0.1, 0.2]
+
+def get_weighted_index(probabilities: List[float],
+                       rotate_index: int,
+                       choices: List[int]) -> int:
     probabilities = deque(probabilities)
-    probabilities.rotate(index)
-    index = choice(possible_indexes, 1, False, probabilities)
-    return possible_moves[index[0]]
+    probabilities.rotate(rotate_index)
+    return choice(choices, 1, False, probabilities)[0]

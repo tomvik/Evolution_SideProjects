@@ -9,16 +9,12 @@ from Game_Manager import GameManager
 
 pygame.init()
 
-fps = 20
-clock_ttl = 5*1000
 
-character_size = 20
-character_speed = 5
-character_sensing = 70
+character_speed = (Constants.MIN_SPEED, Constants.MIN_SPEED)
+character_sensing = (Constants.MIN_SENSING, Constants.MIN_SENSING)
+character_patience = (Constants.MIN_MOVEMENTS, Constants.MIN_MOVEMENTS)
 character_color = (255, 0, 0)
-traverse_character = True
 
-food_size = 5
 food_value = 1
 
 game_manager = GameManager(Constants.WINDOW_SIZE,
@@ -28,12 +24,13 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.CLOCK_FONT,
                            Constants.CLOCK_COLOR,
                            Constants.TEXT_FONT,
-                           character_size,
+                           Constants.CHARACTER_SIZE,
                            character_color,
                            character_speed,
                            character_sensing,
+                           character_patience,
                            Constants.TRAVERSE_CHARACTERS,
-                           food_size,
+                           Constants.FOOD_SIZE,
                            Constants.FOOD_COLOR,
                            food_value)
 

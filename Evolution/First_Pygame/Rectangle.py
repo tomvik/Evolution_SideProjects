@@ -7,7 +7,8 @@ from typing import List, Tuple
 class Rectangle:
 
     def __init__(self, rectangle: pygame.Rect, color: List[int],
-                 background_color: List[int], win: pygame.Surface):
+                 background_color: List[int], win: pygame.Surface,
+                 max_movement: int = 80):
         self._rectangle = rectangle
         self._color = color
         self._background_color = background_color
@@ -16,7 +17,7 @@ class Rectangle:
         self._previous_movement = (0, 0)
         self._movements = 0
         self._direction = 0
-        self._max_movements = 80
+        self._max_movements = max_movement
 
     def __del__(self):
         self.draw_background()
@@ -64,6 +65,10 @@ class Rectangle:
     # Returns the direction to where it's headed.
     def get_direction(self) -> int:
         return self._direction
+
+    # Returns the max movement limit.
+    def get_movement_limit(self) -> int:
+        return self._max_movements
 
     # Sets the color.
     def set_color(self, color: List[int]):
