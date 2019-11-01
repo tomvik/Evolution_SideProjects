@@ -63,6 +63,17 @@ class CharacterManager:
     def get_oldest_generation(self) -> int:
         return self.__oldest_generation
 
+    # Returns the stats of the current set of characters.
+    def get_stats(self) -> str:
+        self.__characters.sort(key=lambda x: x.get_generation())
+        data = ""
+        for character in self.__characters:
+            data += str(character.get_generation()) + " "
+            data += str(character.get_hunger()) + " "
+            data += str(character.get_sensing()) + " "
+            data += str(character.get_speed()) + "\n"
+        return data
+
     # Returns if someone is heading home
     def heading_home(self) -> bool:
         return self.__heading_home > 0
@@ -125,8 +136,8 @@ class CharacterManager:
     def reproduce_characters(self, probability: int):
         self.__newborn = 0
         for i in range(self.__initial_amount):
-            sensing = self.__characters[i].get_sensing()
-            speed = self.__characters[i].get_speed()
+            sensing = self.__characters[i].get_sensing() + 5
+            speed = self.__characters[i].get_speed() + 1
             next_generation = self.__characters[i].get_generation()+1
             next_color = [255-(next_generation*10), 0, 0+(next_generation*10)]
             if random.randrange(0, 100, 1) < probability:

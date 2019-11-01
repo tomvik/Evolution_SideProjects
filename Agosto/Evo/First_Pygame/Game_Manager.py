@@ -177,11 +177,7 @@ class GameManager:
         remaining_characters = self.__character_manager.characters_left()
         remaining_foods = self.__food_manager.food_left()
 
-        key_value = {Constants.CHARACTERS:
-                     remaining_characters,
-                     Constants.FOODS:
-                     remaining_foods}
-        round_life = self.__stage.handle_in_game(key_value)
+        round_life = self.__stage.handle_in_game(self.__load_data_dict(0))
         if remaining_characters is 0 \
                 or (remaining_foods is 0
                     and self.__character_manager.heading_home() is False):
@@ -204,19 +200,38 @@ class GameManager:
         self.__character_manager.new_round_characters(Constants.REPRODUCTION)
         self.__food_manager.reset_foods(self.__character_manager.get_list())
         self.__days += 1
+        self.__stage.new_round_stage(self.__load_data_dict(1))
+        return self.__character_manager.characters_left() > 0
+
+    # Loads the data for the dictionary, depending the case.
+    # Case 0: In-game update
+    # Case 1: New round update
+    def __load_data_dict(self, case: int) -> Dict[str, int]:
         key_value = {Constants.CHARACTERS:
                      self.__character_manager.characters_left(),
                      Constants.FOODS:
-                     self.__food_manager.food_left(),
-                     Constants.NEWEST_GENERATION:
-                     self.__character_manager.get_newest_generation(),
-                     Constants.OLDEST_GENERATION:
-                     self.__character_manager.get_oldest_generation(),
-                     Constants.PERISHED:
-                     self.__character_manager.get_perished(),
-                     Constants.NEWBORN:
-                     self.__character_manager.get_newborn(),
-                     Constants.DAYS:
-                     self.__days}
-        self.__stage.new_round_stage(key_value)
-        return self.__character_manager.characters_left() > 0
+                     self.__food_manager.food_left()}
+        if case == 1:
+            key_value.update({Constants.NEWEST_GENERATION:
+                              self.__character_manager.get_newest_generation(),
+                              Constants.OLDEST_GENERATION:
+                              self.__character_manager.get_oldest_generation(),
+                              Constants.PERISHED:
+                              self.__character_manager.get_perished(),
+                              Constants.NEWBORN:
+                              self.__character_manager.get_newborn(),
+                              Constants.DAYS:
+                              self.__days})
+            self.__update_stats(key_value)
+        return key_value
+
+    # Writes down the stats to the stats file.
+    def __update_stats(self, key_value: Dict[str, int]):
+        data = "\n"
+        for x, y in key_value.items():
+            data += x + " " + str(y) + "\n"
+        data += "\n"
+        data += self.__character_manager.get_stats()
+        file = open("stats.txt", "a+")
+        file.write(data)
+        file.close()
