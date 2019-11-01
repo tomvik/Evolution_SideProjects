@@ -1,4 +1,5 @@
 import pygame
+import os.path
 from typing import Dict, List, Tuple
 
 from Character_Manager import CharacterManager
@@ -53,6 +54,11 @@ class GameManager:
         pygame.display.update()
         self.__wait_for_enter()
         self.__stage.initialize_game()
+        self.__file_name = Constants.FILE_NAME
+        i = 0
+        while os.path.isfile(self.__file_name + str(i) + ".txt"):
+            i += 1
+        self.__file_name += str(i) + ".txt"
 
     # Runs the game in continuous mode.
     def continous_game(self):
@@ -232,6 +238,6 @@ class GameManager:
             data += x + " " + str(y) + "\n"
         data += "\n"
         data += self.__character_manager.get_stats()
-        file = open("stats.txt", "a+")
+        file = open(self.__file_name, "a+")
         file.write(data)
         file.close()

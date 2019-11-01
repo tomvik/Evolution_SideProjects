@@ -1,5 +1,8 @@
 from typing import List, Tuple
 
+# Simulation constants
+FILE_NAME: str = "Evolution/Stats/stats_of_run_"
+
 # Window constants
 WINDOW_WIDTH: int = 1200
 WINDOW_HEIGHT: int = 700

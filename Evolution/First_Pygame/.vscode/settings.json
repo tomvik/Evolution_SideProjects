@@ -1,7 +1,7 @@
 {
-  "python.pythonPath": "D:\\lugol\\Desktop\\SideProjects\\Agosto\\Evo\\First_Pygame\\env\\Scripts\\python.exe",
+  "python.pythonPath": "D:\\lugol\\Desktop\\SideProjects\\Evolution\\First_Pygame\\env\\Scripts\\python.exe",
   "python.linting.pep8Enabled": true,
-  "python.linting.pylintPath": "D:\\lugol\\Desktop\\SideProjects\\Agosto\\Evo\\First_Pygame\\env\\Scripts\\pylint.exe",
+  "python.linting.pylintPath": "D:\\lugol\\Desktop\\SideProjects\\Evolution\\First_Pygame\\env\\Scripts\\pylint.exe",
   "python.linting.pylintArgs": [
     "--load-plugins",
     "pylint_django"

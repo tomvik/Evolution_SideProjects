@@ -1,7 +1,6 @@
 You define your own limit.
 
 Next steps:
-- Create new file on each run.
 - Don't include the files on github or maybe do.
 - Decide another specific folder for the files.
 - Comment code.
