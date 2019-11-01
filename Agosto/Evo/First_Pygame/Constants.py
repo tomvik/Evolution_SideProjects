@@ -23,6 +23,7 @@ TEXT_FONT: Tuple[str, int] = ("Trebuchet MS", 15)
 
 # Character constants
 REPRODUCTION: int = 50  # 50%
+TRAVERSE_CHARACTERS: bool = True
 
 # Food constants
 FOOD_COLOR: List[int] = WHITE

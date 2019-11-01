@@ -8,11 +8,13 @@ import Distances
 
 
 class Stage:
-    def __init__(self, size: Tuple[int, int],
+    def __init__(self,
+                 win: pygame.Surface,
+                 size: Tuple[int, int],
                  stage_colors: Tuple[List[int], List[int]],
-                 win: pygame.Surface, fps: int,
-                 clock_font: Tuple[str, int], clock_font_color: List[int],
-                 ttl: int, text_box_font: Tuple[str, int]):
+                 clock_font: Tuple[str, int],
+                 clock_font_color: List[int],
+                 text_box_font: Tuple[str, int]):
         self.__characters_name = "Characters"
         self.__foods_name = "Foods"
         self.__ttl_name = "Ttl"
@@ -35,20 +37,19 @@ class Stage:
 
         clock_pos = (self.__width + self.__wall_width + 1,
                      self.__height + self.__wall_height)
-        self.__clock = Clock(fps, clock_pos,
-                             self.__stage_color, self.__walls_color,
-                             clock_font, clock_font_color, self.__win, ttl)
+        self.__clock = Clock(clock_pos, self.__stage_color, self.__walls_color,
+                             clock_font, clock_font_color, self.__win)
 
     # Initializes the stage and returns its walls and stage.
     def __initialize_stage(self) -> Tuple[List[Rectangle], Rectangle]:
-        wall_rects = (pygame.Rect(0, 0,
+        wall_rects = [pygame.Rect(0, 0,
                                   self.__wall_width, self.__window_height),
                       pygame.Rect(0, 0,
                                   self.__window_width, self.__wall_height),
                       pygame.Rect(self.__wall_width+self.__width, 0,
                                   self.__wall_width, self.__window_height),
                       pygame.Rect(0, self.__wall_height+self.__height,
-                                  self.__window_width, self.__wall_height))
+                                  self.__window_width, self.__wall_height)]
         stage_rect = pygame.Rect(self.__wall_width, self.__wall_height,
                                  self.__width, self.__height)
 
@@ -109,6 +110,13 @@ class Stage:
     # Returns the amount of days that has passed.
     def get_days(self) -> int:
         return self.__days
+
+    # Gets the TTL in seconds.
+    def get_ttl_seconds(self) -> int:
+        return self.__clock.get_ttl()/1000
+
+    def get_fps(self) -> int:
+        return self.__clock.get_fps()
 
     # Draws all the text boxes.
     def draw_boxes(self):

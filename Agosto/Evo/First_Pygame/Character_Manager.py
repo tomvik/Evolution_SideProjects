@@ -26,10 +26,10 @@ class CharacterManager:
     # selected with random values of sensing and speed, within the range.
     # Replaces the list of characters.
     # Initializes stage values too.
-    def initialize_character_list(self, amount: int,
-                                  sensing_range: Tuple[int, int],
-                                  speed_range: Tuple[int, int],
-                                  stage: Stage):
+    def initialize(self, amount: int,
+                   sensing_range: Tuple[int, int],
+                   speed_range: Tuple[int, int],
+                   stage: Stage):
         self.__stage_limits = stage.get_stage_limits()
         self.__stage_color = stage.get_stage_color()
         self.__walls_color = stage.get_walls_color()

@@ -5,21 +5,22 @@ import TextBox
 
 
 class Clock:
-    def __init__(self, fps: int, pos: Tuple[int, int], box_color: List[int],
+    def __init__(self, pos: Tuple[int, int], box_color: List[int],
                  background_color: List[int], font: Tuple[str, int],
-                 font_color: List[int], win: pygame.Surface, ttl: int = 5000):
+                 font_color: List[int], win: pygame.Surface,
+                 fps: int = 40, ttl: int = 5000):
         self.__fps = fps
-        self.__clock = pygame.time.Clock()
         self.__ttl = ttl
         self.__total_ms = 0
         self.__hour = 0
         self.__minute = 0
         self.__second = 0
         self.__first = True
-        is_input = (False, False, False)
-        data = (("Hour", "{0:02}:".format(self.__hour)),
+        self.__clock = pygame.time.Clock()
+        is_input = [False, False, False]
+        data = [("Hour", "{0:02}:".format(self.__hour)),
                 ("Minute", "{0:02}:".format(self.__minute)),
-                ("Second", "{0:02}".format(self.__second)))
+                ("Second", "{0:02}".format(self.__second))]
         self.__hour_box, self.__minute_box, self.__second_box = \
             TextBox.create_array(
                 pos, (font_color, background_color), 0, win,
@@ -28,6 +29,14 @@ class Clock:
     # Returns true if the time is still under the TTL.
     def still_valid(self) -> bool:
         return self.__total_ms < self.__ttl
+
+    # Get TTL.
+    def get_ttl(self) -> int:
+        return self.__ttl
+
+    # Get FPS.
+    def get_fps(self) -> int:
+        return self.__fps
 
     # Sets the new TTL.
     def set_ttl(self, ttl: int):
