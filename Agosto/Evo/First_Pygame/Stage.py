@@ -8,8 +8,9 @@ import Distances
 
 
 class Stage:
-    def __init__(self, width: int, height: int, stage_color: List[int],
-                 walls_color: List[int], win: pygame.Surface, fps: int,
+    def __init__(self, size: Tuple[int, int],
+                 stage_colors: Tuple[List[int], List[int]],
+                 win: pygame.Surface, fps: int,
                  clock_font: Tuple[str, int], clock_font_color: List[int],
                  ttl: int, text_box_font: Tuple[str, int]):
         self.__characters_name = "Characters"
@@ -18,10 +19,10 @@ class Stage:
         self.__fps_name = "Fps"
         self.__days_name = "Days"
 
-        self.__width = width
-        self.__height = height
-        self.__stage_color = stage_color
-        self.__walls_color = walls_color
+        self.__width = size[0]
+        self.__height = size[1]
+        self.__stage_color = stage_colors[0]
+        self.__walls_color = stage_colors[1]
         self.__win = win
         self.__days = 0
 

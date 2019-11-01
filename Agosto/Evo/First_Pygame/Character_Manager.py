@@ -79,6 +79,7 @@ class CharacterManager:
                                                            only_walls),
                                       food_manager)
             i += 1
+        food_manager.draw()
 
     # Resets all the characters to a random position inside the stage.
     def reset_characters(self):

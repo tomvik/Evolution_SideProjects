@@ -8,6 +8,7 @@ from Character_Manager import CharacterManager
 from Food import Food
 from Food_Manager import FoodManager
 import Stage
+import Constants
 import TextBox
 
 
@@ -18,8 +19,7 @@ def initialize_stage(stage_size: Tuple[int, int],
                      clock_font_color: List[int], ttl: int,
                      text_font: Tuple[str, int],
                      win: pygame.Surface) -> Stage.Stage:
-    stage = Stage.Stage(stage_size[0], stage_size[1],
-                        stage_colors[0], stage_colors[1],
+    stage = Stage.Stage(stage_size, stage_colors,
                         win, fps, clock_font,
                         clock_font_color, ttl, text_font)
     pygame.display.update()
@@ -60,7 +60,7 @@ def initialize_managers(stage: Stage.Stage, character_size: int,
 # Waits for the key enter and while doing so,
 # the input textboxes can be written on.
 def wait_for_enter(stage: Stage.Stage):
-    waiting = True
+    waiting: bool = True
     while waiting:
         for event in pygame.event.get():
             stage.handle_event(event)
@@ -105,7 +105,7 @@ def handle_events(in_game: bool, stage: Stage.Stage) -> int:
 def new_round_game(character_manager: CharacterManager,
                    food_manager: FoodManager,
                    stage: Stage.Stage) -> bool:
-    character_manager.new_round_characters(50)
+    character_manager.new_round_characters(Constants.REPRODUCTION)
     food_manager.reset_foods(character_manager.get_list())
     stage.new_round_stage(character_manager.characters_left(),
                           food_manager.food_left())
@@ -115,10 +115,9 @@ def new_round_game(character_manager: CharacterManager,
 # Runs the game. Returns false if the round has finished.
 def run_game(character_manager: CharacterManager, food_manager: FoodManager,
              stage: Stage.Stage, traverse_character: bool) -> bool:
-    round_life = True
+    round_life: bool = True
     character_manager.move_characters(food_manager, stage,
                                       traverse_character)
-    food_manager.draw()
     round_life = stage.handle_in_game(character_manager.characters_left(),
                                       food_manager.food_left())
     if character_manager.characters_left() is 0 \
