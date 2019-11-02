@@ -7,16 +7,17 @@ from numpy.random import choice
 
 from Rectangle import Rectangle
 import Constants
+from Common_Types import *
 
 
 # Returns the Euclidean distance between two points.
-def L2(a: Tuple[int, int], b: Tuple[int, int]) -> float:
+def L2(a: Point, b: Point) -> float:
     return math.sqrt(math.pow((a[0]-b[0]), 2) + math.pow((a[1]-b[1]), 2))
 
 
 # Returns the L infinite between two points.
 # L infinite is commonly the max, not the min.
-def Linf(a: Tuple[int, int], b: Tuple[int, int]) -> int:
+def Linf(a: Point, b: Point) -> int:
     return min(abs(a[0]-b[0]), abs(a[1]-b[1]))
 
 
@@ -71,8 +72,7 @@ def closest_of_all_Linf(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
 
 
 # Returns the direction [dx, dy] from point a to point b.
-def direction_to_point(a: Tuple[int, int],
-                       b: Tuple[int, int]) -> Tuple[float, float]:
+def direction_to_point(a: Point, b: Point) -> Direction:
     move_x = b[0] - a[0]
     move_y = b[1] - a[1]
     total = abs(move_x) + abs(move_y)
@@ -89,7 +89,7 @@ def direction_to_point(a: Tuple[int, int],
 # If it's not within the sensing radius r, it returns a random movement.
 # It also returns True if it is within the area.
 def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> \
-        Tuple[Tuple[float, float], bool]:
+        Tuple[Direction, bool]:
     a_center = a.get_center()
     corners = b.get_corners()
     for corner in corners:
@@ -100,7 +100,7 @@ def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> \
     return direction_to_point(a_center, b.get_center()), True
 
 
-def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:
+def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Point:
     corners = b.get_corners()
     vip = a.get_corners()
     vip = vip[0]
@@ -135,8 +135,7 @@ def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:
 # 2 = right, 3 = down-right
 # 4 = down, 5 = down-left
 # 6 = left, 7 = up-left
-def index_direction_to_point(a: Tuple[int, int],
-                             b: Tuple[int, int]) -> int:
+def index_direction_to_point(a: Point, b: Point) -> int:
     dx, dy = direction_to_point(a, b)
     if -0.25 < dx <= 0.25:  # This means dx = 0 or does not move in x.
         if dy > 0:  # It should go down.
@@ -160,8 +159,7 @@ def index_direction_to_point(a: Tuple[int, int],
 
 
 # Returns a random weighted movement towards the direction.
-def get_weighted_random_move(a: Tuple[int, int],
-                             direction: int) -> Tuple[float, float]:
+def get_weighted_random_move(a: Point, direction: int) -> Direction:
     index = index_direction_to_point(a, Constants.INTEREST_POINTS[direction])
     index = get_weighted_index(Constants.PROBABILITIES_MOVES,
                                index,

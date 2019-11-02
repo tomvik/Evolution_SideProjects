@@ -6,21 +6,23 @@ from Rectangle import Rectangle
 from Food import Food
 import Distances
 import Constants
+from Common_Types import *
 
 
 class Character(Rectangle):
-    # Variable to set where the next home would be
+    # Class variable to set where the next home would be
     next_home = (1, 1)
 
-    def __init__(self, left: int, top: int, width: int, height: int,
-                 background_color: List[int],
-                 win: pygame.Surface, speed: int, sensing_range: int,
+    def __init__(self, rectangle: PointSize,
+                 background_color: Color,
+                 speed: int, sensing_range: int,
                  movement_limit: int):
         self._speed = speed
         self._sensing_range = sensing_range
         self._max_movements = movement_limit
-        super().__init__(pygame.Rect(left, top, width, height),
-                         (0, 0, 0), background_color, win, movement_limit)
+
+        super().__init__(rectangle,
+                         (0, 0, 0), background_color, movement_limit)
         self.set_color_attributes()
         self.draw()
         self._generation = 0

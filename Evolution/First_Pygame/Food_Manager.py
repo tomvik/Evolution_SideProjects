@@ -7,18 +7,18 @@ from Food import Food
 import Stage
 import Distances
 from Character import Character
+from Common_Types import *
 
 
 class FoodManager:
-    def __init__(self, food_size: int, food_color: List[int]):
+    def __init__(self, food_size: int, food_color: Color):
         self.__foods = list()
         self.__food_size = food_size
         self.__food_color = food_color
         self.__initial_amount = 0
         self.__range_of_values = (0, 0)
-        self.__stage_limits = (0, 0, 0, 0)
-        self.__stage_color = (0, 0, 0)
-        self.__win = 0
+        self.__stage_limits = Limits(0, 0, 0, 0)
+        self.__stage_color = Color(0, 0, 0)
 
     # Spans randomly throughout the stage the amount of food selected with
     # random values of nutrition within the range.
@@ -29,13 +29,12 @@ class FoodManager:
                    blockings: List[Rectangle.Rectangle]):
         foods = list()
         width, height = blockings[0].get_size()
-        self.__stage_limits = stage.get_stage_limits()
-        self.__stage_limits[0] += width
-        self.__stage_limits[1] += height
-        self.__stage_limits[2] -= width
-        self.__stage_limits[3] -= height
+        limits = stage.get_stage_limits()
+        self.__stage_limits = Limits(limits.x_min + width,
+                                     limits.y_min + height,
+                                     limits.x_max - width,
+                                     limits.y_max - height)
         self.__stage_color = stage.get_stage_color()
-        self.__win = stage.get_win()
         self.__range_of_values = range_of_values
 
         self.__foods = self.__span_random_food(amount, blockings)
@@ -52,8 +51,7 @@ class FoodManager:
     # Returns the direction to the closes food from the character received.
     # If the food is within distance of the speed, it will also move
     # towards it.
-    def direction_to_closest_food(self,
-                                  character: Character) -> Tuple[float, float]:
+    def direction_to_closest_food(self, character: Character) -> Direction:
         food = Distances.closest_of_all_L2(character, self.__foods)
         d, within_r = Distances.sensing_direction(character, food,
                                                   character.get_sensing())
@@ -63,7 +61,7 @@ class FoodManager:
             if within_r:
                 character.draw_background()
                 character.teleport(food.get_center())
-                return (0, 0)
+                return Direction(0, 0)
         return d
 
     # Delete the specific food.
@@ -110,9 +108,10 @@ class FoodManager:
             current_x, current_y = Rectangle.free_random_position(
                 self.__stage_limits, self.__food_size, blockings + foods)
 
+            rectangle = PointSize(current_x, current_y,
+                                  self.__food_size, self.__food_size)
             foods.append(Food(len(foods)+1,
-                              current_x, current_y,
-                              self.__food_size, self.__food_size,
+                              rectangle,
                               self.__food_color, self.__stage_color,
-                              self.__win, current_value))
+                              current_value))
         return foods

@@ -6,30 +6,31 @@ from Character_Manager import CharacterManager
 from Food_Manager import FoodManager
 from Stage import Stage
 import Constants
+import Rectangle
+from Common_Types import *
 
 
 class GameManager:
     def __init__(self,
-                 window_size: Tuple[int, int],
+                 window_size: Point,
                  window_title: str,
-                 stage_size: Tuple[int, int],
-                 stage_colors: Tuple[List[int], List[int]],
-                 clock_font: Tuple[str, int],
-                 clock_font_color: List[int],
-                 text_font: Tuple[str, int],
+                 stage_size: Point,
+                 stage_colors: Tuple[Color, Color],
+                 clock_font: Font,
+                 clock_font_color: Color,
+                 text_font: Font,
                  character_size: int,
                  character_speed: Tuple[int, int],
                  character_sensing: Tuple[int, int],
                  character_patience: Tuple[int, int],
                  traverse_characters: bool,
                  food_size: int,
-                 food_color: List[int],
+                 food_color: Color,
                  food_value: int) -> 'GameManager':
         self.__days = 0
         self.__traverse = traverse_characters
-        self.__window = pygame.display.set_mode(window_size)
-        pygame.display.set_caption(window_title)
-        self.__stage = self.__initialize_stage(self.__window,
+        self.__stage = self.__initialize_stage(window_size,
+                                               window_title,
                                                stage_size,
                                                stage_colors,
                                                clock_font,
@@ -71,13 +72,14 @@ class GameManager:
 
     # Initializes the stage.
     def __initialize_stage(self,
-                           win: pygame.Surface,
-                           stage_size: Tuple[int, int],
-                           stage_colors: Tuple[List[int], List[int]],
-                           clock_font: Tuple[str, int],
-                           clock_font_color: List[int],
-                           text_font: Tuple[str, int]) -> Stage:
-        stage = Stage(win, stage_size, stage_colors,
+                           window_size: Size,
+                           window_title: str,
+                           stage_size: Size,
+                           stage_colors: Tuple[Color, Color],
+                           clock_font: Font,
+                           clock_font_color: Color,
+                           text_font: Font) -> Stage:
+        stage = Stage(window_size, window_title, stage_size, stage_colors,
                       clock_font, clock_font_color, text_font)
         pygame.display.update()
         return stage
@@ -92,7 +94,7 @@ class GameManager:
                               character_patience: Tuple[int, int],
                               number_of_foods: int,
                               food_size: int,
-                              food_color: List[int],
+                              food_color: Color,
                               food_value: int) -> Tuple[CharacterManager,
                                                         FoodManager]:
 

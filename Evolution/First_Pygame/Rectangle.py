@@ -2,17 +2,20 @@ import pygame
 import random
 import math
 from typing import List, Tuple
+from Common_Types import *
 
 
 class Rectangle:
+    __window = None
 
-    def __init__(self, rectangle: pygame.Rect, color: List[int],
-                 background_color: List[int], win: pygame.Surface,
+    def __init__(self,
+                 rectangle: PointSize,
+                 color: Color,
+                 background_color: Color,
                  max_movement: int = 80):
-        self._rectangle = rectangle
+        self._rectangle = pygame.Rect(rectangle)
         self._color = color
         self._background_color = background_color
-        self._win = win
         self.draw()
         self._movements = 0
         self._direction = 0
@@ -27,38 +30,39 @@ class Rectangle:
 
     # Returns the window.
     def get_window(self) -> pygame.Surface:
-        return (self._win)
+        return (self.__class__.__window)
 
     # Returns the color.
-    def get_color(self) -> List[int]:
+    def get_color(self) -> Color:
         return self._color
 
     # Returns the size as in width, height
-    def get_size(self) -> Tuple[int, int]:
-        return (self._rectangle.width, self._rectangle.height)
+    def get_size(self) -> Size:
+        return Size(self._rectangle.width, self._rectangle.height)
 
     # Returns the background color.
-    def get_background_color(self) -> List[int]:
+    def get_background_color(self) -> Color:
         return self._background_color
 
     # Returns the Rectangle corners.
     # a b
     # c d
-    def get_corners(self) -> List[Tuple[int, int]]:
-        return [self._rectangle.topleft, self._rectangle.topright,
-                self._rectangle.bottomleft, self._rectangle.bottomright]
+    def get_corners(self) -> Corners:
+        return Corners(self._rectangle.topleft, self._rectangle.topright,
+                       self._rectangle.bottomleft, self._rectangle.bottomright)
 
     # Returns the Rectangle limits as in: x_min, y_min, x_max, y_max
-    def get_limits(self) -> List[int]:
-        return [self._rectangle.left, self._rectangle.top,
-                self._rectangle.right, self._rectangle.bottom]
+    def get_limits(self) -> Limits:
+        return Limits(self._rectangle.left, self._rectangle.top,
+                      self._rectangle.right, self._rectangle.bottom)
 
     # Returns the position of the left top corner as x,y
-    def get_position(self) -> Tuple[int, int]:
+    def get_position(self) -> Point:
         return self._rectangle.topleft
 
     # Returns the center position.
-    def get_center(self) -> Tuple[int, int]:
+    def get_center(self) -> Point:
+
         return self._rectangle.center
 
     # Returns the direction to where it's headed.
@@ -69,12 +73,16 @@ class Rectangle:
     def get_movement_limit(self) -> int:
         return self._max_movements
 
+    def set_window(window_size: Size, window_title: str):
+        __class__.__window = pygame.display.set_mode(window_size)
+        pygame.display.set_caption(window_title)
+
     # Sets the color.
-    def set_color(self, color: List[int]):
+    def set_color(self, color: Color):
         self._color = color
 
     # Sets the background color
-    def set_background_color(self, background_color: List[int]):
+    def set_background_color(self, background_color: Color):
         self._background_color = background_color
 
     # Sets the left side to the x input
@@ -94,31 +102,31 @@ class Rectangle:
         self._rectangle.bottom = bottom
 
     # Move the rectangle dx and dy from its current position.
-    def move(self, movement: Tuple[float, float]):
+    def move(self, movement: Direction):
         self._rectangle.left += movement[0]
         self._rectangle.top += movement[1]
 
     # Teleports the rectangle to x and y
-    def teleport(self, position: Tuple[int, int]):
+    def teleport(self, position: Point):
         self._rectangle.left = position[0]
         self._rectangle.top = position[1]
 
     # Draws itself.
     def draw(self):
-        pygame.draw.rect(self._win, self._color, self._rectangle)
+        pygame.draw.rect(self.__class__.__window, self._color, self._rectangle)
 
     # Draws the background.
     # Note: Must be used before moving the object.
     def draw_background(self):
-        pygame.draw.rect(self._win, self._background_color, self._rectangle)
+        pygame.draw.rect(self.__class__.__window, self._background_color,
+                         self._rectangle)
 
     # Blits in the window a certain Rectangle or Surface received on itself.
     def blit(self, thing):
-        self._win.blit(thing, self._rectangle)
+        self.__class__.__window.blit(thing, self._rectangle)
 
     # Returns true if there would be a collision between self and b.
-    def would_collide(self, b: 'Rectangle',
-                      mov: Tuple[int, int]) -> bool:
+    def would_collide(self, b: 'Rectangle', mov: Point) -> bool:
         self._rectangle.left += mov[0]
         self._rectangle.top += mov[1]
         would_collide = self._rectangle.colliderect(b.get_rectangle())
@@ -127,7 +135,7 @@ class Rectangle:
         return would_collide
 
     # Returns True if self collides with the area given.
-    def area_collide(self, area: List[int]) -> bool:
+    def area_collide(self, area: Limits) -> bool:
         collides = False
         left, top, right, bottom = self.get_limits()
         left_, top_, right_, bottom_ = area
@@ -140,7 +148,7 @@ class Rectangle:
         return collides
 
     # Returns true if self collides with the given point.
-    def collide_point(self, b: Tuple[int, int]) -> bool:
+    def collide_point(self, b: Point) -> bool:
         return self._rectangle.collidepoint(b)
 
     # Returns true if self collides with another Rectangle.
@@ -150,9 +158,9 @@ class Rectangle:
 
 # Returns a random position that does not collide with any other blocking.
 # And may be next to the walls.
-def free_random_position(limits: List[int], size: int,
+def free_random_position(limits: Limits, size: int,
                          blockings: List[Rectangle],
-                         in_wall: bool = False) -> Tuple[int, int]:
+                         in_wall: bool = False) -> Point:
     x_min, y_min, x_max, y_max = limits
     x_max -= size
     y_max -= size
@@ -184,7 +192,7 @@ def free_random_position(limits: List[int], size: int,
 
 
 # Returns True if it's blocked.
-def check_if_blocked(position: Tuple[int, int], size: int,
+def check_if_blocked(position: Point, size: int,
                      blockings: List[Rectangle]) -> bool:
     current_limits = (position[0], position[1],
                       position[0] + size, position[1] + size)

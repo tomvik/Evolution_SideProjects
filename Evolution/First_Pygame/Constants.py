@@ -1,4 +1,5 @@
 from typing import List, Tuple
+from Common_Types import *
 
 # Simulation constants
 FILE_NAME: str = "Evolution/Stats/stats_of_run_"
@@ -6,25 +7,25 @@ FILE_NAME: str = "Evolution/Stats/stats_of_run_"
 # Window constants
 WINDOW_WIDTH: int = 1200
 WINDOW_HEIGHT: int = 700
-WINDOW_SIZE: Tuple[int, int] = (WINDOW_WIDTH, WINDOW_HEIGHT)
+WINDOW_SIZE: Size = Size(WINDOW_WIDTH, WINDOW_HEIGHT)
 WINDOW_TITLE: str = "Evolution Simulator"
 
 # Color pallete
-CLEAR_GREY: List[int] = [211, 211, 211]
-DARK_GREY: List[int] = [140, 140, 140]
-BLACK: List[int] = [0, 0, 0]
-WHITE: List[int] = [255, 255, 255]
+CLEAR_GREY: Color = Color(211, 211, 211)
+DARK_GREY: Color = Color(140, 140, 140)
+BLACK: Color = Color(0, 0, 0)
+WHITE: Color = Color(255, 255, 255)
 
 # Stage constants
-STAGE_SIZE: Tuple[int, int] = (800, 500)
-WALLS_DIMENSIONS: Tuple[int, int] = (((WINDOW_WIDTH-STAGE_SIZE[0])/2),
-                                     ((WINDOW_HEIGHT-STAGE_SIZE[1])/2))
-STAGE_COLORS: Tuple[List[int], List[int]] = (CLEAR_GREY, DARK_GREY)
-STAGE_CENTER: Tuple[int, int] = (WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
+STAGE_SIZE: Size = Size(800, 500)
+WALLS_DIMENSIONS: Size = Size(((WINDOW_WIDTH-STAGE_SIZE[0])/2),
+                              ((WINDOW_HEIGHT-STAGE_SIZE[1])/2))
+STAGE_COLORS: Tuple[Color, Color] = (CLEAR_GREY, DARK_GREY)
+STAGE_CENTER: Point = Point(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
 
-CLOCK_FONT: Tuple[str, int] = ("Trebuchet MS", 25)
-CLOCK_COLOR: List[int] = BLACK
-TEXT_FONT: Tuple[str, int] = ("Trebuchet MS", 15)
+CLOCK_FONT: Font = Font("Trebuchet MS", 25)
+CLOCK_COLOR: Color = BLACK
+TEXT_FONT: Font = Font("Trebuchet MS", 15)
 
 CHARACTERS = "Characters"
 FOODS = "Foods"
@@ -72,7 +73,7 @@ INSTRUCTIONS_TEXTBOXES = [("", "Pre-game Instructions:"), ("", " "),
 INSTRUCTIONS_INPUT = [False] * len(INSTRUCTIONS_TEXTBOXES)
 
 # Food constants
-FOOD_COLOR: List[int] = WHITE
+FOOD_COLOR: Color = WHITE
 FOOD_SIZE = 5
 
 # Character constants
@@ -106,18 +107,18 @@ MUTATIONS_INDEXES: List[int] = range(5)
 
 # Moves constants
 
-INTEREST_POINTS: List[Tuple[int, int]] = \
+INTEREST_POINTS: List[Point] = \
     [STAGE_CENTER,
      WALLS_DIMENSIONS,
-     (WALLS_DIMENSIONS[0] + STAGE_SIZE[0], WALLS_DIMENSIONS[1]),
-     (WALLS_DIMENSIONS[0], WALLS_DIMENSIONS[1] + STAGE_SIZE[1]),
-     (WALLS_DIMENSIONS[0] + STAGE_SIZE[0],
-      WALLS_DIMENSIONS[1] + STAGE_SIZE[1])]
+     Point(WALLS_DIMENSIONS[0] + STAGE_SIZE[0], WALLS_DIMENSIONS[1]),
+     Point(WALLS_DIMENSIONS[0], WALLS_DIMENSIONS[1] + STAGE_SIZE[1]),
+     Point(WALLS_DIMENSIONS[0] + STAGE_SIZE[0],
+           WALLS_DIMENSIONS[1] + STAGE_SIZE[1])]
 
-POSSIBLE_MOVES: List[Tuple[float, float]] = [(0, -1), (0.5, -0.5),
-                                             (1, 0), (0.5, 0.5),
-                                             (0, 1), (-0.5, 0.5),
-                                             (-1, 0), (-0.5, -0.5)]
+POSSIBLE_MOVES: List[Direction] = [(0, -1), (0.5, -0.5),
+                                   (1, 0), (0.5, 0.5),
+                                   (0, 1), (-0.5, 0.5),
+                                   (-1, 0), (-0.5, -0.5)]
 
 MOVES_INDEXES: List[int] = range(8)
 

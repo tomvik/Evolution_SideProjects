@@ -8,6 +8,7 @@ from Stage import Stage
 from Food_Manager import FoodManager
 import Distances
 import Constants
+from Common_Types import *
 
 
 class CharacterManager:
@@ -16,10 +17,9 @@ class CharacterManager:
         self.__finished_characters = list()
         self.__character_size = character_size
         self.__initial_amount = 0
-        self.__stage_limits = [0, 0, 0, 0]
-        self.__stage_color = [0, 0, 0]
-        self.__walls_color = [0, 0, 0]
-        self.__win = 0
+        self.__stage_limits = Limits(0, 0, 0, 0)
+        self.__stage_color = Color(0, 0, 0)
+        self.__walls_color = Color(0, 0, 0)
         self.__in_wall = True
         self.__newest_generation = 0
         self.__oldest_generation = 0
@@ -38,7 +38,6 @@ class CharacterManager:
         self.__stage_limits = stage.get_stage_limits()
         self.__stage_color = stage.get_stage_color()
         self.__walls_color = stage.get_walls_color()
-        self.__win = stage.get_win()
         self.__characters.clear()
         self.__heading_home = 0
         self.__span_random_characters(amount, sensing_range, speed_range,
@@ -187,21 +186,21 @@ class CharacterManager:
     # If there's no food left, it returns a random movement.
     # TODO: Make this more pretty.
     def __goto_closest_food(self, index: int,
-                            food_manager: FoodManager) -> Tuple[float, float]:
+                            food_manager: FoodManager) -> Direction:
         if food_manager.food_left() is 0:
             return Distances.get_weighted_random_move(self.__characters[index].get_center(), self.__characters[index].get_direction())  # noqa: E501
         return food_manager.direction_to_closest_food(self.__characters[index])
 
     # Returns the direction that the character shall follow.
     def __get_direction(self, index: int, stage: Stage,
-                        food_manager: FoodManager) -> Tuple[float, float]:
+                        food_manager: FoodManager) -> Direction:
         if (self.__characters[index].is_hungry() is False):
             return self.__goto_closest_wall(index, stage)
         return self.__goto_closest_food(index, food_manager)
 
     # Moves the character a certain dx and dy times its own speed, plus
     # checks on the foods and eats if the character is hungry.
-    def __move_character(self, index: int, dir: Tuple[float, float],
+    def __move_character(self, index: int, dir: Direction,
                          blockings: List[Rectangle.Rectangle],
                          food_manager: FoodManager):
         self.__characters[index].move(dir[0], dir[1], blockings)
@@ -229,15 +228,13 @@ class CharacterManager:
         current_movement = random.randint(movements_range[0],
                                           movements_range[1])
 
-        current_x, current_y = Rectangle.free_random_position(
+        x, y = Rectangle.free_random_position(
             self.__stage_limits, self.__character_size, self.__characters,
             self.__in_wall)
-        self.__characters.append(Character(current_x,
-                                           current_y,
-                                           self.__character_size,
-                                           self.__character_size,
+        pos_dim = PointSize(x, y, self.__character_size,
+                            self.__character_size)
+        self.__characters.append(Character(pos_dim,
                                            self.__stage_color,
-                                           self.__win,
                                            current_speed,
                                            current_sensing,
                                            current_movement))
