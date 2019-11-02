@@ -1,53 +1,12 @@
-from typing import NamedTuple
+from collections import namedtuple
 
-
-class Color(NamedTuple):
-    red: int
-    green: int
-    blue: int
-
-
-class Point(NamedTuple):
-    x: int
-    y: int
-
-
-class Size(NamedTuple):
-    width: int
-    height: int
-
-
-class PointSize(NamedTuple):
-    x: int
-    y: int
-    width: int
-    height: int
-
-
-class Corners(NamedTuple):
-    top_left: int
-    top_right: int
-    bottom_right: int
-    bottom_left: int
-
-
-class Limits(NamedTuple):
-    x_min: int
-    y_min: int
-    x_max: int
-    y_max: int
-
-
-class Direction(NamedTuple):
-    dx: float
-    dy: float
-
-
-class Font(NamedTuple):
-    letter: str
-    size: int
-
-
-class KeyValue(NamedTuple):
-    key: str
-    value: int
+Point = namedtuple('Point', ['x', 'y'])
+Color = namedtuple('Color', ['red', 'green', 'blue'])
+Size = namedtuple('Size', ['width', 'height'])
+PointSize = namedtuple('PointSize', ['x', 'y', 'width', 'height'])
+Corners = namedtuple('Corners', ['top_left', 'top_right',
+                                 'bottom_right', 'bottom_left'])
+Limits = namedtuple('Limits', ['x_min', 'y_min', 'x_max', 'y_max'])
+Direction = namedtuple('Direction', ['dx', 'dy'])
+Font = namedtuple('Font', ['letter', 'size'])
+KeyValue = namedtuple('KeyValue', ['key', 'value'])
