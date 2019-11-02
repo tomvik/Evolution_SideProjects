@@ -11,11 +11,10 @@ import Constants
 
 
 class CharacterManager:
-    def __init__(self, character_size: int, character_color: List[int]):
+    def __init__(self, character_size: int):
         self.__characters = list()
         self.__finished_characters = list()
         self.__character_size = character_size
-        self.__character_color = character_color
         self.__initial_amount = 0
         self.__stage_limits = [0, 0, 0, 0]
         self.__stage_color = [0, 0, 0]
@@ -188,21 +187,21 @@ class CharacterManager:
     # If there's no food left, it returns a random movement.
     # TODO: Make this more pretty.
     def __goto_closest_food(self, index: int,
-                            food_manager: FoodManager) -> Tuple[int, int]:
+                            food_manager: FoodManager) -> Tuple[float, float]:
         if food_manager.food_left() is 0:
             return Distances.get_weighted_random_move(self.__characters[index].get_center(), self.__characters[index].get_direction())  # noqa: E501
         return food_manager.direction_to_closest_food(self.__characters[index])
 
     # Returns the direction that the character shall follow.
     def __get_direction(self, index: int, stage: Stage,
-                        food_manager: FoodManager) -> Tuple[int, int]:
+                        food_manager: FoodManager) -> Tuple[float, float]:
         if (self.__characters[index].is_hungry() is False):
             return self.__goto_closest_wall(index, stage)
         return self.__goto_closest_food(index, food_manager)
 
     # Moves the character a certain dx and dy times its own speed, plus
     # checks on the foods and eats if the character is hungry.
-    def __move_character(self, index: int, dir: Tuple[int, int],
+    def __move_character(self, index: int, dir: Tuple[float, float],
                          blockings: List[Rectangle.Rectangle],
                          food_manager: FoodManager):
         self.__characters[index].move(dir[0], dir[1], blockings)
@@ -237,7 +236,6 @@ class CharacterManager:
                                            current_y,
                                            self.__character_size,
                                            self.__character_size,
-                                           self.__character_color,
                                            self.__stage_color,
                                            self.__win,
                                            current_speed,

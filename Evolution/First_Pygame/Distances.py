@@ -87,15 +87,17 @@ def direction_to_point(a: Tuple[int, int],
 
 # Returns the direction [dx, dy] from object a to object b.
 # If it's not within the sensing radius r, it returns a random movement.
+# It also returns True if it is within the area.
 def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> \
-        Tuple[float, float]:
+        Tuple[Tuple[float, float], bool]:
     a_center = a.get_center()
     corners = b.get_corners()
     for corner in corners:
         if r < L2(a_center, corner):
-            return get_weighted_random_move(a.get_center(), a.get_direction())
+            return get_weighted_random_move(a.get_center(),
+                                            a.get_direction()), False
 
-    return direction_to_point(a_center, b.get_center())
+    return direction_to_point(a_center, b.get_center()), True
 
 
 def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:

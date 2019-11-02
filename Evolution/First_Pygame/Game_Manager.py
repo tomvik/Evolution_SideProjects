@@ -18,7 +18,6 @@ class GameManager:
                  clock_font_color: List[int],
                  text_font: Tuple[str, int],
                  character_size: int,
-                 character_color: List[int],
                  character_speed: Tuple[int, int],
                  character_sensing: Tuple[int, int],
                  character_patience: Tuple[int, int],
@@ -45,7 +44,6 @@ class GameManager:
             self.__initialize_managers(self.__stage,
                                        stage_data[Constants.CHARACTERS],
                                        character_size,
-                                       character_color,
                                        character_speed,
                                        character_sensing,
                                        character_patience,
@@ -56,11 +54,7 @@ class GameManager:
         pygame.display.update()
         self.__wait_for_enter()
         self.__stage.initialize_game()
-        self.__file_name = Constants.FILE_NAME
-        i = 0
-        while os.path.isfile(self.__file_name + str(i) + ".txt"):
-            i += 1
-        self.__file_name += str(i) + ".txt"
+        self.__file_name = self.__get_new_file_name()
 
     # Runs the game in continuous mode.
     def continous_game(self):
@@ -73,7 +67,7 @@ class GameManager:
                 window_life = self.__new_round()
                 round_life = True
         pygame.display.update()
-        self.__wait_for_enter()
+        self.__wait_for_exit()
 
     # Initializes the stage.
     def __initialize_stage(self,
@@ -93,7 +87,6 @@ class GameManager:
                               stage: Stage,
                               number_of_characters: int,
                               character_size: int,
-                              character_color: List[int],
                               character_speed: Tuple[int, int],
                               character_sensing: Tuple[int, int],
                               character_patience: Tuple[int, int],
@@ -103,8 +96,7 @@ class GameManager:
                               food_value: int) -> Tuple[CharacterManager,
                                                         FoodManager]:
 
-        character_manager = CharacterManager(character_size,
-                                             character_color)
+        character_manager = CharacterManager(character_size)
         character_manager.initialize(number_of_characters,
                                      character_sensing,
                                      character_speed,
@@ -119,6 +111,12 @@ class GameManager:
                                 character_manager.get_list())
 
         return character_manager, food_manager
+
+    def __get_new_file_name(self) -> str:
+        i = 0
+        while os.path.isfile(Constants.FILE_NAME + str(i) + ".txt"):
+            i += 1
+        return Constants.FILE_NAME + str(i) + ".txt"
 
     # Waits for the input of textboxes.
     # It finishes once enter has been pressed.
@@ -140,6 +138,14 @@ class GameManager:
                 if event.type == pygame.KEYDOWN \
                         and event.key == pygame.K_RETURN:
                     waiting = False
+
+    # Waits for the key enter and while doing so,
+    # the input textboxes can be written on.
+    def __wait_for_exit(self):
+        while True:
+            for event in pygame.event.get():
+                if self.__maybe_quit(event):
+                    return
 
     # Returns a list of the values of the text_boxes.
     def __load_stage_state(self) -> Dict[str, int]:
@@ -208,7 +214,9 @@ class GameManager:
         self.__character_manager.new_round_characters(Constants.REPRODUCTION)
         self.__food_manager.reset_foods(self.__character_manager.get_list())
         self.__days += 1
-        self.__stage.new_round_stage(self.__load_data_dict(1))
+        text_boxes_dict = self.__load_data_dict(1)
+        self.__stage.new_round_stage(text_boxes_dict)
+        self.__update_stats(text_boxes_dict)
         return self.__character_manager.characters_left() > 0
 
     # Loads the data for the dictionary, depending the case.
@@ -230,7 +238,6 @@ class GameManager:
                               self.__character_manager.get_newborn(),
                               Constants.DAYS:
                               self.__days})
-            self.__update_stats(key_value)
         return key_value
 
     # Writes down the stats to the stats file.

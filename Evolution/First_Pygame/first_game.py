@@ -10,10 +10,9 @@ from Game_Manager import GameManager
 pygame.init()
 
 
-character_speed = (Constants.MIN_SPEED, Constants.MIN_SPEED)
+character_speed = (Constants.MIN_SPEED, Constants.MAX_SPEED)
 character_sensing = (Constants.MIN_SENSING, Constants.MIN_SENSING)
-character_patience = (Constants.MIN_MOVEMENTS, Constants.MIN_MOVEMENTS)
-character_color = (255, 0, 0)
+character_patience = (Constants.MIN_MOVEMENTS, Constants.MAX_MOVEMENTS)
 
 food_value = 1
 
@@ -25,7 +24,6 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.CLOCK_COLOR,
                            Constants.TEXT_FONT,
                            Constants.CHARACTER_SIZE,
-                           character_color,
                            character_speed,
                            character_sensing,
                            character_patience,

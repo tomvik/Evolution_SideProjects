@@ -50,11 +50,21 @@ class FoodManager:
         return len(self.__foods)
 
     # Returns the direction to the closes food from the character received.
+    # If the food is within distance of the speed, it will also move
+    # towards it.
     def direction_to_closest_food(self,
-                                  character: Character) -> Tuple[int, int]:
+                                  character: Character) -> Tuple[float, float]:
         food = Distances.closest_of_all_L2(character, self.__foods)
-        return Distances.sensing_direction(character, food,
-                                           character.get_sensing())
+        d, within_r = Distances.sensing_direction(character, food,
+                                                  character.get_sensing())
+        if within_r:
+            d2, within_r = Distances.sensing_direction(character, food,
+                                                       character.get_speed())
+            if within_r:
+                character.draw_background()
+                character.teleport(food.get_center())
+                return (0, 0)
+        return d
 
     # Delete the specific food.
     def delete_index(self, index: int):
@@ -83,10 +93,11 @@ class FoodManager:
         return character_was_hungry != character.is_hungry()
 
     # Spans the initial amount of food throughout the already defined stage.
-    def reset_foods(self,
-                    blockings: List[Rectangle.Rectangle]):
-        self.__foods = self.__span_random_food(self.__initial_amount,
-                                               blockings)
+    def reset_foods(self, blockings: List[Rectangle.Rectangle],
+                    amount: int = 0):
+        if amount == 0:
+            amount = self.__initial_amount
+        self.__foods = self.__span_random_food(amount, blockings)
 
     # Spans a random amount of food throughout the specified stage.
     def __span_random_food(self, amount: int,

@@ -6,7 +6,6 @@ import Rectangle
 
 class TextBox:
 
-    # TODO: add ID
     def __init__(self, position: Tuple[int, int], text_color: List[int],
                  box_color: List[int], box_transparent: bool,
                  background_color: List[int], font_letter: str, font_size: int,

@@ -13,14 +13,14 @@ class Character(Rectangle):
     next_home = (1, 1)
 
     def __init__(self, left: int, top: int, width: int, height: int,
-                 color: List[int], background_color: List[int],
+                 background_color: List[int],
                  win: pygame.Surface, speed: int, sensing_range: int,
                  movement_limit: int):
         self._speed = speed
         self._sensing_range = sensing_range
         self._max_movements = movement_limit
         super().__init__(pygame.Rect(left, top, width, height),
-                         color, background_color, win, movement_limit)
+                         (0, 0, 0), background_color, win, movement_limit)
         self.set_color_attributes()
         self.draw()
         self._generation = 0

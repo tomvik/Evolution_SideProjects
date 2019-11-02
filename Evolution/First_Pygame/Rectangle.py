@@ -14,7 +14,6 @@ class Rectangle:
         self._background_color = background_color
         self._win = win
         self.draw()
-        self._previous_movement = (0, 0)
         self._movements = 0
         self._direction = 0
         self._max_movements = max_movement
@@ -96,7 +95,6 @@ class Rectangle:
 
     # Move the rectangle dx and dy from its current position.
     def move(self, movement: Tuple[float, float]):
-        self._previous_movement = movement
         self._rectangle.left += movement[0]
         self._rectangle.top += movement[1]
 
