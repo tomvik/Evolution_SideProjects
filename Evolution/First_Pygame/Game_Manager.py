@@ -19,12 +19,12 @@ class GameManager:
                  clock_font: Font,
                  clock_font_color: Color,
                  text_font: Font,
-                 character_size: int,
+                 character_size: Size,
                  character_speed: Tuple[int, int],
                  character_sensing: Tuple[int, int],
                  character_patience: Tuple[int, int],
                  traverse_characters: bool,
-                 food_size: int,
+                 food_size: Size,
                  food_color: Color,
                  food_value: int) -> 'GameManager':
         self.__days = 0
@@ -123,7 +123,7 @@ class GameManager:
     # Waits for the input of textboxes.
     # It finishes once enter has been pressed.
     def __wait_for_input(self):
-        waiting: bool = True
+        waiting = True
         while waiting:
             for event in pygame.event.get():
                 self.__stage.handle_event(event)
@@ -134,7 +134,7 @@ class GameManager:
     # Waits for the key enter and while doing so,
     # the input textboxes can be written on.
     def __wait_for_enter(self):
-        waiting: bool = True
+        waiting = True
         while waiting:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN \

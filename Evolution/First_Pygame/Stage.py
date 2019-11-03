@@ -19,8 +19,8 @@ class Stage:
                  clock_font_color: Color,
                  text_box_font: Font):
         Rectangle.set_window(window_size, window_title)
-        self.__width = stage_size[0]
-        self.__height = stage_size[1]
+        self.__width = stage_size.width
+        self.__height = stage_size.height
         self.__stage_color = stage_colors[0]
         self.__walls_color = stage_colors[1]
 
@@ -39,16 +39,16 @@ class Stage:
 
     # Initializes the stage and returns its walls and stage.
     def __initialize_stage(self) -> Tuple[List[Rectangle], Rectangle]:
-        wall_rects = [(0, 0,
-                       self.__wall_width, self.__window_height),
-                      (0, 0,
-                       self.__window_width, self.__wall_height),
-                      (self.__wall_width+self.__width, 0,
-                       self.__wall_width, self.__window_height),
-                      (0, self.__wall_height+self.__height,
-                       self.__window_width, self.__wall_height)]
-        stage_rect = (self.__wall_width, self.__wall_height,
-                      self.__width, self.__height)
+        wall_rects = [PointSize(0, 0,
+                                self.__wall_width, self.__window_height),
+                      PointSize(0, 0,
+                                self.__window_width, self.__wall_height),
+                      PointSize(self.__wall_width+self.__width, 0,
+                                self.__wall_width, self.__window_height),
+                      PointSize(0, self.__wall_height+self.__height,
+                                self.__window_width, self.__wall_height)]
+        stage_rect = PointSize(self.__wall_width, self.__wall_height,
+                               self.__width, self.__height)
 
         walls = list()
         for wall in wall_rects:
@@ -59,8 +59,7 @@ class Stage:
         return walls, stage
 
     # Initializes the text boxes. This part is partly hard_coded.
-    def __initialize_text_boxes(self, font: Font) -> \
-            List[TextBox.TextBox]:
+    def __initialize_text_boxes(self, font: Font) -> List[TextBox.TextBox]:
         text_boxes = list()
 
         colors = (self.__stage_color, self.__walls_color)
@@ -84,6 +83,7 @@ class Stage:
         for i in range(len(self.__text_boxes)):
             if self.__text_boxes[i].get_name() == name:
                 return i
+        # Should never reach this case.
         return -1
 
     # Returns the walls.

@@ -18,8 +18,8 @@ WHITE: Color = Color(255, 255, 255)
 
 # Stage constants
 STAGE_SIZE: Size = Size(800, 500)
-WALLS_DIMENSIONS: Size = Size(((WINDOW_WIDTH-STAGE_SIZE[0])/2),
-                              ((WINDOW_HEIGHT-STAGE_SIZE[1])/2))
+WALLS_DIMENSIONS: Size = Size(((WINDOW_WIDTH-STAGE_SIZE.width)/2),
+                              ((WINDOW_HEIGHT-STAGE_SIZE.height)/2))
 STAGE_COLORS: Tuple[Color, Color] = (CLEAR_GREY, DARK_GREY)
 STAGE_CENTER: Point = Point(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
 
@@ -49,16 +49,16 @@ TEXTBOX_MATRIX_IS_INPUT = [False, True,
                            False, False,
                            False, False]
 
-TEXTBOX_MATRIX = [("", "Time of Round (s):"), (TTL, "5  "),
-                  ("", "fps:"), (FPS, "60 "),
-                  ("", "Max generations:"), (MAX_GENERATION, "15 "),
-                  ("", "# of Characters:"), (CHARACTERS, "30 "),
-                  ("", "# of Foods:"), (FOODS, "30 "),
+TEXTBOX_MATRIX = [("", "Time of Round (s):"), (TTL, "5    "),
+                  ("", "fps:"), (FPS, "60   "),
+                  ("", "Max generations:"), (MAX_GENERATION, "15   "),
+                  ("", "# of Characters:"), (CHARACTERS, "30   "),
+                  ("", "# of Foods:"), (FOODS, "30   "),
                   ("", "days:"), (DAYS, "0    "),
-                  ("", "Oldest generation:"), (OLDEST_GENERATION, "0  "),
-                  ("", "Newest generation:"), (NEWEST_GENERATION, "0  "),
-                  ("", "Perished yesterday:"), (PERISHED, "0  "),
-                  ("", "Newborn:"), (NEWBORN, "0  ")]
+                  ("", "Oldest generation:"), (OLDEST_GENERATION, "0    "),
+                  ("", "Newest generation:"), (NEWEST_GENERATION, "0    "),
+                  ("", "Perished yesterday:"), (PERISHED, "0    "),
+                  ("", "Newborn:"), (NEWBORN, "0    ")]
 
 INSTRUCTIONS_TEXTBOXES = [("", "Pre-game Instructions:"), ("", " "),
                           ("", "Input the data into"), ("", " "),
@@ -74,21 +74,21 @@ INSTRUCTIONS_INPUT = [False] * len(INSTRUCTIONS_TEXTBOXES)
 
 # Food constants
 FOOD_COLOR: Color = WHITE
-FOOD_SIZE = 5
+FOOD_SIZE = Size(5, 5)
 
 # Character constants
 REPRODUCTION: int = 50  # 50%
 TRAVERSE_CHARACTERS: bool = True
-CHARACTER_SIZE = 22
+CHARACTER_SIZE = Size(22, 22)
 
 MIN_SPEED = 2
-MAX_SPEED = CHARACTER_SIZE * 2  # diff = 24
+MAX_SPEED = CHARACTER_SIZE.height * 2  # diff = 24
 STEP_SPEED = 1  # 24 steps to max
 SLOPE_SPEED = 255/(MAX_SPEED-MIN_SPEED)
 B_SPEED = SLOPE_SPEED*MIN_SPEED
 
-MIN_SENSING = CHARACTER_SIZE * 2  # 44
-MAX_SENSING = CHARACTER_SIZE * 6  # 132 diff: 88
+MIN_SENSING = CHARACTER_SIZE.height * 2  # 44
+MAX_SENSING = CHARACTER_SIZE.height * 6  # 132 diff: 88
 STEP_SENSING = 4  # 22 steps to max
 SLOPE_SENSING = 255/(MAX_SENSING-MIN_SENSING)
 B_SENSING = SLOPE_SENSING*MIN_SENSING
@@ -109,16 +109,19 @@ MUTATIONS_INDEXES: List[int] = range(5)
 
 INTEREST_POINTS: List[Point] = \
     [STAGE_CENTER,
-     WALLS_DIMENSIONS,
-     Point(WALLS_DIMENSIONS[0] + STAGE_SIZE[0], WALLS_DIMENSIONS[1]),
-     Point(WALLS_DIMENSIONS[0], WALLS_DIMENSIONS[1] + STAGE_SIZE[1]),
-     Point(WALLS_DIMENSIONS[0] + STAGE_SIZE[0],
-           WALLS_DIMENSIONS[1] + STAGE_SIZE[1])]
+     Point(WALLS_DIMENSIONS.width,
+           WALLS_DIMENSIONS.height),
+     Point(WALLS_DIMENSIONS.width + STAGE_SIZE.width,
+           WALLS_DIMENSIONS.height),
+     Point(WALLS_DIMENSIONS.width,
+           WALLS_DIMENSIONS.height + STAGE_SIZE.height),
+     Point(WALLS_DIMENSIONS.width + STAGE_SIZE.width,
+           WALLS_DIMENSIONS.height + STAGE_SIZE.height)]
 
-POSSIBLE_MOVES: List[Direction] = [(0, -1), (0.5, -0.5),
-                                   (1, 0), (0.5, 0.5),
-                                   (0, 1), (-0.5, 0.5),
-                                   (-1, 0), (-0.5, -0.5)]
+POSSIBLE_MOVES: List[Direction] = [Direction(0, -1), Direction(0.5, -0.5),
+                                   Direction(1, 0), Direction(0.5, 0.5),
+                                   Direction(0, 1), Direction(-0.5, 0.5),
+                                   Direction(-1, 0), Direction(-0.5, -0.5)]
 
 MOVES_INDEXES: List[int] = range(8)
 

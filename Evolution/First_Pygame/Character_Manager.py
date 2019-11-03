@@ -12,7 +12,7 @@ from Common_Types import *
 
 
 class CharacterManager:
-    def __init__(self, character_size: int):
+    def __init__(self, character_size: Size):
         self.__characters = list()
         self.__finished_characters = list()
         self.__character_size = character_size
@@ -231,8 +231,8 @@ class CharacterManager:
         x, y = Rectangle.free_random_position(
             self.__stage_limits, self.__character_size, self.__characters,
             self.__in_wall)
-        pos_dim = PointSize(x, y, self.__character_size,
-                            self.__character_size)
+        pos_dim = PointSize(x, y, self.__character_size.width,
+                            self.__character_size.height)
         self.__characters.append(Character(pos_dim,
                                            self.__stage_color,
                                            current_speed,

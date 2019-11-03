@@ -11,7 +11,7 @@ from Common_Types import *
 
 
 class FoodManager:
-    def __init__(self, food_size: int, food_color: Color):
+    def __init__(self, food_size: Size, food_color: Color):
         self.__foods = list()
         self.__food_size = food_size
         self.__food_color = food_color
@@ -109,7 +109,8 @@ class FoodManager:
                 self.__stage_limits, self.__food_size, blockings + foods)
 
             rectangle = PointSize(current_x, current_y,
-                                  self.__food_size, self.__food_size)
+                                  self.__food_size.width,
+                                  self.__food_size.height)
             foods.append(Food(len(foods)+1,
                               rectangle,
                               self.__food_color, self.__stage_color,

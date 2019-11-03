@@ -11,7 +11,7 @@ from Common_Types import *
 
 class Character(Rectangle):
     # Class variable to set where the next home would be
-    next_home = (1, 1)
+    next_home = Point(1, 1)
 
     def __init__(self, rectangle: PointSize,
                  background_color: Color,
@@ -74,7 +74,7 @@ class Character(Rectangle):
 
     # Resets the coordinate of home.
     def reset_home(self):
-        self.__class__.next_home = (1, 1)
+        self.__class__.next_home = Point(1, 1)
 
     # Adjusts the hunger according to the nutritional value intake.
     def feed(self, nutritional_value: int):
@@ -104,7 +104,7 @@ class Character(Rectangle):
     def __move_single_axis(self, dx: int, dy: int, blockings: List[Rectangle]):
         self.draw_background()
 
-        super().move((dx*self._speed, dy*self._speed))
+        super().move(Direction(dx*self._speed, dy*self._speed))
 
         for block in blockings:
             if self.collides(block):
@@ -124,15 +124,15 @@ class Character(Rectangle):
         self.draw_background()
         self.teleport(self.__class__.next_home)
         self.draw()
-        window_width, window_height = self.get_window().get_size()
+        window_width, window_height = Constants.WINDOW_SIZE
         character_width, character_height = self.get_size()
-        new_home_x = self.__class__.next_home[0] + character_width + 5
-        new_home_y = self.__class__.next_home[1]
+        new_home_x = self.__class__.next_home.x + character_width + 5
+        new_home_y = self.__class__.next_home.y
         if new_home_x + 50 > window_width:
             new_home_x = 1
             new_home_y += character_height + 5
 
-        self.__class__.next_home = (new_home_x, new_home_y)
+        self.__class__.next_home = Point(new_home_x, new_home_y)
 
     def set_color_attributes(self):
         r = Constants.SLOPE_SPEED * self._speed + Constants.B_SPEED

@@ -12,13 +12,13 @@ from Common_Types import *
 
 # Returns the Euclidean distance between two points.
 def L2(a: Point, b: Point) -> float:
-    return math.sqrt(math.pow((a[0]-b[0]), 2) + math.pow((a[1]-b[1]), 2))
+    return math.sqrt(math.pow((a.x-b.x), 2) + math.pow((a.y-b.y), 2))
 
 
 # Returns the L infinite between two points.
 # L infinite is commonly the max, not the min.
 def Linf(a: Point, b: Point) -> int:
-    return min(abs(a[0]-b[0]), abs(a[1]-b[1]))
+    return min(abs(a.x-b.x), abs(a.y-b.y))
 
 
 # Returns the closest corner L2 distance between two Rectangles.
@@ -73,16 +73,16 @@ def closest_of_all_Linf(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
 
 # Returns the direction [dx, dy] from point a to point b.
 def direction_to_point(a: Point, b: Point) -> Direction:
-    move_x = b[0] - a[0]
-    move_y = b[1] - a[1]
-    total = abs(move_x) + abs(move_y)
+    dx = b.x - a.x
+    dy = b.y - a.y
+    total = abs(dx) + abs(dy)
 
     if total == 0:
-        return (0, 0)
-    move_x = float(move_x) / float(total)
-    move_y = float(move_y) / float(total)
+        return Direction(0, 0)
+    dx = float(dx) / float(total)
+    dy = float(dy) / float(total)
 
-    return move_x, move_y
+    return Direction(dx, dy)
 
 
 # Returns the direction [dx, dy] from object a to object b.
@@ -100,7 +100,7 @@ def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> \
     return direction_to_point(a_center, b.get_center()), True
 
 
-def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Point:
+def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Direction:
     corners = b.get_corners()
     vip = a.get_corners()
     vip = vip[0]
@@ -120,13 +120,13 @@ def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Point:
             up += 1
 
     if right == 4:
-        return (1, 0)
+        return Direction(1, 0)
     elif left == 4:
-        return (-1, 0)
+        return Direction(-1, 0)
     elif down == 4:
-        return (0, 1)
+        return Direction(0, 1)
     elif up == 4:
-        return (0, -1)
+        return Direction(0, -1)
     return get_weighted_random_move(a.get_center(), a.get_direction())
 
 

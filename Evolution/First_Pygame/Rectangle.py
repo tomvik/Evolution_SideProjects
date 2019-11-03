@@ -26,11 +26,7 @@ class Rectangle:
 
     # Returns the Rectangle and Color as a Tuple.
     def get_rectangle(self) -> pygame.Rect:
-        return (self._rectangle)
-
-    # Returns the window.
-    def get_window(self) -> pygame.Surface:
-        return (self.__class__.__window)
+        return self._rectangle
 
     # Returns the color.
     def get_color(self) -> Color:
@@ -48,8 +44,12 @@ class Rectangle:
     # a b
     # c d
     def get_corners(self) -> Corners:
-        return Corners(self._rectangle.topleft, self._rectangle.topright,
-                       self._rectangle.bottomleft, self._rectangle.bottomright)
+        left, top = self._rectangle.topleft
+        right, bottom = self._rectangle.bottomright
+        return Corners(Point(left, top),
+                       Point(right, top),
+                       Point(left, bottom),
+                       Point(right, bottom))
 
     # Returns the Rectangle limits as in: x_min, y_min, x_max, y_max
     def get_limits(self) -> Limits:
@@ -58,12 +58,11 @@ class Rectangle:
 
     # Returns the position of the left top corner as x,y
     def get_position(self) -> Point:
-        return self._rectangle.topleft
+        return Point(self._rectangle.top, self._rectangle.left)
 
     # Returns the center position.
     def get_center(self) -> Point:
-
-        return self._rectangle.center
+        return Point(self._rectangle.centerx, self._rectangle.centery)
 
     # Returns the direction to where it's headed.
     def get_direction(self) -> int:
@@ -73,6 +72,8 @@ class Rectangle:
     def get_movement_limit(self) -> int:
         return self._max_movements
 
+    # Sets and creates the window. Should be called at the initialization
+    # of the game once.
     def set_window(window_size: Size, window_title: str):
         __class__.__window = pygame.display.set_mode(window_size)
         pygame.display.set_caption(window_title)
@@ -103,13 +104,13 @@ class Rectangle:
 
     # Move the rectangle dx and dy from its current position.
     def move(self, movement: Direction):
-        self._rectangle.left += movement[0]
-        self._rectangle.top += movement[1]
+        self._rectangle.left += movement.dx
+        self._rectangle.top += movement.dy
 
     # Teleports the rectangle to x and y
     def teleport(self, position: Point):
-        self._rectangle.left = position[0]
-        self._rectangle.top = position[1]
+        self._rectangle.left = position.x
+        self._rectangle.top = position.y
 
     # Draws itself.
     def draw(self):
@@ -126,12 +127,12 @@ class Rectangle:
         self.__class__.__window.blit(thing, self._rectangle)
 
     # Returns true if there would be a collision between self and b.
-    def would_collide(self, b: 'Rectangle', mov: Point) -> bool:
-        self._rectangle.left += mov[0]
-        self._rectangle.top += mov[1]
+    def would_collide(self, b: 'Rectangle', mov: Direction) -> bool:
+        self._rectangle.left += mov.dx
+        self._rectangle.top += mov.dy
         would_collide = self._rectangle.colliderect(b.get_rectangle())
-        self._rectangle.left -= mov[0]
-        self._rectangle.top -= mov[1]
+        self._rectangle.left -= mov.dx
+        self._rectangle.top -= mov.dy
         return would_collide
 
     # Returns True if self collides with the area given.
@@ -158,44 +159,44 @@ class Rectangle:
 
 # Returns a random position that does not collide with any other blocking.
 # And may be next to the walls.
-def free_random_position(limits: Limits, size: int,
+def free_random_position(limits: Limits, size: Size,
                          blockings: List[Rectangle],
                          in_wall: bool = False) -> Point:
     x_min, y_min, x_max, y_max = limits
-    x_max -= size
-    y_max -= size
-    current_x = current_y = 0
+    x_max -= size.width
+    y_max -= size.height
+    position = Point(0, 0)
     blocks = True
     while blocks:
         selected = random.randint(0, 3) if in_wall else 4
         if selected == 0:  # Left wall.
-            current_x = x_min + 1
-            current_y = random.randint(y_min, y_max)
-            blocks = check_if_blocked((current_x, current_y), size, blockings)
+            position = Point(x_min + 1,
+                             random.randint(y_min, y_max))
+            blocks = check_if_blocked(position, size, blockings)
         elif selected == 1:  # Top wall.
-            current_x = random.randint(x_min, x_max)
-            current_y = y_min + 1
-            blocks = check_if_blocked((current_x, current_y), size, blockings)
+            position = Point(random.randint(x_min, x_max),
+                             y_min + 1)
+            blocks = check_if_blocked(position, size, blockings)
         elif selected == 2:  # Right wall.
-            current_x = x_max - 1
-            current_y = random.randint(y_min, y_max)
-            blocks = check_if_blocked((current_x, current_y), size, blockings)
+            position = Point(x_max - 1,
+                             random.randint(y_min, y_max))
+            blocks = check_if_blocked(position, size, blockings)
         elif selected == 3:  # Bottom wall.
-            current_x = random.randint(x_min, x_max)
-            current_y = y_max - 1
-            blocks = check_if_blocked((current_x, current_y), size, blockings)
+            position = Point(random.randint(x_min, x_max),
+                             y_max - 1)
+            blocks = check_if_blocked(position, size, blockings)
         elif selected == 4:  # Around all the stage.
-            current_x = random.randint(x_min, x_max)
-            current_y = random.randint(y_min, y_max)
-            blocks = check_if_blocked((current_x, current_y), size, blockings)
-    return current_x, current_y
+            position = Point(random.randint(x_min, x_max),
+                             random.randint(y_min, y_max))
+            blocks = check_if_blocked(position, size, blockings)
+    return position
 
 
 # Returns True if it's blocked.
-def check_if_blocked(position: Point, size: int,
+def check_if_blocked(position: Point, size: Size,
                      blockings: List[Rectangle]) -> bool:
-    current_limits = (position[0], position[1],
-                      position[0] + size, position[1] + size)
+    current_limits = Limits(position.x, position.y,
+                            position.x + size.width, position.y + size.height)
     for blocking in blockings:
         if blocking.area_collide(current_limits):
             return True
