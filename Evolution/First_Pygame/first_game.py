@@ -1,10 +1,8 @@
 import pygame
-from typing import List
 
-import Rectangle
-import Character
 import Constants
 from Game_Manager import GameManager
+from Plotter import Plotter
 
 pygame.init()
 
@@ -33,4 +31,7 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
 
 game_manager.continous_game()
 
+
+plotter = Plotter(Constants.FILE_NAME+'0'+'.txt', '')
+plotter.plot_3d()
 pygame.quit()
