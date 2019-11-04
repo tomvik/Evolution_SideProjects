@@ -27,50 +27,52 @@ CLOCK_FONT: Font = Font("Trebuchet MS", 25)
 CLOCK_COLOR: Color = BLACK
 TEXT_FONT: Font = Font("Trebuchet MS", 15)
 
-CHARACTERS = "Characters"
-FOODS = "Foods"
-TTL = "Ttl"
-FPS = "Fps"
-DAYS = "Days"
-MAX_GENERATION = "Max_Generations"
-OLDEST_GENERATION = "Oldest_Generation"
-NEWEST_GENERATION = "Newest_Generation"
-PERISHED = "Perished"
-NEWBORN = "Newborn"
+CHARACTERS: str = "Characters"
+FOODS: str = "Foods"
+TTL: str = "Ttl"
+FPS: str = "Fps"
+DAYS: str = "Days"
+MAX_GENERATION: str = "Max_Generations"
+OLDEST_GENERATION: str = "Oldest_Generation"
+NEWEST_GENERATION: str = "Newest_Generation"
+PERISHED: str = "Perished"
+NEWBORN: str = "Newborn"
 
-TEXTBOX_MATRIX_IS_INPUT = [False, True,
-                           False, True,
-                           False, True,
-                           False, True,
-                           False, True,
-                           False, False,
-                           False, False,
-                           False, False,
-                           False, False,
-                           False, False]
+TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
+                                       False, True,
+                                       False, True,
+                                       False, True,
+                                       False, True,
+                                       False, False,
+                                       False, False,
+                                       False, False,
+                                       False, False,
+                                       False, False]
 
-TEXTBOX_MATRIX = [("", "Time of Round (s):"), (TTL, "5    "),
-                  ("", "fps:"), (FPS, "60   "),
-                  ("", "Max generations:"), (MAX_GENERATION, "15   "),
-                  ("", "# of Characters:"), (CHARACTERS, "30   "),
-                  ("", "# of Foods:"), (FOODS, "30   "),
-                  ("", "days:"), (DAYS, "0    "),
-                  ("", "Oldest generation:"), (OLDEST_GENERATION, "0    "),
-                  ("", "Newest generation:"), (NEWEST_GENERATION, "0    "),
-                  ("", "Perished yesterday:"), (PERISHED, "0    "),
-                  ("", "Newborn:"), (NEWBORN, "0    ")]
+TEXTBOX_MATRIX: List[Tuple[str, str]] = \
+    [("", "Time of Round (s):"), (TTL, "5    "),
+     ("", "fps:"), (FPS, "60   "),
+     ("", "Max generations:"), (MAX_GENERATION, "15   "),
+     ("", "# of Characters:"), (CHARACTERS, "30   "),
+     ("", "# of Foods:"), (FOODS, "30   "),
+     ("", "days:"), (DAYS, "0    "),
+     ("", "Oldest generation:"), (OLDEST_GENERATION, "0    "),
+     ("", "Newest generation:"), (NEWEST_GENERATION, "0    "),
+     ("", "Perished yesterday:"), (PERISHED, "0    "),
+     ("", "Newborn:"), (NEWBORN, "0    ")]
 
-INSTRUCTIONS_TEXTBOXES = [("", "Pre-game Instructions:"), ("", " "),
-                          ("", "Input the data into"), ("", " "),
-                          ("", "the boxes and"), ("", " "),
-                          ("", "afterwards press enter."), ("", " "),
-                          ("", " "), ("", " "),
-                          ("", "In-game Instructions:"), ("", " "),
-                          ("", "Key:  "), ("", "Effect:"),
-                          ("", "Exit   "), ("", "Quit the game"),
-                          ("", "Space "), ("", "End the round")]
+INSTRUCTIONS_TEXTBOXES: List[Tuple[str, str]] = \
+    [("", "Pre-game Instructions:"), ("", " "),
+     ("", "Input the data into"), ("", " "),
+     ("", "the boxes and"), ("", " "),
+     ("", "afterwards press enter."), ("", " "),
+     ("", " "), ("", " "),
+     ("", "In-game Instructions:"), ("", " "),
+     ("", "Key:  "), ("", "Effect:"),
+     ("", "Exit   "), ("", "Quit the game"),
+     ("", "Space "), ("", "End the round")]
 
-INSTRUCTIONS_INPUT = [False] * len(INSTRUCTIONS_TEXTBOXES)
+INSTRUCTIONS_INPUT: List[bool] = [False] * len(INSTRUCTIONS_TEXTBOXES)
 
 # Food constants
 FOOD_COLOR: Color = WHITE
@@ -79,25 +81,25 @@ FOOD_SIZE = Size(5, 5)
 # Character constants
 REPRODUCTION: int = 50  # 50%
 TRAVERSE_CHARACTERS: bool = True
-CHARACTER_SIZE = Size(22, 22)
+CHARACTER_SIZE = Size(20, 20)
 
-MIN_SPEED = 2
-MAX_SPEED = CHARACTER_SIZE.height * 2  # diff = 24
-STEP_SPEED = 1  # 24 steps to max
-SLOPE_SPEED = 255/(MAX_SPEED-MIN_SPEED)
-B_SPEED = SLOPE_SPEED*MIN_SPEED
+MIN_SPEED: int = 2
+MAX_SPEED: int = CHARACTER_SIZE.height * 2  # 40 diff: 38
+STEP_SPEED: int = 1  # 24 steps to max
+SLOPE_SPEED: float = 255/(MAX_SPEED-MIN_SPEED)
+B_SPEED: float = SLOPE_SPEED*MIN_SPEED
 
-MIN_SENSING = CHARACTER_SIZE.height * 2  # 44
-MAX_SENSING = CHARACTER_SIZE.height * 6  # 132 diff: 88
-STEP_SENSING = 4  # 22 steps to max
-SLOPE_SENSING = 255/(MAX_SENSING-MIN_SENSING)
-B_SENSING = SLOPE_SENSING*MIN_SENSING
+MIN_SENSING: int = CHARACTER_SIZE.height * 2  # 44
+MAX_SENSING: int = CHARACTER_SIZE.height * 6  # 132 diff: 88
+STEP_SENSING: int = 4  # 22 steps to max
+SLOPE_SENSING: float = 255/(MAX_SENSING-MIN_SENSING)
+B_SENSING: float = SLOPE_SENSING*MIN_SENSING
 
-MIN_MOVEMENTS = 60
-MAX_MOVEMENTS = 200  # diff: 140
-STEP_MOVEMENTS = 4  # 32 steps to max
-SLOPE_MOVEMENTS = 255/(MAX_MOVEMENTS-MIN_MOVEMENTS)
-B_MOVEMENTS = SLOPE_MOVEMENTS*MIN_MOVEMENTS
+MIN_MOVEMENTS: int = 60
+MAX_MOVEMENTS: int = 200  # diff: 140
+STEP_MOVEMENTS: int = 4  # 32 steps to max
+SLOPE_MOVEMENTS: float = 255/(MAX_MOVEMENTS-MIN_MOVEMENTS)
+B_MOVEMENTS: float = SLOPE_MOVEMENTS*MIN_MOVEMENTS
 
 PROBABILITIES_STEP: List[float] = [0.2, 0.35, 0.45]
 STEP_INDEXES: List[int] = range(3)

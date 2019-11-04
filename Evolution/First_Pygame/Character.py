@@ -26,8 +26,7 @@ class Character(Rectangle):
         self.set_color_attributes()
         self.draw()
         self._generation = 0
-        self._original_hunger = 1
-        self._hunger = 1
+        self.__set_hunger()
         self._is_home = False
 
     # Returns the generation of character.
@@ -65,6 +64,12 @@ class Character(Rectangle):
     # Sets the generation of the character.
     def set_generation(self, generation: int):
         self._generation = generation
+
+    # Sets the hunger of the character depending on its stats.
+    # hunger = int(speed/10)
+    def __set_hunger(self):
+        self._original_hunger = int(self._speed/10)
+        self._hunger = self._original_hunger
 
     # Resets the values to indicate that is hungry and is not home.
     def reset(self):

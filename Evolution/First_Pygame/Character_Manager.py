@@ -69,11 +69,11 @@ class CharacterManager:
         self.__characters.sort(key=lambda x: x.get_generation())
         data = ""
         for character in self.__characters:
-            data += str(character.get_generation()) + " "
-            data += str(character.get_hunger()) + " "
-            data += str(character.get_sensing()) + " "
-            data += str(character.get_speed()) + " "
-            data += str(character.get_movement_limit()) + "\n"
+            data += "gen:" + str(character.get_generation()) + " "
+            data += "hun:" + str(character.get_hunger()) + " "
+            data += "sen:" + str(character.get_sensing()) + " "
+            data += "spe:" + str(character.get_speed()) + " "
+            data += "mov:" + str(character.get_movement_limit()) + "\n"
         return data
 
     # Returns if someone is heading home

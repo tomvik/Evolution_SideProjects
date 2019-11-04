@@ -1,0 +1,364 @@
+
+Characters 14
+Foods 30
+Newest_Generation 1
+Oldest_Generation 0
+Perished 21
+Newborn 5
+Days 1
+
+gen:0 hun:3 sen:40 spe:33 mov:170
+gen:0 hun:2 sen:40 spe:20 mov:150
+gen:0 hun:1 sen:40 spe:17 mov:124
+gen:0 hun:3 sen:40 spe:37 mov:91
+gen:0 hun:4 sen:40 spe:40 mov:184
+gen:0 hun:1 sen:40 spe:12 mov:172
+gen:0 hun:0 sen:40 spe:3 mov:161
+gen:0 hun:0 sen:40 spe:5 mov:187
+gen:0 hun:0 sen:40 spe:5 mov:110
+gen:1 hun:2 sen:40 spe:20 mov:154
+gen:1 hun:1 sen:40 spe:17 mov:120
+gen:1 hun:4 sen:40 spe:40 mov:180
+gen:1 hun:0 sen:40 spe:6 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+
+Characters 23
+Foods 30
+Newest_Generation 2
+Oldest_Generation 0
+Perished 0
+Newborn 9
+Days 2
+
+gen:0 hun:3 sen:40 spe:33 mov:170
+gen:0 hun:4 sen:40 spe:40 mov:184
+gen:0 hun:3 sen:40 spe:37 mov:91
+gen:0 hun:1 sen:40 spe:17 mov:124
+gen:0 hun:2 sen:40 spe:20 mov:150
+gen:0 hun:1 sen:40 spe:12 mov:172
+gen:0 hun:0 sen:40 spe:5 mov:110
+gen:0 hun:0 sen:40 spe:5 mov:187
+gen:0 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:2 sen:40 spe:20 mov:154
+gen:1 hun:1 sen:40 spe:17 mov:120
+gen:1 hun:4 sen:40 spe:40 mov:180
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:6 mov:187
+gen:1 hun:3 sen:40 spe:39 mov:184
+gen:1 hun:3 sen:40 spe:37 mov:87
+gen:1 hun:1 sen:40 spe:17 mov:124
+gen:1 hun:1 sen:40 spe:12 mov:168
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:5 mov:187
+gen:1 hun:0 sen:40 spe:3 mov:161
+gen:2 hun:2 sen:40 spe:20 mov:154
+gen:2 hun:0 sen:40 spe:6 mov:187
+
+Characters 31
+Foods 30
+Newest_Generation 3
+Oldest_Generation 0
+Perished 2
+Newborn 10
+Days 3
+
+gen:0 hun:2 sen:40 spe:20 mov:150
+gen:0 hun:3 sen:40 spe:33 mov:170
+gen:0 hun:4 sen:40 spe:40 mov:184
+gen:0 hun:1 sen:40 spe:17 mov:124
+gen:0 hun:3 sen:40 spe:37 mov:91
+gen:0 hun:0 sen:40 spe:3 mov:161
+gen:0 hun:0 sen:40 spe:5 mov:187
+gen:0 hun:0 sen:40 spe:5 mov:110
+gen:1 hun:1 sen:40 spe:12 mov:168
+gen:1 hun:1 sen:40 spe:17 mov:124
+gen:1 hun:1 sen:40 spe:17 mov:120
+gen:1 hun:4 sen:40 spe:40 mov:180
+gen:1 hun:3 sen:40 spe:37 mov:87
+gen:1 hun:2 sen:40 spe:20 mov:154
+gen:1 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:0 sen:40 spe:5 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:6 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:3 sen:40 spe:33 mov:170
+gen:1 hun:0 sen:44 spe:3 mov:161
+gen:2 hun:2 sen:40 spe:20 mov:154
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:1 sen:40 spe:12 mov:168
+gen:2 hun:1 sen:48 spe:17 mov:124
+gen:2 hun:4 sen:40 spe:40 mov:180
+gen:2 hun:3 sen:40 spe:37 mov:83
+gen:2 hun:0 sen:40 spe:4 mov:161
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:187
+
+Characters 37
+Foods 30
+Newest_Generation 4
+Oldest_Generation 0
+Perished 6
+Newborn 12
+Days 4
+
+gen:0 hun:3 sen:40 spe:37 mov:91
+gen:0 hun:4 sen:40 spe:40 mov:184
+gen:0 hun:2 sen:40 spe:20 mov:150
+gen:0 hun:1 sen:40 spe:17 mov:124
+gen:0 hun:3 sen:40 spe:33 mov:170
+gen:0 hun:0 sen:40 spe:5 mov:110
+gen:0 hun:0 sen:40 spe:5 mov:187
+gen:0 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:3 sen:40 spe:37 mov:87
+gen:1 hun:3 sen:40 spe:33 mov:170
+gen:1 hun:1 sen:40 spe:17 mov:124
+gen:1 hun:1 sen:40 spe:12 mov:168
+gen:1 hun:0 sen:44 spe:3 mov:161
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:6 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:5 mov:187
+gen:1 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:3 sen:40 spe:39 mov:91
+gen:1 hun:3 sen:40 spe:33 mov:170
+gen:1 hun:0 sen:44 spe:5 mov:187
+gen:2 hun:4 sen:40 spe:40 mov:180
+gen:2 hun:1 sen:48 spe:17 mov:124
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:4 mov:161
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:3 sen:40 spe:37 mov:95
+gen:2 hun:1 sen:40 spe:18 mov:124
+gen:2 hun:0 sen:40 spe:3 mov:161
+gen:2 hun:0 sen:44 spe:5 mov:110
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:5 mov:195
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:4 mov:161
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:4 hun:0 sen:40 spe:6 mov:187
+
+Characters 48
+Foods 30
+Newest_Generation 5
+Oldest_Generation 0
+Perished 4
+Newborn 15
+Days 5
+
+gen:0 hun:4 sen:40 spe:40 mov:184
+gen:0 hun:3 sen:40 spe:37 mov:91
+gen:0 hun:3 sen:40 spe:33 mov:170
+gen:0 hun:0 sen:40 spe:3 mov:161
+gen:0 hun:0 sen:40 spe:5 mov:187
+gen:0 hun:0 sen:40 spe:5 mov:110
+gen:1 hun:3 sen:40 spe:39 mov:91
+gen:1 hun:3 sen:40 spe:33 mov:170
+gen:1 hun:1 sen:40 spe:12 mov:168
+gen:1 hun:1 sen:40 spe:17 mov:124
+gen:1 hun:0 sen:44 spe:5 mov:187
+gen:1 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:0 sen:40 spe:5 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:6 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:44 spe:3 mov:161
+gen:1 hun:3 sen:40 spe:33 mov:166
+gen:2 hun:1 sen:40 spe:18 mov:124
+gen:2 hun:3 sen:40 spe:37 mov:95
+gen:2 hun:4 sen:40 spe:40 mov:180
+gen:2 hun:1 sen:48 spe:17 mov:124
+gen:2 hun:0 sen:40 spe:5 mov:195
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:44 spe:5 mov:110
+gen:2 hun:0 sen:40 spe:3 mov:161
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:4 mov:161
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:1 sen:40 spe:17 mov:116
+gen:2 hun:0 sen:40 spe:3 mov:157
+gen:2 hun:0 sen:40 spe:7 mov:187
+gen:2 hun:0 sen:44 spe:6 mov:110
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:44 spe:5 mov:114
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:4 mov:161
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:3 sen:40 spe:37 mov:95
+gen:3 hun:4 sen:40 spe:40 mov:176
+gen:3 hun:0 sen:40 spe:5 mov:195
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:191
+gen:3 hun:0 sen:40 spe:6 mov:195
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:5 hun:0 sen:40 spe:6 mov:187
+
+Characters 60
+Foods 30
+Newest_Generation 6
+Oldest_Generation 0
+Perished 5
+Newborn 17
+Days 6
+
+gen:0 hun:3 sen:40 spe:33 mov:170
+gen:0 hun:4 sen:40 spe:40 mov:184
+gen:0 hun:0 sen:40 spe:5 mov:110
+gen:0 hun:0 sen:40 spe:5 mov:187
+gen:0 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:3 sen:40 spe:33 mov:166
+gen:1 hun:3 sen:40 spe:33 mov:170
+gen:1 hun:1 sen:40 spe:12 mov:168
+gen:1 hun:1 sen:40 spe:17 mov:124
+gen:1 hun:0 sen:44 spe:3 mov:161
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:6 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:5 mov:187
+gen:1 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:0 sen:44 spe:5 mov:187
+gen:1 hun:0 sen:40 spe:5 mov:183
+gen:2 hun:4 sen:40 spe:40 mov:180
+gen:2 hun:1 sen:40 spe:18 mov:124
+gen:2 hun:1 sen:40 spe:17 mov:116
+gen:2 hun:0 sen:44 spe:5 mov:114
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:44 spe:6 mov:110
+gen:2 hun:0 sen:40 spe:7 mov:187
+gen:2 hun:0 sen:40 spe:3 mov:157
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:4 mov:161
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:3 mov:161
+gen:2 hun:0 sen:44 spe:5 mov:110
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:5 mov:195
+gen:2 hun:0 sen:44 spe:3 mov:161
+gen:2 hun:0 sen:40 spe:7 mov:187
+gen:2 hun:0 sen:48 spe:5 mov:187
+gen:3 hun:3 sen:40 spe:37 mov:95
+gen:3 hun:0 sen:40 spe:6 mov:195
+gen:3 hun:0 sen:40 spe:6 mov:191
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:5 mov:195
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:4 mov:161
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:5 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:191
+gen:3 hun:0 sen:44 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:4 mov:161
+gen:3 hun:0 sen:40 spe:3 mov:161
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:4 hun:3 sen:40 spe:37 mov:91
+gen:4 hun:0 sen:40 spe:6 mov:195
+gen:4 hun:0 sen:40 spe:5 mov:200
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:5 hun:0 sen:40 spe:6 mov:187
+gen:5 hun:0 sen:40 spe:6 mov:187
+gen:5 hun:0 sen:40 spe:6 mov:191
+gen:6 hun:0 sen:40 spe:6 mov:187
+
+Characters 88
+Foods 30
+Newest_Generation 7
+Oldest_Generation 0
+Perished 0
+Newborn 28
+Days 7
+
+gen:0 hun:4 sen:40 spe:40 mov:184
+gen:0 hun:3 sen:40 spe:33 mov:170
+gen:0 hun:0 sen:40 spe:3 mov:161
+gen:0 hun:0 sen:40 spe:5 mov:187
+gen:0 hun:0 sen:40 spe:5 mov:110
+gen:1 hun:3 sen:40 spe:33 mov:166
+gen:1 hun:1 sen:40 spe:17 mov:124
+gen:1 hun:3 sen:40 spe:33 mov:170
+gen:1 hun:1 sen:40 spe:12 mov:168
+gen:1 hun:0 sen:40 spe:5 mov:183
+gen:1 hun:0 sen:44 spe:5 mov:187
+gen:1 hun:0 sen:40 spe:3 mov:161
+gen:1 hun:0 sen:40 spe:5 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:40 spe:6 mov:187
+gen:1 hun:0 sen:44 spe:5 mov:110
+gen:1 hun:0 sen:44 spe:3 mov:161
+gen:1 hun:3 sen:40 spe:33 mov:170
+gen:1 hun:0 sen:40 spe:5 mov:187
+gen:2 hun:1 sen:40 spe:17 mov:116
+gen:2 hun:4 sen:40 spe:40 mov:180
+gen:2 hun:1 sen:40 spe:18 mov:124
+gen:2 hun:0 sen:48 spe:5 mov:187
+gen:2 hun:0 sen:40 spe:7 mov:187
+gen:2 hun:0 sen:44 spe:3 mov:161
+gen:2 hun:0 sen:40 spe:5 mov:195
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:44 spe:5 mov:110
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:4 mov:161
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:40 spe:3 mov:157
+gen:2 hun:0 sen:40 spe:7 mov:187
+gen:2 hun:0 sen:44 spe:6 mov:110
+gen:2 hun:0 sen:40 spe:6 mov:187
+gen:2 hun:0 sen:44 spe:5 mov:114
+gen:2 hun:0 sen:40 spe:3 mov:161
+gen:2 hun:3 sen:40 spe:33 mov:166
+gen:2 hun:1 sen:44 spe:12 mov:168
+gen:2 hun:0 sen:40 spe:5 mov:179
+gen:2 hun:0 sen:44 spe:5 mov:110
+gen:2 hun:0 sen:44 spe:5 mov:110
+gen:3 hun:3 sen:40 spe:37 mov:95
+gen:3 hun:0 sen:40 spe:3 mov:161
+gen:3 hun:0 sen:40 spe:4 mov:161
+gen:3 hun:0 sen:44 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:191
+gen:3 hun:0 sen:40 spe:5 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:4 mov:161
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:5 mov:195
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:6 mov:191
+gen:3 hun:0 sen:40 spe:6 mov:195
+gen:3 hun:1 sen:40 spe:17 mov:116
+gen:3 hun:0 sen:40 spe:5 mov:187
+gen:3 hun:0 sen:44 spe:3 mov:157
+gen:3 hun:0 sen:40 spe:6 mov:195
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:40 spe:3 mov:161
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:44 spe:6 mov:110
+gen:3 hun:0 sen:40 spe:6 mov:187
+gen:3 hun:0 sen:44 spe:4 mov:114
+gen:3 hun:0 sen:40 spe:3 mov:157
+gen:4 hun:3 sen:40 spe:37 mov:91
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:4 hun:0 sen:40 spe:5 mov:200
+gen:4 hun:0 sen:40 spe:6 mov:195
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:4 hun:0 sen:40 spe:6 mov:187
+gen:4 hun:3 sen:40 spe:37 mov:91
+gen:4 hun:0 sen:40 spe:6 mov:183
+gen:4 hun:0 sen:40 spe:6 mov:195
+gen:4 hun:0 sen:40 spe:6 mov:191
+gen:4 hun:0 sen:40 spe:6 mov:191
+gen:5 hun:0 sen:40 spe:6 mov:191
+gen:5 hun:0 sen:40 spe:6 mov:187
+gen:5 hun:0 sen:40 spe:6 mov:187
+gen:5 hun:3 sen:40 spe:37 mov:91
+gen:5 hun:0 sen:40 spe:6 mov:191
+gen:5 hun:0 sen:40 spe:5 mov:200
+gen:5 hun:0 sen:40 spe:6 mov:187
+gen:6 hun:0 sen:40 spe:6 mov:187
+gen:7 hun:0 sen:40 spe:6 mov:187
