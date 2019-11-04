@@ -1,5 +1,4 @@
 import pygame
-import os.path
 from typing import Dict, List, Tuple
 
 from Character_Manager import CharacterManager
@@ -26,7 +25,9 @@ class GameManager:
                  traverse_characters: bool,
                  food_size: Size,
                  food_color: Color,
-                 food_value: int) -> 'GameManager':
+                 food_value: int,
+                 file_name: str) -> 'GameManager':
+        pygame.init()
         self.__days = 0
         self.__traverse = traverse_characters
         self.__stage = self.__initialize_stage(window_size,
@@ -57,7 +58,10 @@ class GameManager:
         pygame.display.update()
         self.__wait_for_enter()
         self.__stage.initialize_game()
-        self.__file_name = self.__get_new_file_name()
+        self.__file_name = file_name
+
+    def __del__(self):
+        pygame.quit()
 
     # Runs the game in continuous mode.
     def continous_game(self):
@@ -115,12 +119,6 @@ class GameManager:
                                 character_manager.get_list())
 
         return character_manager, food_manager
-
-    def __get_new_file_name(self) -> str:
-        i = 0
-        while os.path.isfile(Constants.FILE_NAME + str(i) + ".txt"):
-            i += 1
-        return Constants.FILE_NAME + str(i) + ".txt"
 
     # Waits for the input of textboxes.
     # It finishes once enter has been pressed.

@@ -88,6 +88,7 @@ INSTRUCTIONS_INPUT: List[bool] = [False] * len(INSTRUCTIONS_TEXTBOXES)
 # Food constants
 FOOD_COLOR: Color = WHITE
 FOOD_SIZE = Size(5, 5)
+FOOD_VALUE = 1
 
 # Character constants
 REPRODUCTION: int = 50  # 50%

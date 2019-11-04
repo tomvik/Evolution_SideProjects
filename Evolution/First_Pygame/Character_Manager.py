@@ -121,6 +121,8 @@ class CharacterManager:
 
     # Resets all the characters to a random position inside the stage.
     def reset_characters(self):
+        if len(self.__finished_characters) is 0:
+            return
         self.__characters.clear()
         self.__oldest_generation = self.__newest_generation
         while self.__finished_characters:

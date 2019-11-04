@@ -1,17 +1,23 @@
-import pygame
+import time
+import os.path
+
 
 import Constants
 from Game_Manager import GameManager
 from Plotter import Plotter
 
-pygame.init()
+
+def get_new_file_name() -> str:
+    i = 0
+    while os.path.isfile(Constants.FILE_NAME + str(i) + ".txt"):
+        i += 1
+    return Constants.FILE_NAME + str(i) + ".txt"
 
 
 character_speed = (Constants.MIN_SPEED, Constants.MIN_SPEED + 5)
 character_sensing = (Constants.MIN_SENSING, Constants.MIN_SENSING + 5)
 character_patience = (Constants.MIN_MOVEMENTS, Constants.MAX_MOVEMENTS)
-
-food_value = 1
+file_name = get_new_file_name()
 
 game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.WINDOW_TITLE,
@@ -27,11 +33,11 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.TRAVERSE_CHARACTERS,
                            Constants.FOOD_SIZE,
                            Constants.FOOD_COLOR,
-                           food_value)
-
+                           Constants.FOOD_VALUE,
+                           file_name)
 game_manager.continous_game()
 
 
-plotter = Plotter(Constants.FILE_NAME+'0'+'.txt', '')
+plotter = Plotter(file_name, '')
 plotter.plot_3d()
-pygame.quit()
+plotter.plot()

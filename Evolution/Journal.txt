@@ -1,7 +1,6 @@
 You define your own limit.
 
 Next steps:
-- Add hunger cost to mutations
 - Graph data
 
 TODO:
