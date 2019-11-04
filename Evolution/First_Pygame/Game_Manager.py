@@ -42,16 +42,18 @@ class GameManager:
         self.__update_stage_state(stage_data[Constants.FPS],
                                   stage_data[Constants.TTL])
         self.__character_manager, self.__food_manager = \
-            self.__initialize_managers(self.__stage,
-                                       stage_data[Constants.CHARACTERS],
-                                       character_size,
-                                       character_speed,
-                                       character_sensing,
-                                       character_patience,
-                                       stage_data[Constants.FOODS],
-                                       food_size,
-                                       food_color,
-                                       food_value)
+            self.__initialize_managers(
+                self.__stage,
+                stage_data[Constants.INITIAL_CHARACTERS],
+                character_size,
+                character_speed,
+                character_sensing,
+                character_patience,
+                stage_data[Constants.INITIAL_FOODS],
+                food_size,
+                food_color,
+                food_value
+            )
         pygame.display.update()
         self.__wait_for_enter()
         self.__stage.initialize_game()
@@ -230,16 +232,22 @@ class GameManager:
                      Constants.FOODS:
                      self.__food_manager.food_left()}
         if case == 1:
-            key_value.update({Constants.NEWEST_GENERATION:
-                              self.__character_manager.get_newest_generation(),
-                              Constants.OLDEST_GENERATION:
-                              self.__character_manager.get_oldest_generation(),
-                              Constants.PERISHED:
-                              self.__character_manager.get_perished(),
-                              Constants.NEWBORN:
-                              self.__character_manager.get_newborn(),
-                              Constants.DAYS:
-                              self.__days})
+            key_value.update({
+                Constants.INITIAL_CHARACTERS:
+                self.__character_manager.characters_left(),
+                Constants.INITIAL_FOODS:
+                self.__food_manager.food_left(),
+                Constants.NEWEST_GENERATION:
+                self.__character_manager.get_newest_generation(),
+                Constants.OLDEST_GENERATION:
+                self.__character_manager.get_oldest_generation(),
+                Constants.PERISHED:
+                self.__character_manager.get_perished(),
+                Constants.NEWBORN:
+                self.__character_manager.get_newborn(),
+                Constants.DAYS:
+                self.__days
+            })
         return key_value
 
     # Writes down the stats to the stats file.

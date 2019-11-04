@@ -177,6 +177,6 @@ class Stage:
     def initialize_game(self):
         for box in self.__text_boxes:
             if box.has_name():
-                if box.get_name() != Constants.CHARACTERS \
-                        and box.get_name() != Constants.FOODS:
+                if box.get_name() != Constants.INITIAL_CHARACTERS \
+                        and box.get_name() != Constants.INITIAL_FOODS:
                     box.change_type()

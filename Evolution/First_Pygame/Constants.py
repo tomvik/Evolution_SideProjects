@@ -27,7 +27,9 @@ CLOCK_FONT: Font = Font("Trebuchet MS", 25)
 CLOCK_COLOR: Color = BLACK
 TEXT_FONT: Font = Font("Trebuchet MS", 15)
 
+INITIAL_CHARACTERS: str = "Initial_Characters"
 CHARACTERS: str = "Characters"
+INITIAL_FOODS: str = "Initial_Foods"
 FOODS: str = "Foods"
 TTL: str = "Ttl"
 FPS: str = "Fps"
@@ -37,6 +39,11 @@ OLDEST_GENERATION: str = "Oldest_Generation"
 NEWEST_GENERATION: str = "Newest_Generation"
 PERISHED: str = "Perished"
 NEWBORN: str = "Newborn"
+GENERATION: str = "Generation"
+HUNGER: str = "Hunger"
+SENSING: str = "Sensing"
+SPEED: str = "Speed"
+MOVEMENT: str = "Movement"
 
 TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
                                        False, True,
@@ -47,14 +54,18 @@ TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
                                        False, False,
                                        False, False,
                                        False, False,
+                                       False, False,
+                                       False, False,
                                        False, False]
 
 TEXTBOX_MATRIX: List[Tuple[str, str]] = \
     [("", "Time of Round (s):"), (TTL, "5    "),
      ("", "fps:"), (FPS, "60   "),
      ("", "Max generations:"), (MAX_GENERATION, "15   "),
-     ("", "# of Characters:"), (CHARACTERS, "30   "),
-     ("", "# of Foods:"), (FOODS, "30   "),
+     ("", "Initial Characters:"), (INITIAL_CHARACTERS, "30   "),
+     ("", "Initial Foods:"), (INITIAL_FOODS, "30   "),
+     ("", "# of Characters:"), (CHARACTERS, "0    "),
+     ("", "# of Foods:"), (FOODS, "0    "),
      ("", "days:"), (DAYS, "0    "),
      ("", "Oldest generation:"), (OLDEST_GENERATION, "0    "),
      ("", "Newest generation:"), (NEWEST_GENERATION, "0    "),
@@ -85,7 +96,7 @@ CHARACTER_SIZE = Size(20, 20)
 
 MIN_SPEED: int = 2
 MAX_SPEED: int = CHARACTER_SIZE.height * 2  # 40 diff: 38
-STEP_SPEED: int = 1  # 24 steps to max
+STEP_SPEED: int = 2  # 24 steps to max
 SLOPE_SPEED: float = 255/(MAX_SPEED-MIN_SPEED)
 B_SPEED: float = SLOPE_SPEED*MIN_SPEED
 

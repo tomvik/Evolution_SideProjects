@@ -23,7 +23,7 @@ class Character(Rectangle):
 
         super().__init__(rectangle,
                          (0, 0, 0), background_color, movement_limit)
-        self.set_color_attributes()
+        self.__set_color_attributes()
         self.draw()
         self._generation = 0
         self.__set_hunger()
@@ -68,7 +68,7 @@ class Character(Rectangle):
     # Sets the hunger of the character depending on its stats.
     # hunger = int(speed/10)
     def __set_hunger(self):
-        self._original_hunger = int(self._speed/10)
+        self._original_hunger = int(self._speed/10) + 1
         self._hunger = self._original_hunger
 
     # Resets the values to indicate that is hungry and is not home.
@@ -139,7 +139,7 @@ class Character(Rectangle):
 
         self.__class__.next_home = Point(new_home_x, new_home_y)
 
-    def set_color_attributes(self):
+    def __set_color_attributes(self):
         r = Constants.SLOPE_SPEED * self._speed + Constants.B_SPEED
         r = int(r)
         r = min(r, 255)

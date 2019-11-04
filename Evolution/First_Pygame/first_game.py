@@ -1,5 +1,4 @@
 import pygame
-import random
 from typing import List
 
 import Rectangle
@@ -10,8 +9,8 @@ from Game_Manager import GameManager
 pygame.init()
 
 
-character_speed = (Constants.MIN_SPEED, Constants.MAX_SPEED)
-character_sensing = (Constants.MIN_SENSING, Constants.MIN_SENSING)
+character_speed = (Constants.MIN_SPEED, Constants.MIN_SPEED + 5)
+character_sensing = (Constants.MIN_SENSING, Constants.MIN_SENSING + 5)
 character_patience = (Constants.MIN_MOVEMENTS, Constants.MAX_MOVEMENTS)
 
 food_value = 1

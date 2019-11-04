@@ -69,11 +69,16 @@ class CharacterManager:
         self.__characters.sort(key=lambda x: x.get_generation())
         data = ""
         for character in self.__characters:
-            data += "gen:" + str(character.get_generation()) + " "
-            data += "hun:" + str(character.get_hunger()) + " "
-            data += "sen:" + str(character.get_sensing()) + " "
-            data += "spe:" + str(character.get_speed()) + " "
-            data += "mov:" + str(character.get_movement_limit()) + "\n"
+            data += Constants.GENERATION + " " + \
+                str(character.get_generation()) + " "
+            data += Constants.HUNGER + " " + \
+                str(character.get_hunger()) + " "
+            data += Constants.SENSING + " " + \
+                str(character.get_sensing()) + " "
+            data += Constants.SPEED + " " + \
+                str(character.get_speed()) + " "
+            data += Constants.MOVEMENT + " " + \
+                str(character.get_movement_limit()) + "\n"
         return data
 
     # Returns if someone is heading home
@@ -153,7 +158,7 @@ class CharacterManager:
     # Sets the characters ready for the new round.
     def new_round_characters(self, reproduction_probability: int):
         self.reset_characters()
-        self.reproduce_characters(50)
+        self.reproduce_characters(reproduction_probability)
         self.draw()
 
     # Moves the character home, and transfers it to the finished list.
