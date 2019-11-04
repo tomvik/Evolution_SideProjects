@@ -6,21 +6,19 @@ from collections import deque
 from numpy.random import choice
 
 from Rectangle import Rectangle
-
-# TODO, have these on a constant file.
-CENTER = (600, 350)
-points = (CENTER, (0, 0), (1200, 0), (1200, 700), (0, 700))
+import Constants
+from Common_Types import *
 
 
 # Returns the Euclidean distance between two points.
-def L2(a: Tuple[int, int], b: Tuple[int, int]) -> float:
-    return math.sqrt(math.pow((a[0]-b[0]), 2) + math.pow((a[1]-b[1]), 2))
+def L2(a: Point, b: Point) -> float:
+    return math.sqrt(math.pow((a.x-b.x), 2) + math.pow((a.y-b.y), 2))
 
 
 # Returns the L infinite between two points.
 # L infinite is commonly the max, not the min.
-def Linf(a: Tuple[int, int], b: Tuple[int, int]) -> int:
-    return min(abs(a[0]-b[0]), abs(a[1]-b[1]))
+def Linf(a: Point, b: Point) -> int:
+    return min(abs(a.x-b.x), abs(a.y-b.y))
 
 
 # Returns the closest corner L2 distance between two Rectangles.
@@ -74,34 +72,35 @@ def closest_of_all_Linf(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
 
 
 # Returns the direction [dx, dy] from point a to point b.
-def direction_to_point(a: Tuple[int, int],
-                       b: Tuple[int, int]) -> Tuple[float, float]:
-    move_x = b[0] - a[0]
-    move_y = b[1] - a[1]
-    total = abs(move_x) + abs(move_y)
+def direction_to_point(a: Point, b: Point) -> Direction:
+    dx = b.x - a.x
+    dy = b.y - a.y
+    total = abs(dx) + abs(dy)
 
     if total == 0:
-        return (0, 0)
-    move_x = float(move_x) / float(total)
-    move_y = float(move_y) / float(total)
+        return Direction(0, 0)
+    dx = float(dx) / float(total)
+    dy = float(dy) / float(total)
 
-    return move_x, move_y
+    return Direction(dx, dy)
 
 
 # Returns the direction [dx, dy] from object a to object b.
 # If it's not within the sensing radius r, it returns a random movement.
+# It also returns True if it is within the area.
 def sensing_direction(a: Rectangle, b: Rectangle, r: int) -> \
-        Tuple[float, float]:
+        Tuple[Direction, bool]:
     a_center = a.get_center()
     corners = b.get_corners()
     for corner in corners:
         if r < L2(a_center, corner):
-            return get_weighted_random_move(a.get_center(), a.get_direction())
+            return get_weighted_random_move(a.get_center(),
+                                            a.get_direction()), False
 
-    return direction_to_point(a_center, b.get_center())
+    return direction_to_point(a_center, b.get_center()), True
 
 
-def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:
+def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Direction:
     corners = b.get_corners()
     vip = a.get_corners()
     vip = vip[0]
@@ -121,13 +120,13 @@ def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:
             up += 1
 
     if right == 4:
-        return (1, 0)
+        return Direction(1, 0)
     elif left == 4:
-        return (-1, 0)
+        return Direction(-1, 0)
     elif down == 4:
-        return (0, 1)
+        return Direction(0, 1)
     elif up == 4:
-        return (0, -1)
+        return Direction(0, -1)
     return get_weighted_random_move(a.get_center(), a.get_direction())
 
 
@@ -136,8 +135,7 @@ def cardinal_system_direction(a: Rectangle, b: Rectangle) -> Tuple[int, int]:
 # 2 = right, 3 = down-right
 # 4 = down, 5 = down-left
 # 6 = left, 7 = up-left
-def index_direction_to_point(a: Tuple[int, int],
-                             b: Tuple[int, int]) -> int:
+def index_direction_to_point(a: Point, b: Point) -> int:
     dx, dy = direction_to_point(a, b)
     if -0.25 < dx <= 0.25:  # This means dx = 0 or does not move in x.
         if dy > 0:  # It should go down.
@@ -161,17 +159,17 @@ def index_direction_to_point(a: Tuple[int, int],
 
 
 # Returns a random weighted movement towards the direction.
-def get_weighted_random_move(a: Tuple[int, int],
-                             direction: int) -> Tuple[float, float]:
+def get_weighted_random_move(a: Point, direction: int) -> Direction:
+    index = index_direction_to_point(a, Constants.INTEREST_POINTS[direction])
+    index = get_weighted_index(Constants.PROBABILITIES_MOVES,
+                               index,
+                               Constants.MOVES_INDEXES)
+    return Constants.POSSIBLE_MOVES[index]
 
-    possible_moves = [(0, -1), (0.5, -0.5),
-                      (1, 0), (0.5, 0.5),
-                      (0, 1), (-0.5, 0.5),
-                      (-1, 0), (-0.5, -0.5)]
-    possible_indexes = range(8)
-    index = index_direction_to_point(a, points[direction])
-    probabilities = [0.4, 0.2, 0.1, 0, 0, 0, 0.1, 0.2]
+
+def get_weighted_index(probabilities: List[float],
+                       rotate_index: int,
+                       choices: List[int]) -> int:
     probabilities = deque(probabilities)
-    probabilities.rotate(index)
-    index = choice(possible_indexes, 1, False, probabilities)
-    return possible_moves[index[0]]
+    probabilities.rotate(rotate_index)
+    return choice(choices, 1, False, probabilities)[0]

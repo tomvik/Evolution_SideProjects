@@ -2,12 +2,13 @@ import pygame
 from typing import Tuple, List
 
 import TextBox
+from Common_Types import *
 
 
 class Clock:
-    def __init__(self, pos: Tuple[int, int], box_color: List[int],
-                 background_color: List[int], font: Tuple[str, int],
-                 font_color: List[int], win: pygame.Surface,
+    def __init__(self, pos: Point, box_color: Color,
+                 background_color: Color, font: Font,
+                 font_color: Color,
                  fps: int = 40, ttl: int = 5000):
         self.__fps = fps
         self.__ttl = ttl
@@ -23,7 +24,7 @@ class Clock:
                 ("Second", "{0:02}".format(self.__second))]
         self.__hour_box, self.__minute_box, self.__second_box = \
             TextBox.create_array(
-                pos, (font_color, background_color), 0, win,
+                pos, (font_color, background_color), 0,
                 is_input, data, font)
         self.__hour_box.set_transparent(False)
         self.__minute_box.set_transparent(False)

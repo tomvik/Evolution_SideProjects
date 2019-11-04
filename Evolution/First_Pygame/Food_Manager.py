@@ -7,18 +7,18 @@ from Food import Food
 import Stage
 import Distances
 from Character import Character
+from Common_Types import *
 
 
 class FoodManager:
-    def __init__(self, food_size: int, food_color: List[int]):
+    def __init__(self, food_size: Size, food_color: Color):
         self.__foods = list()
         self.__food_size = food_size
         self.__food_color = food_color
         self.__initial_amount = 0
         self.__range_of_values = (0, 0)
-        self.__stage_limits = (0, 0, 0, 0)
-        self.__stage_color = (0, 0, 0)
-        self.__win = 0
+        self.__stage_limits = Limits(0, 0, 0, 0)
+        self.__stage_color = Color(0, 0, 0)
 
     # Spans randomly throughout the stage the amount of food selected with
     # random values of nutrition within the range.
@@ -28,9 +28,13 @@ class FoodManager:
                    stage: Stage.Stage,
                    blockings: List[Rectangle.Rectangle]):
         foods = list()
-        self.__stage_limits = stage.get_stage_limits()
+        width, height = blockings[0].get_size()
+        limits = stage.get_stage_limits()
+        self.__stage_limits = Limits(limits.x_min + width,
+                                     limits.y_min + height,
+                                     limits.x_max - width,
+                                     limits.y_max - height)
         self.__stage_color = stage.get_stage_color()
-        self.__win = stage.get_win()
         self.__range_of_values = range_of_values
 
         self.__foods = self.__span_random_food(amount, blockings)
@@ -45,11 +49,20 @@ class FoodManager:
         return len(self.__foods)
 
     # Returns the direction to the closes food from the character received.
-    def direction_to_closest_food(self,
-                                  character: Character) -> Tuple[int, int]:
+    # If the food is within distance of the speed, it will also move
+    # towards it.
+    def direction_to_closest_food(self, character: Character) -> Direction:
         food = Distances.closest_of_all_L2(character, self.__foods)
-        return Distances.sensing_direction(character, food,
-                                           character.get_sensing())
+        d, within_r = Distances.sensing_direction(character, food,
+                                                  character.get_sensing())
+        if within_r:
+            d2, within_r = Distances.sensing_direction(character, food,
+                                                       character.get_speed())
+            if within_r:
+                character.draw_background()
+                character.teleport(food.get_center())
+                return Direction(0, 0)
+        return d
 
     # Delete the specific food.
     def delete_index(self, index: int):
@@ -78,10 +91,11 @@ class FoodManager:
         return character_was_hungry != character.is_hungry()
 
     # Spans the initial amount of food throughout the already defined stage.
-    def reset_foods(self,
-                    blockings: List[Rectangle.Rectangle]):
-        self.__foods = self.__span_random_food(self.__initial_amount,
-                                               blockings)
+    def reset_foods(self, blockings: List[Rectangle.Rectangle],
+                    amount: int = 0):
+        if amount == 0:
+            amount = self.__initial_amount
+        self.__foods = self.__span_random_food(amount, blockings)
 
     # Spans a random amount of food throughout the specified stage.
     def __span_random_food(self, amount: int,
@@ -94,9 +108,11 @@ class FoodManager:
             current_x, current_y = Rectangle.free_random_position(
                 self.__stage_limits, self.__food_size, blockings + foods)
 
+            rectangle = PointSize(current_x, current_y,
+                                  self.__food_size.width,
+                                  self.__food_size.height)
             foods.append(Food(len(foods)+1,
-                              current_x, current_y,
-                              self.__food_size, self.__food_size,
+                              rectangle,
                               self.__food_color, self.__stage_color,
-                              self.__win, current_value))
+                              current_value))
         return foods

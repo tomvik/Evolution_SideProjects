@@ -1,9 +1,11 @@
 You define your own limit.
 
 Next steps:
-- At the end of each round, output the pertinent data to a file.
-- Decide which variables will be mutating and do that.
-- Refactor better
+- Clean Code 
+- Organize better the files
+- Plot better
+- Try not to display always
+- Try to share food
 
 TODO:
 
