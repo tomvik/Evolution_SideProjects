@@ -114,15 +114,15 @@ class Stage:
         return self.__clock.get_fps()
 
     # Draws all the text boxes.
-    def draw_input_boxes(self, do_not_update_display: bool = False):
+    def draw_input_boxes(self):
         for box in self.__text_boxes:
             if box.is_input():
-                box.draw(do_not_update_display)
+                box.draw()
 
     # Returns True if it's under its Time To Live, otherwise False.
-    def update_clock(self, do_not_update_display: bool = False):
+    def update_clock(self):
         self.__clock.update_clock()
-        self.__clock.draw(do_not_update_display)
+        self.__clock.draw()
         return self.__clock.still_valid()
 
     # Return the value of each text_box on a list.
@@ -157,20 +157,18 @@ class Stage:
     def handle_event(self, event: pygame.event):
         for text_box in self.__text_boxes:
             text_box.handle_event(event)
-            text_box.draw()
 
     # Handles the in-game updates.
-    def handle_in_game(self, key_value: Dict[str, int],
-                       do_not_update_display: bool = False) -> bool:
+    def handle_in_game(self, key_value: Dict[str, int]) -> bool:
         for key, value in key_value.items():
             self.__text_boxes[self.__box_index(key)].write(str(value))
-        self.draw_input_boxes(do_not_update_display)
-        return self.update_clock(do_not_update_display)
+        self.draw_input_boxes()
+        return self.update_clock()
 
     # Handles the updates necessary for the new round.
     def new_round_stage(self, key_value: Dict[str, int]):
         self.reset_clock()
-        self.handle_in_game(key_value, True)
+        self.handle_in_game(key_value)
 
     # Changes the boxes that won't be updated anymore to output only, and those
     # that will be to input. The naming is weird, but input are the only ones

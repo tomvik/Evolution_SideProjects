@@ -27,11 +27,11 @@ class GameManager:
                  food_color: Color,
                  food_value: int,
                  file_name: str,
-                 do_not_update_display: bool) -> 'GameManager':
+                 update_display: bool) -> 'GameManager':
         pygame.init()
         self.__days = 0
         self.__traverse = traverse_characters
-        self.__do_not_update_display = do_not_update_display
+        self.__update_display = update_display
         self.__stage = self.__initialize_stage(window_size,
                                                window_title,
                                                stage_size,
@@ -195,8 +195,7 @@ class GameManager:
         remaining_characters = self.__character_manager.characters_left()
         remaining_foods = self.__food_manager.food_left()
 
-        round_life = self.__stage.handle_in_game(self.__load_data_dict(0),
-                                                 self.__do_not_update_display)
+        round_life = self.__stage.handle_in_game(self.__load_data_dict(0))
         if remaining_characters is 0 \
                 or (remaining_foods is 0
                     and self.__character_manager.heading_home() is False):
@@ -206,7 +205,8 @@ class GameManager:
             round_life = window_life = False
         elif event_case == 2:
             round_life = False
-        # pygame.display.update()
+        if self.__update_display:
+            pygame.display.update()
 
         if self.__character_manager.get_newest_generation() >= \
                 self.__max_generation:
