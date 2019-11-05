@@ -61,7 +61,8 @@ class FoodManager:
                                                        character.get_speed())
             if within_r:
                 character.draw_background()
-                character.teleport_center(food.get_center())
+                center = food.get_center()
+                character.move(center.x, center.y, [], True)
                 return Direction(0, 0)
         return d
 

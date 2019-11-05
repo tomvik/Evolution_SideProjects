@@ -134,12 +134,14 @@ class Stage:
                 return_values[key_value[0]] = key_value[1]
         return return_values
 
-    # Returns the closest wall to the object and its direction towards it.
+    # Returns the closest wall to the object, its direction towards it,
+    # and the distance to travel.
     def closest_wall_to(self,
-                        a: Rectangle) -> Tuple[Rectangle, Direction]:
-        selected_wall = Distances.closest_of_all_Linf(a, self.__walls)
+                        a: Rectangle) -> Tuple[Rectangle, Direction, int]:
+        selected_wall, distance = Distances.closest_of_all_Linf(a,
+                                                                self.__walls)
         direction = Distances.cardinal_system_direction(a, selected_wall)
-        return selected_wall, direction
+        return selected_wall, direction, distance
 
     # Resets the clock back to 0.
     def reset_clock(self):

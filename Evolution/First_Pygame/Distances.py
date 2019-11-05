@@ -58,7 +58,7 @@ def closest_of_all_L2(a: Rectangle, bs: List[Rectangle], r: int) -> Rectangle:
         lim = b.get_limits()
         if lim.x_max < x_min:
             continue
-        elif lim.x_min > x_min:
+        elif lim.x_min > x_max:
             break
         current_d = closest_L2(a, b)
         if current_d < closest_d:
@@ -67,8 +67,9 @@ def closest_of_all_L2(a: Rectangle, bs: List[Rectangle], r: int) -> Rectangle:
     return closest
 
 
-# Returns the closest rectangle to a in Linf distance.
-def closest_of_all_Linf(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
+# Returns the closest rectangle to a in Linf distance, and the distance.
+def closest_of_all_Linf(a: Rectangle, bs: List[Rectangle]) -> Tuple[Rectangle,
+                                                                    int]:
     closest_d = 10000
     closest = bs[0]
     for b in bs:
@@ -76,7 +77,7 @@ def closest_of_all_Linf(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
         if current_d < closest_d:
             closest_d = current_d
             closest = b
-    return closest
+    return closest, closest_d
 
 
 # Returns the direction [dx, dy] from point a to point b.

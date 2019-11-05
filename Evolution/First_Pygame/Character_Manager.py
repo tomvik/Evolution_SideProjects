@@ -39,7 +39,6 @@ class CharacterManager:
         self.__stage_color = stage.get_stage_color()
         self.__walls_color = stage.get_walls_color()
         self.__characters.clear()
-        self.__heading_home = 0
         self.__span_random_characters(amount, sensing_range, speed_range,
                                       movements_range)
         self.__initial_amount = amount
@@ -81,10 +80,6 @@ class CharacterManager:
                 str(character.get_movement_limit()) + "\n"
         return data
 
-    # Returns if someone is heading home
-    def heading_home(self) -> bool:
-        return self.__heading_home > 0
-
     # Draws all the characters.
     def draw(self):
         for character in self.__characters:
@@ -110,6 +105,10 @@ class CharacterManager:
                 self.__move_home(i)
                 i -= 1
                 characters_left -= 1
+            elif self.__characters[i].no_energy():
+                self.__kill(i)
+                i -= 1
+                characters_left -= 1
             else:
                 self.__move_character(i, movement,
                                       self.__get_blockings(i,
@@ -118,8 +117,7 @@ class CharacterManager:
                                       food_manager)
             i += 1
         for j in range(characters_left):
-            if food_manager.maybe_is_eating(self.__characters[j]):
-                self.__heading_home += 1
+            food_manager.maybe_is_eating(self.__characters[j])
             self.__characters[j].draw()
 
     # Resets all the characters to a random position inside the stage.
@@ -138,16 +136,18 @@ class CharacterManager:
                 self.__stage_limits, self.__character_size, self.__characters,
                 True))
             self.__characters[-1].set_background_color(self.__stage_color)
+            self.__characters[-1].set_can_reproduce()
             self.__characters[-1].reset()
         self.__characters[-1].reset_home()
         self.__perished = self.__initial_amount - len(self.__characters)
         self.__initial_amount = len(self.__characters)
-        self.__heading_home = 0
 
     # Reproduces the surviving characters according to the probability given.
     def reproduce_characters(self, probability: int):
         self.__newborn = 0
         for i in range(self.__initial_amount):
+            if self.__characters[i].can_reproduce() is False:
+                continue
             speed, sensing, movements = self.__get_mutations(i)
             next_generation = self.__characters[i].get_generation()+1
             if random.randrange(0, 100, 1) < probability:
@@ -166,16 +166,26 @@ class CharacterManager:
         self.reproduce_characters(reproduction_probability)
         self.draw()
 
+    # Returns True if any of the characters has eaten.
+    def has_someone_eaten(self) -> bool:
+        for character in self.__characters:
+            if character.has_eaten():
+                return True
+        return False
+
     # Sorts the character list by its x coordinate.
     def xsort(self):
         self.__characters.sort(key=lambda x: x._rectangle.left)
 
     # Moves the character home, and transfers it to the finished list.
     def __move_home(self, index: int):
-        self.__heading_home -= 1
         self.__finished_characters.append(self.__characters.pop(index))
         self.__finished_characters[-1].move_home()
         self.__finished_characters[-1].set_background_color(self.__walls_color)
+
+    # Kills the character with the selected index.
+    def __kill(self, index: int):
+        self.__characters.pop(index)
 
     # Returns the blockings for the current index.
     def __get_blockings(self, current: int, walls: List[Rectangle.Rectangle],
@@ -189,12 +199,14 @@ class CharacterManager:
     # Returns the direction to the closest wall of the indexed character.
     # If it arrives home, it does nothing and sets the variable on the
     # character.
-    def __goto_closest_wall(self, index: int, stage: Stage) -> Tuple[int, int]:
-        wall, movement = stage.closest_wall_to(self.__characters[index])
+    def __goto_closest_wall(self,
+                            index: int, stage: Stage) -> Tuple[Direction, int]:
+        wall, movement, distance = \
+            stage.closest_wall_to(self.__characters[index])
         if self.__characters[index].would_collide(wall, movement):
             self.__characters[index].arrived_home()
             return (0, 0)
-        return movement
+        return movement, distance
 
     # Returns the direction to the closest food of the indexed character.
     # If there's no food left, it returns a random movement.
@@ -208,9 +220,14 @@ class CharacterManager:
     # Returns the direction that the character shall follow.
     def __get_direction(self, index: int, stage: Stage,
                         food_manager: FoodManager) -> Direction:
-        if self.__characters[index].is_hungry():
+        if self.__characters[index].has_eaten() is False:
             return self.__goto_closest_food(index, food_manager)
-        return self.__goto_closest_wall(index, stage)
+
+        movement, distance = self.__goto_closest_wall(index, stage)
+        if self.__characters[index].is_hungry() \
+                and self.__characters[index].enough_energy(distance):
+            return self.__goto_closest_food(index, food_manager)
+        return movement
 
     # Moves the character a certain dx and dy times its own speed, plus
     # checks on the foods and eats if the character is hungry.

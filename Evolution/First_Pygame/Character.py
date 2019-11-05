@@ -25,13 +25,19 @@ class Character(Rectangle):
                          (0, 0, 0), background_color, movement_limit)
         self.__set_color_attributes()
         self.draw()
+        self._energy = Constants.ENERGY
         self._generation = 0
-        self.__set_hunger()
         self._is_home = False
+        self._can_reproduce = False
+        self.__set_hunger()
 
-    # Returns the generation of character.
+    # Returns the generation of the character.
     def get_generation(self) -> int:
         return self._generation
+
+    # Returns the energy of the character.
+    def get_energy(self) -> int:
+        return self._energy
 
     # Returns the hunger.
     def get_hunger(self) -> int:
@@ -41,9 +47,21 @@ class Character(Rectangle):
     def is_hungry(self) -> bool:
         return self._hunger > 0
 
+    # Returns True if it has eaten at least once.
+    def has_eaten(self) -> bool:
+        return self._hunger < self._original_hunger
+
     # Returns True if it has arrived home.
     def is_home(self) -> bool:
         return self._is_home
+
+    # If it ate all it needed to eat, it can reproduce.
+    def set_can_reproduce(self):
+        self._can_reproduce = not self.is_hungry()
+
+    # Returns True if it can reproduce
+    def can_reproduce(self) -> bool:
+        return self._can_reproduce
 
     # Tells self that it has arrived home.
     def arrived_home(self):
@@ -51,7 +69,7 @@ class Character(Rectangle):
 
     # Returns True if self is home and not hungry.
     def finished(self) -> bool:
-        return self.is_home() and (self.is_hungry() is False)
+        return self.is_home()
 
     # Returns the sensing value.
     def get_sensing(self) -> int:
@@ -76,6 +94,7 @@ class Character(Rectangle):
         self._is_home = False
         self._hunger = self._original_hunger
         self._movements = 0
+        self._energy = Constants.ENERGY
 
     # Resets the coordinate of home.
     def reset_home(self):
@@ -91,25 +110,36 @@ class Character(Rectangle):
     # Moves the object by dx and dy times speed.
     # If there's a blocking, it moves as much as possible.
     # It moves each axis separately for collision checking.
-    def move(self, dx: int, dy: int, blockings: List[Rectangle]):
-        if dx != 0:
-            self.__move_single_axis(dx, 0, blockings)
-        if dy != 0:
-            self.__move_single_axis(0, dy, blockings)
-        self._movements += 1
-        if self._movements >= self._max_movements:
-            self._direction = random.randint(0, 4)
-            self._movements = 0
-        while Distances.L2(self.get_center(),
-                           Constants.INTEREST_POINTS[self._direction]) \
-                < self._sensing_range:
-            self._direction = random.randint(0, 4)
+    def move(self, dx: int, dy: int,
+             blockings: List[Rectangle],
+             teleport: bool = False):
+        if teleport:
+            x, y = self.get_center()
+            self.teleport_center(Point(dx, dy))
+            dx -= x
+            dy -= y
+        else:
+            dx *= self._speed
+            dy *= self._speed
+            if dx != 0:
+                self.__move_single_axis(dx, 0, blockings)
+            if dy != 0:
+                self.__move_single_axis(0, dy, blockings)
+            self._movements += 1
+            if self._movements >= self._max_movements:
+                self._direction = random.randint(0, 4)
+                self._movements = 0
+            while Distances.L2(self.get_center(),
+                               Constants.INTEREST_POINTS[self._direction]) \
+                    < self._sensing_range:
+                self._direction = random.randint(0, 4)
+        self.__modify_energy(Point(dx, dy))
 
     # Helper function for moving the object on a single axis.
     def __move_single_axis(self, dx: int, dy: int, blockings: List[Rectangle]):
         self.draw_background()
 
-        super().move(Direction(dx*self._speed, dy*self._speed))
+        super().move(Direction(dx, dy))
 
         for block in blockings:
             if self.collides(block):
@@ -153,3 +183,21 @@ class Character(Rectangle):
         b = min(b, 255)
         b = max(b, 0)
         self.set_color((r, g, b))
+
+    # The energy consumed per movement is:
+    # sqrt(dx^2 + dy^2) * speed^2
+    def __modify_energy(self, d: Point):
+        self._energy -= Distances.L2(d, Point(0, 0)) \
+            * self._speed * self._speed
+        self._energy = max(0, self._energy)
+
+    # Returns True if there's enough energy to go back.
+    # Enough energy is considered:
+    # current energy > energy_to_nearest_wall + 3 movements
+    def enough_energy(self, distance: int) -> bool:
+        return self._energy >= (distance * self._speed * self._speed) \
+            + (self._speed * self._speed * self._speed * 3)
+
+    # Returns True if the character has no more energy.
+    def no_energy(self) -> bool:
+        return self._energy == 0

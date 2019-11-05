@@ -1,10 +1,9 @@
 You define your own limit.
 
 Next steps:
-- Add total energy
-- Add one extra food to reproduce
-- Add that if energy low and has eaten, return home.
-- Add Size change
+- Add one extra food to reproduce.
+- Add Size change or aggression.
+- Maybe add that after x days, they die.
 - Clean Code 
 - Organize better the files
 - Try to share food

@@ -205,7 +205,7 @@ class GameManager:
         round_life = self.__stage.handle_in_game(self.__load_data_dict(0))
         if remaining_characters is 0 \
                 or (remaining_foods is 0
-                    and self.__character_manager.heading_home() is False):
+                    and self.__character_manager.has_someone_eaten() is False):
             round_life = False
         event_case = self.__handle_in_game_events()
         if event_case == 1:
