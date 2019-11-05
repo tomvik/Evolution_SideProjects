@@ -1,10 +1,9 @@
 You define your own limit.
 
 Next steps:
+- Optimize Collision detection
 - Clean Code 
 - Organize better the files
-- Plot better
-- Try not to display always
 - Try to share food
 
 TODO:

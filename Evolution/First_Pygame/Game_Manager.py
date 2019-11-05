@@ -185,10 +185,16 @@ class GameManager:
                 return 2
         return 0
 
+    # Sorts both character and food lists by its x coordinate.
+    def __xsort_lists(self):
+        self.__character_manager.xsort()
+        self.__food_manager.xsort()
+
     # Runs the game. Returns false if the round has finished.
     def __run_game(self) -> Tuple[bool, bool]:
         round_life = True
         window_life = True
+        self.__xsort_lists()
         self.__character_manager.move_characters(self.__food_manager,
                                                  self.__stage,
                                                  self.__traverse)

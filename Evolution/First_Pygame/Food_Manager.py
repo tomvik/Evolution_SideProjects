@@ -60,7 +60,7 @@ class FoodManager:
                                                        character.get_speed())
             if within_r:
                 character.draw_background()
-                character.teleport(food.get_center())
+                character.teleport_center(food.get_center())
                 return Direction(0, 0)
         return d
 
@@ -76,18 +76,16 @@ class FoodManager:
     # Feeds the character that it receives and returns true if it has been
     # completely fed.
     def maybe_is_eating(self, character: Character) -> bool:
-        counter = 0
-        foods_to_eat = list()
-        amount_of_food = self.food_left()
+        c = 0
         character_was_hungry = character.is_hungry()
-        while counter < amount_of_food and character.is_hungry():
-            if character.collides(self.__foods[counter]):
-                character.feed(self.__foods[counter].get_nutritional_value())
-                del self.__foods[counter]
-                counter -= 1
-                amount_of_food -= 1
-                character.draw()
-            counter += 1
+        indexes = Distances.smart_collide(character, self.__foods)
+        for index in indexes:
+            if character.is_hungry() is False:
+                self.__foods[index - c].draw()
+                continue
+            character.feed(self.__foods[index - c].get_nutritional_value())
+            del self.__foods[index - c]
+            c += 1
         return character_was_hungry != character.is_hungry()
 
     # Spans the initial amount of food throughout the already defined stage.
@@ -96,6 +94,10 @@ class FoodManager:
         if amount == 0:
             amount = self.__initial_amount
         self.__foods = self.__span_random_food(amount, blockings)
+
+    # Sorts the food list according to its x coordinate.
+    def xsort(self):
+        self.__foods.sort(key=lambda x: x._rectangle.left)
 
     # Spans a random amount of food throughout the specified stage.
     def __span_random_food(self, amount: int,

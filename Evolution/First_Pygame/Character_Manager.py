@@ -117,7 +117,10 @@ class CharacterManager:
                                                            only_walls),
                                       food_manager)
             i += 1
-        food_manager.draw()
+        for j in range(characters_left):
+            if food_manager.maybe_is_eating(self.__characters[j]):
+                self.__heading_home += 1
+            self.__characters[j].draw()
 
     # Resets all the characters to a random position inside the stage.
     def reset_characters(self):
@@ -162,6 +165,10 @@ class CharacterManager:
         self.reset_characters()
         self.reproduce_characters(reproduction_probability)
         self.draw()
+
+    # Sorts the character list by its x coordinate.
+    def xsort(self):
+        self.__characters.sort(key=lambda x: x._rectangle.left)
 
     # Moves the character home, and transfers it to the finished list.
     def __move_home(self, index: int):
@@ -211,8 +218,6 @@ class CharacterManager:
                          blockings: List[Rectangle.Rectangle],
                          food_manager: FoodManager):
         self.__characters[index].move(dir[0], dir[1], blockings)
-        if food_manager.maybe_is_eating(self.__characters[index]):
-            self.__heading_home += 1
 
     # Spans randomly throughout the stage the amount of characters
     # selected with random values of sensing and speed, within the range.

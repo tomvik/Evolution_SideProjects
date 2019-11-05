@@ -112,6 +112,10 @@ class Rectangle:
         self._rectangle.left = position.x
         self._rectangle.top = position.y
 
+    # Teleports the rectangle to the center x and y
+    def teleport_center(self, position: Point):
+        self._rectangle.center = (position.x, position.y)
+
     # Draws itself.
     def draw(self):
         pygame.draw.rect(self.__class__.__window, self._color, self._rectangle)

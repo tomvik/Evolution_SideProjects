@@ -122,7 +122,6 @@ class Character(Rectangle):
                     self.set_bottom(top)
                 elif dy < 0:  # Moving up; Hit the bottom side.
                     self.set_top(bottom)
-        self.draw()
 
     # Moves self to home.
     def move_home(self):

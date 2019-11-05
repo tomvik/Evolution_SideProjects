@@ -173,3 +173,17 @@ def get_weighted_index(probabilities: List[float],
     probabilities = deque(probabilities)
     probabilities.rotate(rotate_index)
     return choice(choices, 1, False, probabilities)[0]
+
+
+def smart_collide(character: Rectangle, foods: List[Rectangle]) -> List[int]:
+    indexes = []
+    lim = character.get_limits()
+    for i in range(len(foods)):
+        f_lim = foods[i].get_limits()
+        if f_lim.x_max < lim.x_min:
+            continue
+        elif f_lim.x_min > lim.x_max:
+            return indexes
+        if character.collides(foods[i]):
+            indexes.append(i)
+    return indexes
