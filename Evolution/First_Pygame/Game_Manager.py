@@ -198,6 +198,7 @@ class GameManager:
         self.__character_manager.move_characters(self.__food_manager,
                                                  self.__stage,
                                                  self.__traverse)
+        self.__food_manager.draw()
         remaining_characters = self.__character_manager.characters_left()
         remaining_foods = self.__food_manager.food_left()
 

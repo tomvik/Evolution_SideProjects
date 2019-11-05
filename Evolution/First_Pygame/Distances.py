@@ -48,10 +48,18 @@ def closest_Linf(a: Rectangle, b: Rectangle) -> int:
 
 
 # Returns the closest rectangle to a in L2 distance.
-def closest_of_all_L2(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
+def closest_of_all_L2(a: Rectangle, bs: List[Rectangle], r: int) -> Rectangle:
     closest_d = 10000
+    center = a.get_center()
+    x_min = center.x - r
+    x_max = center.x + r
     closest = bs[0]
     for b in bs:
+        lim = b.get_limits()
+        if lim.x_max < x_min:
+            continue
+        elif lim.x_min > x_min:
+            break
         current_d = closest_L2(a, b)
         if current_d < closest_d:
             closest_d = current_d

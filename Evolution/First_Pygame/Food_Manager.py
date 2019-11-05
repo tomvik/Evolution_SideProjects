@@ -52,7 +52,8 @@ class FoodManager:
     # If the food is within distance of the speed, it will also move
     # towards it.
     def direction_to_closest_food(self, character: Character) -> Direction:
-        food = Distances.closest_of_all_L2(character, self.__foods)
+        food = Distances.closest_of_all_L2(character, self.__foods,
+                                           character.get_sensing())
         d, within_r = Distances.sensing_direction(character, food,
                                                   character.get_sensing())
         if within_r:
@@ -81,8 +82,7 @@ class FoodManager:
         indexes = Distances.smart_collide(character, self.__foods)
         for index in indexes:
             if character.is_hungry() is False:
-                self.__foods[index - c].draw()
-                continue
+                break
             character.feed(self.__foods[index - c].get_nutritional_value())
             del self.__foods[index - c]
             c += 1

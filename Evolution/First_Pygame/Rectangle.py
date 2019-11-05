@@ -171,7 +171,9 @@ def free_random_position(limits: Limits, size: Size,
     y_max -= size.height
     position = Point(0, 0)
     blocks = True
+    loop = 0
     while blocks:
+        loop += 1
         selected = random.randint(0, 3) if in_wall else 4
         if selected == 0:  # Left wall.
             position = Point(x_min + 1,
@@ -193,6 +195,8 @@ def free_random_position(limits: Limits, size: Size,
             position = Point(random.randint(x_min, x_max),
                              random.randint(y_min, y_max))
             blocks = check_if_blocked(position, size, blockings)
+        if loop > 500:
+            return position
     return position
 
 

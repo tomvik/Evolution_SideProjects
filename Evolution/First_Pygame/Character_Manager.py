@@ -208,9 +208,9 @@ class CharacterManager:
     # Returns the direction that the character shall follow.
     def __get_direction(self, index: int, stage: Stage,
                         food_manager: FoodManager) -> Direction:
-        if (self.__characters[index].is_hungry() is False):
-            return self.__goto_closest_wall(index, stage)
-        return self.__goto_closest_food(index, food_manager)
+        if self.__characters[index].is_hungry():
+            return self.__goto_closest_food(index, food_manager)
+        return self.__goto_closest_wall(index, stage)
 
     # Moves the character a certain dx and dy times its own speed, plus
     # checks on the foods and eats if the character is hungry.
@@ -261,46 +261,37 @@ class CharacterManager:
         if index == 0:
             speeds = list()
             for i in range(-2, 3, 1):
-                # print(i)
                 speeds.append(speed + (Constants.STEP_SPEED * i))
                 speeds[i+2] = max(speeds[i+2], Constants.MIN_SPEED)
                 speeds[i+2] = min(speeds[i+2], Constants.MAX_SPEED)
-            # print(len(speeds))
             index = \
                 Distances.get_weighted_index(
                     Constants.PROBABILITIES_MUTATIONS,
                     0,
                     Constants.MUTATIONS_INDEXES)
-            # print(index)
             speed = speeds[index]
         elif index == 1:
             sensings = list()
             for i in range(-2, 3, 1):
-                # print(i)
                 sensings.append(sensing + (Constants.STEP_SENSING * i))
                 sensings[i+2] = max(sensings[i+2], Constants.MIN_SENSING)
                 sensings[i+2] = min(sensings[i+2], Constants.MAX_SENSING)
-            # print(len(sensings))
             index = \
                 Distances.get_weighted_index(
                     Constants.PROBABILITIES_MUTATIONS,
                     0,
                     Constants.MUTATIONS_INDEXES)
-            # print(index)
             sensing = sensings[index]
         else:
             movementss = list()
             for i in range(-2, 3, 1):
-                # print(i)
                 movementss.append(movements + (Constants.STEP_MOVEMENTS * i))
                 movementss[i+2] = max(movementss[i+2], Constants.MIN_MOVEMENTS)
                 movementss[i+2] = min(movementss[i+2], Constants.MAX_MOVEMENTS)
-            # print(len(movementss))
             index = \
                 Distances.get_weighted_index(
                     Constants.PROBABILITIES_MUTATIONS,
                     0,
                     Constants.MUTATIONS_INDEXES)
-            # print(index)
             movements = movementss[index]
         return speed, sensing, movements
