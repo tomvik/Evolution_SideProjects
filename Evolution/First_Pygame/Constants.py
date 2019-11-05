@@ -119,6 +119,12 @@ STEP_INDEXES: List[int] = range(3)
 PROBABILITIES_MUTATIONS: List[float] = [0.1, 0.2, 0.4, 0.2, 0.1]
 MUTATIONS_INDEXES: List[int] = range(5)
 
+PARAMS_LIMITS: Tuple[Tuple[int, int],
+                     Tuple[int, int],
+                     Tuple[int, int]] = ((MIN_SENSING, MAX_SENSING),
+                                         (MIN_SPEED, MAX_SPEED),
+                                         (MIN_MOVEMENTS, MAX_MOVEMENTS))
+
 # Moves constants
 
 INTEREST_POINTS: List[Point] = \
