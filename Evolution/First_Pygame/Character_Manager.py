@@ -117,7 +117,10 @@ class CharacterManager:
                                                            only_walls),
                                       food_manager)
             i += 1
-        food_manager.draw()
+        for j in range(characters_left):
+            if food_manager.maybe_is_eating(self.__characters[j]):
+                self.__heading_home += 1
+            self.__characters[j].draw()
 
     # Resets all the characters to a random position inside the stage.
     def reset_characters(self):
@@ -163,6 +166,10 @@ class CharacterManager:
         self.reproduce_characters(reproduction_probability)
         self.draw()
 
+    # Sorts the character list by its x coordinate.
+    def xsort(self):
+        self.__characters.sort(key=lambda x: x._rectangle.left)
+
     # Moves the character home, and transfers it to the finished list.
     def __move_home(self, index: int):
         self.__heading_home -= 1
@@ -201,9 +208,9 @@ class CharacterManager:
     # Returns the direction that the character shall follow.
     def __get_direction(self, index: int, stage: Stage,
                         food_manager: FoodManager) -> Direction:
-        if (self.__characters[index].is_hungry() is False):
-            return self.__goto_closest_wall(index, stage)
-        return self.__goto_closest_food(index, food_manager)
+        if self.__characters[index].is_hungry():
+            return self.__goto_closest_food(index, food_manager)
+        return self.__goto_closest_wall(index, stage)
 
     # Moves the character a certain dx and dy times its own speed, plus
     # checks on the foods and eats if the character is hungry.
@@ -211,8 +218,6 @@ class CharacterManager:
                          blockings: List[Rectangle.Rectangle],
                          food_manager: FoodManager):
         self.__characters[index].move(dir[0], dir[1], blockings)
-        if food_manager.maybe_is_eating(self.__characters[index]):
-            self.__heading_home += 1
 
     # Spans randomly throughout the stage the amount of characters
     # selected with random values of sensing and speed, within the range.
@@ -256,46 +261,37 @@ class CharacterManager:
         if index == 0:
             speeds = list()
             for i in range(-2, 3, 1):
-                # print(i)
                 speeds.append(speed + (Constants.STEP_SPEED * i))
                 speeds[i+2] = max(speeds[i+2], Constants.MIN_SPEED)
                 speeds[i+2] = min(speeds[i+2], Constants.MAX_SPEED)
-            # print(len(speeds))
             index = \
                 Distances.get_weighted_index(
                     Constants.PROBABILITIES_MUTATIONS,
                     0,
                     Constants.MUTATIONS_INDEXES)
-            # print(index)
             speed = speeds[index]
         elif index == 1:
             sensings = list()
             for i in range(-2, 3, 1):
-                # print(i)
                 sensings.append(sensing + (Constants.STEP_SENSING * i))
                 sensings[i+2] = max(sensings[i+2], Constants.MIN_SENSING)
                 sensings[i+2] = min(sensings[i+2], Constants.MAX_SENSING)
-            # print(len(sensings))
             index = \
                 Distances.get_weighted_index(
                     Constants.PROBABILITIES_MUTATIONS,
                     0,
                     Constants.MUTATIONS_INDEXES)
-            # print(index)
             sensing = sensings[index]
         else:
             movementss = list()
             for i in range(-2, 3, 1):
-                # print(i)
                 movementss.append(movements + (Constants.STEP_MOVEMENTS * i))
                 movementss[i+2] = max(movementss[i+2], Constants.MIN_MOVEMENTS)
                 movementss[i+2] = min(movementss[i+2], Constants.MAX_MOVEMENTS)
-            # print(len(movementss))
             index = \
                 Distances.get_weighted_index(
                     Constants.PROBABILITIES_MUTATIONS,
                     0,
                     Constants.MUTATIONS_INDEXES)
-            # print(index)
             movements = movementss[index]
         return speed, sensing, movements

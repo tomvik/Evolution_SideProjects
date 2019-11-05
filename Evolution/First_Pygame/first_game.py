@@ -9,14 +9,19 @@ from Plotter import Plotter
 
 def get_new_file_name() -> str:
     i = 0
-    while os.path.isfile(Constants.FILE_NAME + str(i) + ".txt"):
+    while os.path.isfile(get_file_name(i)):
         i += 1
+    return get_file_name(i)
+
+
+def get_file_name(i: int) -> str:
     return Constants.FILE_NAME + str(i) + ".txt"
 
 
 character_speed = (Constants.MIN_SPEED, Constants.MIN_SPEED + 5)
 character_sensing = (Constants.MIN_SENSING, Constants.MIN_SENSING + 5)
 character_patience = (Constants.MIN_MOVEMENTS, Constants.MAX_MOVEMENTS)
+
 file_name = get_new_file_name()
 
 game_manager = GameManager(Constants.WINDOW_SIZE,
@@ -34,10 +39,12 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.FOOD_SIZE,
                            Constants.FOOD_COLOR,
                            Constants.FOOD_VALUE,
-                           file_name)
+                           file_name,
+                           True)
 game_manager.continous_game()
 
-
-plotter = Plotter(file_name, '')
+values_to_plot = [Constants.DAYS, Constants.GENERATION, Constants.HUNGER,
+                  Constants.SENSING, Constants.SPEED, Constants.MOVEMENT]
+plotter = Plotter(file_name, values_to_plot)
 plotter.plot_3d()
-plotter.plot()
+plotter.plot_2d()

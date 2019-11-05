@@ -23,6 +23,7 @@ class TextBox:
         rect.topleft = position
         self.__rect = Rectangle.Rectangle(rect, box_color, background_color)
         self.__text = self.__text.strip()
+        self.draw(True)
 
     # Returns the text value in int.
     def get_value(self) -> int:
@@ -78,15 +79,16 @@ class TextBox:
                 else:
                     self.__text += event.unicode
                 self.__text = self.__text.strip()
-                self.draw()
+                self.draw(True)
 
     # Updates the value of the textbox and it draws it.
-    def draw(self):
+    def draw(self, update_display: bool = False):
         self.__text_surface = self.__font.render(self.__text, 1, self.__color)
         if self.__is_transparent is False:
             self.__rect.draw()
         self.__rect.blit(self.__text_surface)
-        pygame.display.update()
+        if update_display:
+            pygame.display.update()
 
     # Changes the type of the box to the opposite one, changing its colors too.
     def change_type(self):
@@ -96,7 +98,7 @@ class TextBox:
         self.__rect.set_color(self.__color)
         self.__color = new_text_color
         self.__rect.draw_background()
-        self.draw()
+        self.draw(True)
 
 
 # Returns an array of TextBoxes. It does not verify if it fits on the same row.

@@ -157,7 +157,6 @@ class Stage:
     def handle_event(self, event: pygame.event):
         for text_box in self.__text_boxes:
             text_box.handle_event(event)
-            text_box.draw()
 
     # Handles the in-game updates.
     def handle_in_game(self, key_value: Dict[str, int]) -> bool:

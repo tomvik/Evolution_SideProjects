@@ -48,10 +48,18 @@ def closest_Linf(a: Rectangle, b: Rectangle) -> int:
 
 
 # Returns the closest rectangle to a in L2 distance.
-def closest_of_all_L2(a: Rectangle, bs: List[Rectangle]) -> Rectangle:
+def closest_of_all_L2(a: Rectangle, bs: List[Rectangle], r: int) -> Rectangle:
     closest_d = 10000
+    center = a.get_center()
+    x_min = center.x - r
+    x_max = center.x + r
     closest = bs[0]
     for b in bs:
+        lim = b.get_limits()
+        if lim.x_max < x_min:
+            continue
+        elif lim.x_min > x_min:
+            break
         current_d = closest_L2(a, b)
         if current_d < closest_d:
             closest_d = current_d
@@ -173,3 +181,17 @@ def get_weighted_index(probabilities: List[float],
     probabilities = deque(probabilities)
     probabilities.rotate(rotate_index)
     return choice(choices, 1, False, probabilities)[0]
+
+
+def smart_collide(character: Rectangle, foods: List[Rectangle]) -> List[int]:
+    indexes = []
+    lim = character.get_limits()
+    for i in range(len(foods)):
+        f_lim = foods[i].get_limits()
+        if f_lim.x_max < lim.x_min:
+            continue
+        elif f_lim.x_min > lim.x_max:
+            return indexes
+        if character.collides(foods[i]):
+            indexes.append(i)
+    return indexes

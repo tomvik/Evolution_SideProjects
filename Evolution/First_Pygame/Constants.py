@@ -61,9 +61,9 @@ TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
 TEXTBOX_MATRIX: List[Tuple[str, str]] = \
     [("", "Time of Round (s):"), (TTL, "5    "),
      ("", "fps:"), (FPS, "60   "),
-     ("", "Max generations:"), (MAX_GENERATION, "15   "),
+     ("", "Max generations:"), (MAX_GENERATION, "100  "),
      ("", "Initial Characters:"), (INITIAL_CHARACTERS, "30   "),
-     ("", "Initial Foods:"), (INITIAL_FOODS, "30   "),
+     ("", "Initial Foods:"), (INITIAL_FOODS, "90   "),
      ("", "# of Characters:"), (CHARACTERS, "0    "),
      ("", "# of Foods:"), (FOODS, "0    "),
      ("", "days:"), (DAYS, "0    "),
@@ -118,6 +118,12 @@ STEP_INDEXES: List[int] = range(3)
 
 PROBABILITIES_MUTATIONS: List[float] = [0.1, 0.2, 0.4, 0.2, 0.1]
 MUTATIONS_INDEXES: List[int] = range(5)
+
+PARAMS_LIMITS: Tuple[Tuple[int, int],
+                     Tuple[int, int],
+                     Tuple[int, int]] = ((MIN_SENSING, MAX_SENSING),
+                                         (MIN_SPEED, MAX_SPEED),
+                                         (MIN_MOVEMENTS, MAX_MOVEMENTS))
 
 # Moves constants
 

@@ -26,10 +26,12 @@ class GameManager:
                  food_size: Size,
                  food_color: Color,
                  food_value: int,
-                 file_name: str) -> 'GameManager':
+                 file_name: str,
+                 update_display: bool) -> 'GameManager':
         pygame.init()
         self.__days = 0
         self.__traverse = traverse_characters
+        self.__update_display = update_display
         self.__stage = self.__initialize_stage(window_size,
                                                window_title,
                                                stage_size,
@@ -73,7 +75,7 @@ class GameManager:
             if window_life:
                 window_life = self.__new_round()
                 round_life = True
-        pygame.display.update()
+            pygame.display.update()
         self.__wait_for_exit()
 
     # Initializes the stage.
@@ -183,13 +185,20 @@ class GameManager:
                 return 2
         return 0
 
+    # Sorts both character and food lists by its x coordinate.
+    def __xsort_lists(self):
+        self.__character_manager.xsort()
+        self.__food_manager.xsort()
+
     # Runs the game. Returns false if the round has finished.
     def __run_game(self) -> Tuple[bool, bool]:
         round_life = True
         window_life = True
+        self.__xsort_lists()
         self.__character_manager.move_characters(self.__food_manager,
                                                  self.__stage,
                                                  self.__traverse)
+        self.__food_manager.draw()
         remaining_characters = self.__character_manager.characters_left()
         remaining_foods = self.__food_manager.food_left()
 
@@ -203,7 +212,8 @@ class GameManager:
             round_life = window_life = False
         elif event_case == 2:
             round_life = False
-        pygame.display.update()
+        if self.__update_display:
+            pygame.display.update()
 
         if self.__character_manager.get_newest_generation() >= \
                 self.__max_generation:
