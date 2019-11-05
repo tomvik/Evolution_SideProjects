@@ -25,9 +25,14 @@ class Plotter:
         average_sensing = [x[3] for x in self.__average_data]
         average_speed = [x[4] for x in self.__average_data]
         average_movement = [x[5] for x in self.__average_data]
+
         pyplot.plot(range(self.__day),
                     average_generation, 'b',
                     label='average_generation')
+
+        pyplot.plot(range(self.__day),
+                    self.__characters, 'm',
+                    label='characters')
 
         pyplot.plot(range(self.__day),
                     average_hunger, 'g',
@@ -44,6 +49,7 @@ class Plotter:
         pyplot.plot(range(self.__day),
                     average_movement, 'y',
                     label='average_movement')
+        pyplot.legend()
         pyplot.show()
 
     def __update_graph(self, day: int):
