@@ -39,7 +39,8 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.FOOD_SIZE,
                            Constants.FOOD_COLOR,
                            Constants.FOOD_VALUE,
-                           file_name)
+                           file_name,
+                           True)
 game_manager.continous_game()
 
 values_to_plot = [Constants.DAYS, Constants.GENERATION, Constants.HUNGER,

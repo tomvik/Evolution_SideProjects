@@ -81,12 +81,13 @@ class TextBox:
                 self.draw()
 
     # Updates the value of the textbox and it draws it.
-    def draw(self):
+    def draw(self, do_not_update_display: bool = False):
         self.__text_surface = self.__font.render(self.__text, 1, self.__color)
         if self.__is_transparent is False:
             self.__rect.draw()
         self.__rect.blit(self.__text_surface)
-        pygame.display.update()
+        if not do_not_update_display:
+            pygame.display.update()
 
     # Changes the type of the box to the opposite one, changing its colors too.
     def change_type(self):

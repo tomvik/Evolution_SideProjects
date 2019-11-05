@@ -66,13 +66,13 @@ class Clock:
         self.__minute = self.__minute % 60
 
     # Writes and draws the new values of time.
-    def draw(self):
+    def draw(self, do_not_update_display: bool = False):
         self.__hour_box.write("{0:02}:".format(self.__hour))
-        self.__hour_box.draw()
+        self.__hour_box.draw(do_not_update_display)
         self.__minute_box.write("{0:02}:".format(self.__minute))
-        self.__minute_box.draw()
+        self.__minute_box.draw(do_not_update_display)
         self.__second_box.write("{0:02}".format(self.__second))
-        self.__second_box.draw()
+        self.__second_box.draw(do_not_update_display)
 
     # Resets the clock to 0 and draws it.
     def reset(self):
