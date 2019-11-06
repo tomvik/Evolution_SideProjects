@@ -38,6 +38,8 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.TRAVERSE_CHARACTERS,
                            Constants.FOOD_SIZE,
                            Constants.FOOD_COLOR,
+                           Constants.FOOD_STEP,
+                           Constants.FOOD_UPDATE_DAY,
                            Constants.FOOD_VALUE,
                            file_name,
                            True)

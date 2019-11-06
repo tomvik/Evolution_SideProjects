@@ -281,7 +281,6 @@ class CharacterManager:
                     break
                 previous -= 1
             if has_been_eaten:
-                print("Someone ate someone")
                 continue
             after = current
             while after < characters_left:
@@ -299,7 +298,6 @@ class CharacterManager:
                     break
                 after += 1
             if has_been_eaten:
-                print("Someone ate someone")
                 continue
             current += 1
 
@@ -418,9 +416,7 @@ class CharacterManager:
         speed = self.__characters[index].get_speed()
         sensing = self.__characters[index].get_sensing()
         aggression = self.__characters[index].get_aggression()
-        index = Distances.get_weighted_index(Constants.PROBABILITIES_STEP,
-                                             0,
-                                             Constants.STEP_INDEXES)
+        index = random.choice(range(3))
         if index == 0:
             speeds = list()
             for i in range(-2, 3, 1):

@@ -181,3 +181,14 @@ class Stage:
                 if box.get_name() != Constants.INITIAL_CHARACTERS \
                         and box.get_name() != Constants.INITIAL_FOODS:
                     box.change_type()
+
+    # Changes the boxes that won't be updated anymore to output only, and those
+    # that will be to input. The naming is weird, but input are the only ones
+    # that get updated.
+    def continue_game(self):
+        for box in self.__text_boxes:
+            if box.has_name():
+                if box.get_name() != Constants.TTL \
+                        and box.get_name() != Constants.FPS:
+                    box.change_type()
+        self.__clock.reset()

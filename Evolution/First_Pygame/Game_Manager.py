@@ -25,6 +25,8 @@ class GameManager:
                  traverse_characters: bool,
                  food_size: Size,
                  food_color: Color,
+                 food_update_step: int,
+                 food_update_day: int,
                  food_value: int,
                  file_name: str,
                  update_display: bool) -> 'GameManager':
@@ -53,14 +55,18 @@ class GameManager:
                 character_sensing,
                 character_aggression,
                 stage_data[Constants.INITIAL_FOODS],
+                stage_data[Constants.TARGET_FOODS],
                 food_size,
                 food_color,
+                food_update_step,
+                food_update_day,
                 food_value
             )
         pygame.display.update()
         self.__wait_for_enter()
         self.__stage.initialize_game()
         self.__file_name = file_name
+        self.__reached_max_generation = False
 
     def __del__(self):
         pygame.quit()
@@ -75,6 +81,27 @@ class GameManager:
             if window_life:
                 window_life = self.__new_round()
                 round_life = True
+            elif self.__reached_max_generation:
+                pygame.display.update()
+                maybe_continue = True
+                while maybe_continue:
+                    case = self.__handle_in_game_events()
+                    if case == 1:
+                        maybe_continue = False
+                    elif case == 2:
+                        break
+                if maybe_continue:
+                    window_life = round_life = True
+                    self.__stage.continue_game()
+                    self.__wait_for_input()
+                    stage_data = self.__load_stage_state()
+                    generation = stage_data[Constants.MAX_GENERATION]
+                    target_food = stage_data[Constants.TARGET_FOODS]
+                    self.__max_generation = generation
+                    self.__reached_max_generation = False
+                    self.__food_manager.set_target_food(target_food)
+                    self.__stage.continue_game()
+
             pygame.display.update()
         self.__wait_for_exit()
 
@@ -101,8 +128,11 @@ class GameManager:
                               character_sensing: Tuple[int, int],
                               character_aggression: Tuple[int, int],
                               number_of_foods: int,
+                              target_foods: int,
                               food_size: int,
                               food_color: Color,
+                              food_update_step: int,
+                              food_update_day: int,
                               food_value: int) -> Tuple[CharacterManager,
                                                         FoodManager]:
 
@@ -114,8 +144,11 @@ class GameManager:
                                      stage)
 
         food_manager = FoodManager(food_size,
-                                   food_color)
+                                   food_color,
+                                   food_update_step,
+                                   food_update_day)
         food_manager.initialize(number_of_foods,
+                                target_foods,
                                 (food_value, food_value),
                                 stage,
                                 character_manager.get_list())
@@ -218,6 +251,7 @@ class GameManager:
         if self.__character_manager.get_newest_generation() >= \
                 self.__max_generation:
             round_life = window_life = False
+            self.__reached_max_generation = True
 
         return round_life, window_life
 

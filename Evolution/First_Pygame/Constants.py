@@ -30,6 +30,7 @@ TEXT_FONT: Font = Font("Trebuchet MS", 15)
 INITIAL_CHARACTERS: str = "Initial_Characters"
 CHARACTERS: str = "Characters"
 INITIAL_FOODS: str = "Initial_Foods"
+TARGET_FOODS: str = "Target_Foods"
 FOODS: str = "Foods"
 TTL: str = "Ttl"
 FPS: str = "Fps"
@@ -51,6 +52,7 @@ TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
                                        False, True,
                                        False, True,
                                        False, True,
+                                       False, True,
                                        False, False,
                                        False, False,
                                        False, False,
@@ -60,11 +62,12 @@ TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
                                        False, False]
 
 TEXTBOX_MATRIX: List[Tuple[str, str]] = \
-    [("", "Time of Round (s):"), (TTL, "5    "),
-     ("", "fps:"), (FPS, "60   "),
+    [("", "Time of Round (s):"), (TTL, "15    "),
+     ("", "fps:"), (FPS, "120   "),
      ("", "Max generations:"), (MAX_GENERATION, "100  "),
      ("", "Initial Characters:"), (INITIAL_CHARACTERS, "30   "),
-     ("", "Initial Foods:"), (INITIAL_FOODS, "90   "),
+     ("", "Initial Foods:"), (INITIAL_FOODS, "60   "),
+     ("", "Target Foods:"), (TARGET_FOODS, "60   "),
      ("", "# of Characters:"), (CHARACTERS, "0    "),
      ("", "# of Foods:"), (FOODS, "0    "),
      ("", "days:"), (DAYS, "0    "),
@@ -82,7 +85,12 @@ INSTRUCTIONS_TEXTBOXES: List[Tuple[str, str]] = \
      ("", "In-game Instructions:"), ("", " "),
      ("", "Key:  "), ("", "Effect:"),
      ("", "Exit   "), ("", "Quit the game"),
-     ("", "Space "), ("", "End the round")]
+     ("", "Space "), ("", "End the round"),
+     ("", " "), ("", " "),
+     ("", "If the max generation"), ("", ""),
+     ("", "has been reached, to"), ("", ""),
+     ("", "continue the game press"), ("", ""),
+     ("", "space."), ("", "")]
 
 INSTRUCTIONS_INPUT: List[bool] = [False] * len(INSTRUCTIONS_TEXTBOXES)
 
@@ -90,6 +98,8 @@ INSTRUCTIONS_INPUT: List[bool] = [False] * len(INSTRUCTIONS_TEXTBOXES)
 FOOD_COLOR: Color = WHITE
 FOOD_SIZE = Size(5, 5)
 FOOD_VALUE = 1
+FOOD_STEP = 2
+FOOD_UPDATE_DAY = 5
 
 # Character constants
 REPRODUCTION: int = 50  # 50%
