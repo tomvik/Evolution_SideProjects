@@ -16,20 +16,21 @@ class Character(Rectangle):
     def __init__(self, rectangle: PointSize,
                  background_color: Color,
                  speed: int, sensing_range: int,
-                 movement_limit: int):
+                 aggression: int):
         self._speed = speed
         self._sensing_range = sensing_range
-        self._max_movements = movement_limit
-
-        super().__init__(rectangle,
-                         (0, 0, 0), background_color, movement_limit)
-        self.__set_color_attributes()
-        self.draw()
+        self._aggression = aggression
         self._energy = Constants.ENERGY
+        self._days_to_death = Constants.DAYS_TO_LIVE
+        self._original_hunger = Constants.ORIGINAL_HUNGER
         self._generation = 0
         self._is_home = False
         self._can_reproduce = False
-        self.__set_hunger()
+        self._hunger = self._original_hunger
+
+        super().__init__(rectangle, Color(0, 0, 0), background_color)
+        self.__set_color_attributes()
+        self.draw()
 
     # Returns the generation of the character.
     def get_generation(self) -> int:
@@ -38,6 +39,10 @@ class Character(Rectangle):
     # Returns the energy of the character.
     def get_energy(self) -> int:
         return self._energy
+
+    # Returns the aggression of the character.
+    def get_aggression(self) -> int:
+        return self._aggression
 
     # Returns the hunger.
     def get_hunger(self) -> int:
@@ -59,9 +64,13 @@ class Character(Rectangle):
     def set_can_reproduce(self):
         self._can_reproduce = not self.is_hungry()
 
-    # Returns True if it can reproduce
+    # Returns True if it can reproduce.
     def can_reproduce(self) -> bool:
         return self._can_reproduce
+
+    # Returns True if it can still live.
+    def can_live(self) -> bool:
+        return self._days_to_death > 0
 
     # Tells self that it has arrived home.
     def arrived_home(self):
@@ -83,18 +92,12 @@ class Character(Rectangle):
     def set_generation(self, generation: int):
         self._generation = generation
 
-    # Sets the hunger of the character depending on its stats.
-    # hunger = int(speed/10)
-    def __set_hunger(self):
-        self._original_hunger = int(self._speed/10) + 1
-        self._hunger = self._original_hunger
-
     # Resets the values to indicate that is hungry and is not home.
     def reset(self):
         self._is_home = False
         self._hunger = self._original_hunger
-        self._movements = 0
         self._energy = Constants.ENERGY
+        self._days_to_death -= 1
 
     # Resets the coordinate of home.
     def reset_home(self):
@@ -125,10 +128,6 @@ class Character(Rectangle):
                 self.__move_single_axis(dx, 0, blockings)
             if dy != 0:
                 self.__move_single_axis(0, dy, blockings)
-            self._movements += 1
-            if self._movements >= self._max_movements:
-                self._direction = random.randint(0, 4)
-                self._movements = 0
             while Distances.L2(self.get_center(),
                                Constants.INTEREST_POINTS[self._direction]) \
                     < self._sensing_range:
@@ -168,6 +167,7 @@ class Character(Rectangle):
 
         self.__class__.next_home = Point(new_home_x, new_home_y)
 
+    # Sets the color of the character depending on its attributes.
     def __set_color_attributes(self):
         r = Constants.SLOPE_SPEED * self._speed + Constants.B_SPEED
         r = int(r)
@@ -177,26 +177,30 @@ class Character(Rectangle):
         g = int(g)
         g = min(g, 255)
         g = max(g, 0)
-        b = Constants.SLOPE_MOVEMENTS * self._max_movements \
-            + Constants.B_MOVEMENTS
+        b = Constants.SLOPE_AGGRESSION * self._aggression \
+            + Constants.B_AGGRESSION
         b = int(b)
         b = min(b, 255)
         b = max(b, 0)
-        self.set_color((r, g, b))
+        self.set_color(Color(r, g, b))
 
     # The energy consumed per movement is:
-    # sqrt(dx^2 + dy^2) * speed^2
+    # Distance * speed^2 * aggression^3
+    def __energy_spent(self, distance: int) -> int:
+        return (distance * self._speed * self._speed * self._aggression
+                * self._aggression * self._aggression)
+
+    # Modifies the energy by the one used.
     def __modify_energy(self, d: Point):
-        self._energy -= Distances.L2(d, Point(0, 0)) \
-            * self._speed * self._speed
+        self._energy -= self.__energy_spent(Distances.L2(d, Point(0, 0)))
         self._energy = max(0, self._energy)
 
     # Returns True if there's enough energy to go back.
     # Enough energy is considered:
     # current energy > energy_to_nearest_wall + 3 movements
     def enough_energy(self, distance: int) -> bool:
-        return self._energy >= (distance * self._speed * self._speed) \
-            + (self._speed * self._speed * self._speed * 3)
+        return self._energy >= self.__energy_spent(distance) \
+            + (3*self.__energy_spent(self._speed))
 
     # Returns True if the character has no more energy.
     def no_energy(self) -> bool:

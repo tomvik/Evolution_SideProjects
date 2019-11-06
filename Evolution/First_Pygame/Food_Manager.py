@@ -50,8 +50,10 @@ class FoodManager:
 
     # Returns the direction to the closes food from the character received.
     # If the food is within distance of the speed, it will also move
-    # towards it.
-    def direction_to_closest_food(self, character: Character) -> Direction:
+    # towards it. And it returns True if in fact there's a food nearby.
+    def direction_to_closest_food(self,
+                                  character: Character) -> \
+            Tuple[Direction, bool]:
         food = Distances.closest_of_all_L2(character, self.__foods,
                                            character.get_sensing())
         d, within_r = Distances.sensing_direction(character, food,
@@ -63,8 +65,11 @@ class FoodManager:
                 character.draw_background()
                 center = food.get_center()
                 character.move(center.x, center.y, [], True)
-                return Direction(0, 0)
-        return d
+                return Direction(0, 0), True
+            else:
+                return d, True
+        else:
+            return Direction(0, 0), False
 
     # Delete the specific food.
     def delete_index(self, index: int):

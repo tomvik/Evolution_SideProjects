@@ -11,15 +11,12 @@ class Rectangle:
     def __init__(self,
                  rectangle: PointSize,
                  color: Color,
-                 background_color: Color,
-                 max_movement: int = 80):
+                 background_color: Color):
         self._rectangle = pygame.Rect(rectangle)
         self._color = color
         self._background_color = background_color
         self.draw()
-        self._movements = 0
         self._direction = 0
-        self._max_movements = max_movement
 
     def __del__(self):
         self.draw_background()
@@ -67,10 +64,6 @@ class Rectangle:
     # Returns the direction to where it's headed.
     def get_direction(self) -> int:
         return self._direction
-
-    # Returns the max movement limit.
-    def get_movement_limit(self) -> int:
-        return self._max_movements
 
     # Sets and creates the window. Should be called at the initialization
     # of the game once.

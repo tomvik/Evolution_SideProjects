@@ -1,12 +1,9 @@
 You define your own limit.
 
 Next steps:
-- Add one extra food to reproduce.
-- Add Size change or aggression.
-- Maybe add that after x days, they die.
 - Clean Code 
 - Organize better the files
-- Try to share food
+- Try to share food or care for your 'clan'
 
 TODO:
 

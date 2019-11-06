@@ -33,14 +33,14 @@ class CharacterManager:
     def initialize(self, amount: int,
                    sensing_range: Tuple[int, int],
                    speed_range: Tuple[int, int],
-                   movements_range: Tuple[int, int],
+                   aggression_range: Tuple[int, int],
                    stage: Stage):
         self.__stage_limits = stage.get_stage_limits()
         self.__stage_color = stage.get_stage_color()
         self.__walls_color = stage.get_walls_color()
         self.__characters.clear()
         self.__span_random_characters(amount, sensing_range, speed_range,
-                                      movements_range)
+                                      aggression_range)
         self.__initial_amount = amount
 
     # Returns the list of characters.
@@ -76,8 +76,8 @@ class CharacterManager:
                 str(character.get_sensing()) + " "
             data += Constants.SPEED + " " + \
                 str(character.get_speed()) + " "
-            data += Constants.MOVEMENT + " " + \
-                str(character.get_movement_limit()) + "\n"
+            data += Constants.AGGRESSION + " " + \
+                str(character.get_aggression()) + "\n"
         return data
 
     # Draws all the characters.
@@ -116,29 +116,33 @@ class CharacterManager:
                                                            only_walls),
                                       food_manager)
             i += 1
-        for j in range(characters_left):
+        self.__maybe_someone_is_eating_someone()
+        for j in range(self.characters_left()):
             food_manager.maybe_is_eating(self.__characters[j])
             self.__characters[j].draw()
 
     # Resets all the characters to a random position inside the stage.
     def reset_characters(self):
-        if len(self.__finished_characters) is 0:
-            return
         self.__characters.clear()
         self.__oldest_generation = self.__newest_generation
         while self.__finished_characters:
-            self.__characters.append(self.__finished_characters.pop())
-            generation = self.__characters[-1].get_generation()
-            if self.__oldest_generation > generation:
-                self.__oldest_generation = generation
-            self.__characters[-1].draw_background()
-            self.__characters[-1].teleport(Rectangle.free_random_position(
-                self.__stage_limits, self.__character_size, self.__characters,
-                True))
-            self.__characters[-1].set_background_color(self.__stage_color)
-            self.__characters[-1].set_can_reproduce()
-            self.__characters[-1].reset()
-        self.__characters[-1].reset_home()
+            if self.__finished_characters[-1].can_live():
+                self.__characters.append(self.__finished_characters.pop())
+                generation = self.__characters[-1].get_generation()
+                if self.__oldest_generation > generation:
+                    self.__oldest_generation = generation
+                self.__characters[-1].draw_background()
+                self.__characters[-1].teleport(Rectangle.free_random_position(
+                    self.__stage_limits, self.__character_size,
+                    self.__characters,
+                    True))
+                self.__characters[-1].set_background_color(self.__stage_color)
+                self.__characters[-1].set_can_reproduce()
+                self.__characters[-1].reset()
+            else:
+                self.__finished_characters.pop()
+        if self.__characters:
+            self.__characters[-1].reset_home()
         self.__perished = self.__initial_amount - len(self.__characters)
         self.__initial_amount = len(self.__characters)
 
@@ -148,12 +152,12 @@ class CharacterManager:
         for i in range(self.__initial_amount):
             if self.__characters[i].can_reproduce() is False:
                 continue
-            speed, sensing, movements = self.__get_mutations(i)
+            speed, sensing, aggression = self.__get_mutations(i)
             next_generation = self.__characters[i].get_generation()+1
             if random.randrange(0, 100, 1) < probability:
                 self.__span_random_character((sensing, sensing),
                                              (speed, speed),
-                                             (movements, movements))
+                                             (aggression, aggression))
                 self.__characters[-1].set_generation(next_generation)
                 if next_generation > self.__newest_generation:
                     self.__newest_generation = next_generation
@@ -196,6 +200,136 @@ class CharacterManager:
         right_hand = characters[current+1:]
         return left_hand + right_hand + walls
 
+    # Returns True if the aggression of b is superior enough that it's
+    # dangerous
+    def __is_dangerous(self, a: int, b: int) -> bool:
+        return a*a*a*Constants.AGGRESSION_DIFF < b*b*b
+
+    # Returns a list of the directions towards the dangerous characters.
+    def __get_dangers(self, index: int) -> List[Direction]:
+        directions = []
+        s_range = self.__characters[index].get_sensing()
+        agg = self.__characters[index].get_aggression()
+        closests = Distances.all_within_r_L2(self.__characters[index],
+                                             self.__characters,
+                                             s_range)
+        for closest in closests:
+            c_agg = self.__characters[closest].get_aggression()
+            if self.__is_dangerous(agg, c_agg):  # Is dangerous.
+                direction, within_r = \
+                    Distances.sensing_direction(self.__characters[index],
+                                                self.__characters[closest],
+                                                s_range)
+                if within_r:
+                    directions.append(direction)
+        return directions
+
+    # Returns the best direction by adding and normalizing the list of
+    # directions.
+    def __get_best_direction(self, directions: List[Direction]) -> Direction:
+        t_dx = 0
+        t_dy = 0
+        dx = 0
+        dy = 0
+        for direction in directions:
+            t_dx += abs(direction.dx)
+            t_dy += abs(direction.dy)
+            dx -= direction.dx
+            dy -= direction.dy
+        if t_dx > 0:
+            dx /= float(t_dx)
+        else:
+            dx = 0
+        if t_dy > 0:
+            dy /= float(t_dy)
+        else:
+            dy = 0
+        return Direction(dx, dy)
+
+    # Returns true if the character is in danger and the direction of its
+    # movement to prevent it.
+    def __in_danger(self, index: int, stage: Stage) -> Tuple[bool, Direction]:
+        dangerous_directions = self.__get_dangers(index)
+        if dangerous_directions:
+            return True, self.__get_best_direction(dangerous_directions)
+        else:
+            return False, Direction(0, 0)
+
+    # Goes through all the characters and checks if someone is eating someone.
+    def __maybe_someone_is_eating_someone(self):
+        characters_left = len(self.__characters)
+        previous = 0
+        current = 0
+        after = 0
+        while current < characters_left:
+            has_been_eaten = False
+            c_lim = self.__characters[current].get_limits()
+            c_agg = self.__characters[current].get_aggression()
+            previous = current
+            while previous > 0:
+                p_lim = self.__characters[previous].get_limits()
+                p_agg = self.__characters[previous].get_aggression()
+                if p_lim.x_max < c_lim.x_min:
+                    break
+                elif self.__characters[current].collides(
+                    self.__characters[previous]) \
+                        and self.__is_dangerous(c_agg, p_agg):
+                    self.__characters[previous].feed(2)
+                    self.__characters.pop(current)
+                    has_been_eaten = True
+                    characters_left -= 1
+                    break
+                previous -= 1
+            if has_been_eaten:
+                print("Someone ate someone")
+                continue
+            after = current
+            while after < characters_left:
+                a_lim = self.__characters[after].get_limits()
+                a_agg = self.__characters[after].get_aggression()
+                if a_lim.x_min > c_lim.x_max:
+                    break
+                elif self.__characters[current].collides(
+                    self.__characters[after]) \
+                        and self.__is_dangerous(c_agg, a_agg):
+                    self.__characters[after].feed(2)
+                    self.__characters.pop(current)
+                    has_been_eaten = True
+                    characters_left -= 1
+                    break
+                after += 1
+            if has_been_eaten:
+                print("Someone ate someone")
+                continue
+            current += 1
+
+    # Returns the direction to the closest victim and returns True if it has
+    # reached it.
+    def __goto_closest_victim(self, index: int) -> Tuple[Direction, bool]:
+        character = self.__characters[index]
+        r = character.get_sensing()
+        s = character.get_speed()
+        agg = character.get_aggression()
+        closests = Distances.all_within_r_L2(character, self.__characters, r)
+        for closest in closests:
+            c_character = self.__characters[closest]
+            c_agg = c_character.get_aggression()
+            if self.__is_dangerous(c_agg, agg):
+                d, within_r = Distances.sensing_direction(character,
+                                                          c_character,
+                                                          r)
+                if within_r:
+                    d2, within_r = Distances.sensing_direction(character,
+                                                               c_character,
+                                                               s)
+                    if within_r:
+                        character.draw_background()
+                        center = c_character.get_center()
+                        character.move(center.x, center.y, [], True)
+                        return Direction(0, 0), True
+                return d, True
+        return Direction(0, 0), False
+
     # Returns the direction to the closest wall of the indexed character.
     # If it arrives home, it does nothing and sets the variable on the
     # character.
@@ -208,19 +342,31 @@ class CharacterManager:
             return (0, 0)
         return movement, distance
 
-    # Returns the direction to the closest food of the indexed character.
-    # If there's no food left, it returns a random movement.
-    # TODO: Make this more pretty.
-    def __goto_closest_food(self, index: int,
+    # Returns the direction to the closest food or victim of the
+    # indexed character.
+    # If there's no food or victim close or left, it returns a random movement.
+    def __goto_closest_food(self, i: int,
                             food_manager: FoodManager) -> Direction:
-        if food_manager.food_left() is 0:
-            return Distances.get_weighted_random_move(self.__characters[index].get_center(), self.__characters[index].get_direction())  # noqa: E501
-        return food_manager.direction_to_closest_food(self.__characters[index])
+        character = self.__characters[i]
+        if food_manager.food_left() > 0:
+            d, r = food_manager.direction_to_closest_food(character)
+            if r:
+                return d
+        else:
+            d, r = self.__goto_closest_victim(i)
+            if r:
+                return d
+        return Distances.get_weighted_random_move(character.get_center(),
+                                                  character.get_direction())
 
-    # Returns the direction that the character shall follow.
+    # Returns the direction that the character shall follow, prioritizing
+    # its own safety first.
     def __get_direction(self, index: int, stage: Stage,
                         food_manager: FoodManager) -> Direction:
-        if self.__characters[index].has_eaten() is False:
+        in_danger, movement = self.__in_danger(index, stage)
+        if in_danger:
+            return movement
+        elif self.__characters[index].has_eaten() is False:
             return self.__goto_closest_food(index, food_manager)
 
         movement, distance = self.__goto_closest_wall(index, stage)
@@ -241,21 +387,21 @@ class CharacterManager:
     def __span_random_characters(self, amount: int,
                                  sensing_range: Tuple[int, int],
                                  speed_range: Tuple[int, int],
-                                 movements_range: Tuple[int, int]):
+                                 aggression_range: Tuple[int, int]):
         for i in range(amount):
             self.__span_random_character(sensing_range, speed_range,
-                                         movements_range)
+                                         aggression_range)
 
     # Spans randomly one character.
     def __span_random_character(self,
                                 sensing_range: Tuple[int, int],
                                 speed_range: Tuple[int, int],
-                                movements_range: Tuple[int, int]):
+                                aggression_range: Tuple[int, int]):
         current_speed = random.randint(speed_range[0], speed_range[1])
         current_sensing = random.randint(sensing_range[0],
                                          sensing_range[1])
-        current_movement = random.randint(movements_range[0],
-                                          movements_range[1])
+        current_aggression = random.randint(aggression_range[0],
+                                            aggression_range[1])
 
         x, y = Rectangle.free_random_position(
             self.__stage_limits, self.__character_size, self.__characters,
@@ -266,12 +412,12 @@ class CharacterManager:
                                            self.__stage_color,
                                            current_speed,
                                            current_sensing,
-                                           current_movement))
+                                           current_aggression))
 
     def __get_mutations(self, index: int) -> List[int]:
         speed = self.__characters[index].get_speed()
         sensing = self.__characters[index].get_sensing()
-        movements = self.__characters[index].get_movement_limit()
+        aggression = self.__characters[index].get_aggression()
         index = Distances.get_weighted_index(Constants.PROBABILITIES_STEP,
                                              0,
                                              Constants.STEP_INDEXES)
@@ -300,15 +446,18 @@ class CharacterManager:
                     Constants.MUTATIONS_INDEXES)
             sensing = sensings[index]
         else:
-            movementss = list()
+            aggressions = list()
             for i in range(-2, 3, 1):
-                movementss.append(movements + (Constants.STEP_MOVEMENTS * i))
-                movementss[i+2] = max(movementss[i+2], Constants.MIN_MOVEMENTS)
-                movementss[i+2] = min(movementss[i+2], Constants.MAX_MOVEMENTS)
+                aggressions.append(aggression +
+                                   (Constants.STEP_AGGRESSION * i))
+                aggressions[i+2] = max(aggressions[i+2],
+                                       Constants.MIN_AGGRESSION)
+                aggressions[i+2] = min(aggressions[i+2],
+                                       Constants.MAX_AGGRESSION)
             index = \
                 Distances.get_weighted_index(
                     Constants.PROBABILITIES_MUTATIONS,
                     0,
                     Constants.MUTATIONS_INDEXES)
-            movements = movementss[index]
-        return speed, sensing, movements
+            aggression = aggressions[index]
+        return speed, sensing, aggression

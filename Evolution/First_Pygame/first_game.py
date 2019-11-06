@@ -20,7 +20,7 @@ def get_file_name(i: int) -> str:
 
 character_speed = (Constants.MIN_SPEED, Constants.MIN_SPEED + 5)
 character_sensing = (Constants.MIN_SENSING, Constants.MIN_SENSING + 5)
-character_patience = (Constants.MIN_MOVEMENTS, Constants.MAX_MOVEMENTS)
+character_aggression = (Constants.MIN_AGGRESSION, Constants.MIN_AGGRESSION + 2)
 
 file_name = get_new_file_name()
 
@@ -34,7 +34,7 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
                            Constants.CHARACTER_SIZE,
                            character_speed,
                            character_sensing,
-                           character_patience,
+                           character_aggression,
                            Constants.TRAVERSE_CHARACTERS,
                            Constants.FOOD_SIZE,
                            Constants.FOOD_COLOR,
@@ -44,7 +44,7 @@ game_manager = GameManager(Constants.WINDOW_SIZE,
 game_manager.continous_game()
 
 values_to_plot = [Constants.DAYS, Constants.GENERATION, Constants.HUNGER,
-                  Constants.SENSING, Constants.SPEED, Constants.MOVEMENT]
+                  Constants.SENSING, Constants.SPEED, Constants.AGGRESSION]
 plotter = Plotter(file_name, values_to_plot)
 plotter.plot_3d()
 plotter.plot_2d()

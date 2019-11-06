@@ -44,6 +44,7 @@ HUNGER: str = "Hunger"
 SENSING: str = "Sensing"
 SPEED: str = "Speed"
 MOVEMENT: str = "Movement"
+AGGRESSION: str = "Aggression"
 
 TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
                                        False, True,
@@ -94,10 +95,12 @@ FOOD_VALUE = 1
 REPRODUCTION: int = 50  # 50%
 TRAVERSE_CHARACTERS: bool = True
 CHARACTER_SIZE = Size(20, 20)
+DAYS_TO_LIVE: int = 15
+ORIGINAL_HUNGER: int = 2
 
 MIN_SPEED: int = 2
 MAX_SPEED: int = CHARACTER_SIZE.height * 2  # 40 diff: 38
-STEP_SPEED: int = 2  # 24 steps to max
+STEP_SPEED: int = 1  # 38 steps to max
 SLOPE_SPEED: float = 255/(MAX_SPEED-MIN_SPEED)
 B_SPEED: float = SLOPE_SPEED*MIN_SPEED
 
@@ -107,15 +110,18 @@ STEP_SENSING: int = 4  # 22 steps to max
 SLOPE_SENSING: float = 255/(MAX_SENSING-MIN_SENSING)
 B_SENSING: float = SLOPE_SENSING*MIN_SENSING
 
-MIN_MOVEMENTS: int = 60
-MAX_MOVEMENTS: int = 200  # diff: 140
-STEP_MOVEMENTS: int = 4  # 32 steps to max
-SLOPE_MOVEMENTS: float = 255/(MAX_MOVEMENTS-MIN_MOVEMENTS)
-B_MOVEMENTS: float = SLOPE_MOVEMENTS*MIN_MOVEMENTS
+MIN_AGGRESSION: int = 20
+MAX_AGGRESSION: int = 50  # diff: 30
+STEP_AGGRESSION: int = 1  # 30 steps
+SLOPE_AGGRESSION: float = 255/(MAX_AGGRESSION-MIN_AGGRESSION)
+B_AGGRESSION: float = SLOPE_AGGRESSION*MIN_AGGRESSION
+AGGRESSION_DIFF: float = 1.4
 
-ENERGY: int = (MAX_SPEED/2) * (MAX_SPEED/2) * STAGE_SIZE.width
 
-PROBABILITIES_STEP: List[float] = [0.2, 0.35, 0.45]
+ENERGY: int = (MAX_SPEED/2) * (MAX_SPEED/2) * STAGE_SIZE.width \
+    * (MAX_AGGRESSION/2) * (MAX_AGGRESSION/2) * (MAX_AGGRESSION/2)
+
+PROBABILITIES_STEP: List[float] = [0.3, 0.35, 0.35]
 STEP_INDEXES: List[int] = range(3)
 
 PROBABILITIES_MUTATIONS: List[float] = [0.1, 0.2, 0.4, 0.2, 0.1]
@@ -125,7 +131,7 @@ PARAMS_LIMITS: Tuple[Tuple[int, int],
                      Tuple[int, int],
                      Tuple[int, int]] = ((MIN_SENSING, MAX_SENSING),
                                          (MIN_SPEED, MAX_SPEED),
-                                         (MIN_MOVEMENTS, MAX_MOVEMENTS))
+                                         (MIN_AGGRESSION, MAX_AGGRESSION))
 
 # Moves constants
 
