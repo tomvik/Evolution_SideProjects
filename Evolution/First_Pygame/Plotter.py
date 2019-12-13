@@ -53,7 +53,7 @@ class Plotter:
     def plot_3d(self):
         data = self.__data[self.__data[self.__tags[0]] == 1]
         self.__graph = self.__3d_ax.scatter(data.Sensing, data.Speed,
-                                            data.Movement)
+                                            data.Aggression)
 
         ani = matplotlib.animation.FuncAnimation(self.__3d_fig,
                                                  self.__update_graph,
@@ -77,8 +77,8 @@ class Plotter:
     def __update_graph(self, day: int):
         data = self.__data[self.__data[self.__tags[0]] == day+1]
         self.__graph._offsets3d = (data.Sensing, data.Speed,
-                                   data.Movement)
-        self.__3d_title.set_text('3D Test, day={}'.format(day+1))
+                                   data.Aggression)
+        self.__3d_title.set_text('Narutal Selection Sim, day={}'.format(day+1))
         if day+1 == self.__max_day:
             self.__graph.remove()
             self.__scatter_all_3d()
@@ -89,7 +89,7 @@ class Plotter:
         for d in range(self.__max_day):
             data = self.__data[self.__data[self.__tags[0]] == d]
             self.__graph = self.__3d_ax.scatter(data.Sensing, data.Speed,
-                                                data.Movement,
+                                                data.Aggression,
                                                 color=colors[d])
 
     # Prepares the 3d graph with the labels and limits introduced.

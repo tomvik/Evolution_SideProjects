@@ -134,12 +134,14 @@ class Stage:
                 return_values[key_value[0]] = key_value[1]
         return return_values
 
-    # Returns the closest wall to the object and its direction towards it.
+    # Returns the closest wall to the object, its direction towards it,
+    # and the distance to travel.
     def closest_wall_to(self,
-                        a: Rectangle) -> Tuple[Rectangle, Direction]:
-        selected_wall = Distances.closest_of_all_Linf(a, self.__walls)
+                        a: Rectangle) -> Tuple[Rectangle, Direction, int]:
+        selected_wall, distance = Distances.closest_of_all_Linf(a,
+                                                                self.__walls)
         direction = Distances.cardinal_system_direction(a, selected_wall)
-        return selected_wall, direction
+        return selected_wall, direction, distance
 
     # Resets the clock back to 0.
     def reset_clock(self):
@@ -179,3 +181,14 @@ class Stage:
                 if box.get_name() != Constants.INITIAL_CHARACTERS \
                         and box.get_name() != Constants.INITIAL_FOODS:
                     box.change_type()
+
+    # Changes the boxes that won't be updated anymore to output only, and those
+    # that will be to input. The naming is weird, but input are the only ones
+    # that get updated.
+    def continue_game(self):
+        for box in self.__text_boxes:
+            if box.has_name():
+                if box.get_name() != Constants.TTL \
+                        and box.get_name() != Constants.FPS:
+                    box.change_type()
+        self.__clock.reset()

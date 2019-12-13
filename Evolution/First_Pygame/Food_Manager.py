@@ -11,11 +11,16 @@ from Common_Types import *
 
 
 class FoodManager:
-    def __init__(self, food_size: Size, food_color: Color):
+    def __init__(self, food_size: Size, food_color: Color,
+                 update_step: int, update_day: int):
         self.__foods = list()
         self.__food_size = food_size
         self.__food_color = food_color
         self.__initial_amount = 0
+        self.__target_amount = 0
+        self.__update_step = update_step
+        self.__update_days = update_day
+        self.__days_to_update = self.__update_days
         self.__range_of_values = (0, 0)
         self.__stage_limits = Limits(0, 0, 0, 0)
         self.__stage_color = Color(0, 0, 0)
@@ -23,7 +28,7 @@ class FoodManager:
     # Spans randomly throughout the stage the amount of food selected with
     # random values of nutrition within the range.
     # Replaces the list of foods.
-    def initialize(self, amount: int,
+    def initialize(self, amount: int, target_amount: int,
                    range_of_values: Tuple[int, int],
                    stage: Stage.Stage,
                    blockings: List[Rectangle.Rectangle]):
@@ -39,6 +44,7 @@ class FoodManager:
 
         self.__foods = self.__span_random_food(amount, blockings)
         self.__initial_amount = amount
+        self.__target_amount = target_amount
 
     # Returns the list of food.
     def get_list(self) -> List[Food]:
@@ -48,10 +54,17 @@ class FoodManager:
     def food_left(self) -> int:
         return len(self.__foods)
 
+    # Sets the target food and resets the days to update variable.
+    def set_target_food(self, target_food: int):
+        self.__days_to_update = self.__update_days
+        self.__target_amount = target_food
+
     # Returns the direction to the closes food from the character received.
     # If the food is within distance of the speed, it will also move
-    # towards it.
-    def direction_to_closest_food(self, character: Character) -> Direction:
+    # towards it. And it returns True if in fact there's a food nearby.
+    def direction_to_closest_food(self,
+                                  character: Character) -> \
+            Tuple[Direction, bool]:
         food = Distances.closest_of_all_L2(character, self.__foods,
                                            character.get_sensing())
         d, within_r = Distances.sensing_direction(character, food,
@@ -61,9 +74,13 @@ class FoodManager:
                                                        character.get_speed())
             if within_r:
                 character.draw_background()
-                character.teleport_center(food.get_center())
-                return Direction(0, 0)
-        return d
+                center = food.get_center()
+                character.move(center.x, center.y, [], True)
+                return Direction(0, 0), True
+            else:
+                return d, True
+        else:
+            return Direction(0, 0), False
 
     # Delete the specific food.
     def delete_index(self, index: int):
@@ -89,11 +106,16 @@ class FoodManager:
         return character_was_hungry != character.is_hungry()
 
     # Spans the initial amount of food throughout the already defined stage.
-    def reset_foods(self, blockings: List[Rectangle.Rectangle],
-                    amount: int = 0):
-        if amount == 0:
-            amount = self.__initial_amount
-        self.__foods = self.__span_random_food(amount, blockings)
+    def reset_foods(self, blockings: List[Rectangle.Rectangle]):
+        self.__days_to_update -= 1
+        if self.__days_to_update is 0:
+            if self.__initial_amount > self.__target_amount:
+                self.__initial_amount -= self.__update_step
+                self.__initial_amount = max(self.__target_amount,
+                                            self.__initial_amount)
+            self.__days_to_update = self.__update_days
+        self.__foods = self.__span_random_food(self.__initial_amount,
+                                               blockings)
 
     # Sorts the food list according to its x coordinate.
     def xsort(self):

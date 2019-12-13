@@ -30,6 +30,7 @@ TEXT_FONT: Font = Font("Trebuchet MS", 15)
 INITIAL_CHARACTERS: str = "Initial_Characters"
 CHARACTERS: str = "Characters"
 INITIAL_FOODS: str = "Initial_Foods"
+TARGET_FOODS: str = "Target_Foods"
 FOODS: str = "Foods"
 TTL: str = "Ttl"
 FPS: str = "Fps"
@@ -44,8 +45,10 @@ HUNGER: str = "Hunger"
 SENSING: str = "Sensing"
 SPEED: str = "Speed"
 MOVEMENT: str = "Movement"
+AGGRESSION: str = "Aggression"
 
 TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
+                                       False, True,
                                        False, True,
                                        False, True,
                                        False, True,
@@ -59,11 +62,12 @@ TEXTBOX_MATRIX_IS_INPUT: List[bool] = [False, True,
                                        False, False]
 
 TEXTBOX_MATRIX: List[Tuple[str, str]] = \
-    [("", "Time of Round (s):"), (TTL, "5    "),
-     ("", "fps:"), (FPS, "60   "),
+    [("", "Time of Round (s):"), (TTL, "15    "),
+     ("", "fps:"), (FPS, "120   "),
      ("", "Max generations:"), (MAX_GENERATION, "100  "),
      ("", "Initial Characters:"), (INITIAL_CHARACTERS, "30   "),
-     ("", "Initial Foods:"), (INITIAL_FOODS, "90   "),
+     ("", "Initial Foods:"), (INITIAL_FOODS, "60   "),
+     ("", "Target Foods:"), (TARGET_FOODS, "60   "),
      ("", "# of Characters:"), (CHARACTERS, "0    "),
      ("", "# of Foods:"), (FOODS, "0    "),
      ("", "days:"), (DAYS, "0    "),
@@ -81,7 +85,12 @@ INSTRUCTIONS_TEXTBOXES: List[Tuple[str, str]] = \
      ("", "In-game Instructions:"), ("", " "),
      ("", "Key:  "), ("", "Effect:"),
      ("", "Exit   "), ("", "Quit the game"),
-     ("", "Space "), ("", "End the round")]
+     ("", "Space "), ("", "End the round"),
+     ("", " "), ("", " "),
+     ("", "If the max generation"), ("", ""),
+     ("", "has been reached, to"), ("", ""),
+     ("", "continue the game press"), ("", ""),
+     ("", "space."), ("", "")]
 
 INSTRUCTIONS_INPUT: List[bool] = [False] * len(INSTRUCTIONS_TEXTBOXES)
 
@@ -89,15 +98,19 @@ INSTRUCTIONS_INPUT: List[bool] = [False] * len(INSTRUCTIONS_TEXTBOXES)
 FOOD_COLOR: Color = WHITE
 FOOD_SIZE = Size(5, 5)
 FOOD_VALUE = 1
+FOOD_STEP = 2
+FOOD_UPDATE_DAY = 5
 
 # Character constants
 REPRODUCTION: int = 50  # 50%
 TRAVERSE_CHARACTERS: bool = True
 CHARACTER_SIZE = Size(20, 20)
+DAYS_TO_LIVE: int = 15
+ORIGINAL_HUNGER: int = 2
 
 MIN_SPEED: int = 2
 MAX_SPEED: int = CHARACTER_SIZE.height * 2  # 40 diff: 38
-STEP_SPEED: int = 2  # 24 steps to max
+STEP_SPEED: int = 1  # 38 steps to max
 SLOPE_SPEED: float = 255/(MAX_SPEED-MIN_SPEED)
 B_SPEED: float = SLOPE_SPEED*MIN_SPEED
 
@@ -107,13 +120,18 @@ STEP_SENSING: int = 4  # 22 steps to max
 SLOPE_SENSING: float = 255/(MAX_SENSING-MIN_SENSING)
 B_SENSING: float = SLOPE_SENSING*MIN_SENSING
 
-MIN_MOVEMENTS: int = 60
-MAX_MOVEMENTS: int = 200  # diff: 140
-STEP_MOVEMENTS: int = 4  # 32 steps to max
-SLOPE_MOVEMENTS: float = 255/(MAX_MOVEMENTS-MIN_MOVEMENTS)
-B_MOVEMENTS: float = SLOPE_MOVEMENTS*MIN_MOVEMENTS
+MIN_AGGRESSION: int = 20
+MAX_AGGRESSION: int = 50  # diff: 30
+STEP_AGGRESSION: int = 1  # 30 steps
+SLOPE_AGGRESSION: float = 255/(MAX_AGGRESSION-MIN_AGGRESSION)
+B_AGGRESSION: float = SLOPE_AGGRESSION*MIN_AGGRESSION
+AGGRESSION_DIFF: float = 1.4
 
-PROBABILITIES_STEP: List[float] = [0.2, 0.35, 0.45]
+
+ENERGY: int = (MAX_SPEED/2) * (MAX_SPEED/2) * STAGE_SIZE.width \
+    * (MAX_AGGRESSION/2) * (MAX_AGGRESSION/2) * (MAX_AGGRESSION/2)
+
+PROBABILITIES_STEP: List[float] = [0.3, 0.35, 0.35]
 STEP_INDEXES: List[int] = range(3)
 
 PROBABILITIES_MUTATIONS: List[float] = [0.1, 0.2, 0.4, 0.2, 0.1]
@@ -123,7 +141,7 @@ PARAMS_LIMITS: Tuple[Tuple[int, int],
                      Tuple[int, int],
                      Tuple[int, int]] = ((MIN_SENSING, MAX_SENSING),
                                          (MIN_SPEED, MAX_SPEED),
-                                         (MIN_MOVEMENTS, MAX_MOVEMENTS))
+                                         (MIN_AGGRESSION, MAX_AGGRESSION))
 
 # Moves constants
 
