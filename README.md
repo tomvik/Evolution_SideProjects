@@ -1,2 +1,2 @@
-# SideProjects
-Fun python projects
+# Natural Selection Side Project
+Fun python low budget Natural Selection side project
